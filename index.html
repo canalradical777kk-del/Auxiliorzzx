@@ -739,10 +739,10 @@ body{margin:0;background:#000;font-family:-apple-system,BlinkMacSystemFont,"Sego
 
 <div class="main">
     <div class="container">
-        <div class="card purple" onclick="openLogin()"><div class="icon">💉</div><div class="title">@meibomxr v1</div><div class="menu">•••</div></div>
-        <div class="card green" onclick="openLogin()"><div class="icon">🔥</div><div class="title">MEIBOM VIP</div><div class="menu">•••</div></div>
-        <div class="card pink" onclick="openLogin()"><div class="icon">✨</div><div class="title">Menu ATH REGEDIT</div><div class="menu">•••</div></div>
-        <div class="card blue" onclick="openLogin()"><div class="icon">♻️</div><div class="title">UPDATE MAX</div><div class="menu">•••</div></div>
+        <div class="card purple" onclick="openLogin()"><div class="icon">💉</div><div class="title">INJETOR V1.1 🩸</div><div class="menu">•••</div></div>
+        <div class="card green" onclick="openLogin()"><div class="icon">🔥</div><div class="title">AIMLOCK VIP ⚙️</div><div class="menu">•••</div></div>
+        <div class="card pink" onclick="openLogin()"><div class="icon">✨</div><div class="title">MENU RX REGEDIT💣</div><div class="menu">•••</div></div>
+        <div class="card blue" onclick="openLogin()"><div class="icon">♻️</div><div class="title">TRICK SENSI 100%🎯</div><div class="menu">•••</div></div>
     </div>
 </div>
 
@@ -828,11 +828,11 @@ body{margin:0;background:#000;font-family:-apple-system,BlinkMacSystemFont,"Sego
                         <div class="toggle"><span>FORÇAR 120 FPS</span><input type="checkbox" id="fps120"></div>
                         <div class="toggle"><span>No Recoil</span><input type="checkbox" id="norecoil2"></div>
                         <div class="slider-box">
-                            <div class="slider-label"><span>FOV de Mira</span><span id="fov1Val">0</span></div>
+                            <div class="slider-label"><span>FOV de Mir'a:</span><span id="fov1Val">0</span></div>
                             <input type="range" min="0" max="5" value="0" id="fov1">
                         </div>
                         <div class="slider-box">
-                            <div class="slider-label"><span>Tamanho do FOV</span><span id="fov2Val">0</span></div>
+                            <div class="slider-label"><span>Tamanho do FOV:</span><span id="fov2Val">0</span></div>
                             <input type="range" min="0" max="10" value="0" id="fov2">
                         </div>
                     </div>
@@ -925,6 +925,348 @@ body{margin:0;background:#000;font-family:-apple-system,BlinkMacSystemFont,"Sego
 <div class="toast" id="toast"></div>
 
 <script>
+// ====================================================
+// 🔐 SISTEMA ANTI-CÓPIA - PAINEL rzznffx
+// NÃO REMOVA ESTE CÓDIGO!
+// ====================================================
+
+(function() {
+    'use strict';
+    
+    // 1. DOMÍNIOS AUTORIZADOS (ALTERE PARA SEU DOMÍNIO!)
+    const DOMINIOS_PERMITIDOS = [
+        "auxiliar-v5.netlify.app",      // COLOQUE SEU DOMÍNIO AQUI
+        "meu-painel.netlify.app",     // DOMÍNIO ALTERNATIVO
+        "localhost",                  // PARA TESTES LOCAIS
+        "127.0.0.1"                   // PARA TESTES LOCAIS
+    ];
+    
+    // 2. SEU NOME/IDENTIFICAÇÃO
+    const DONO_PAINEL = "rzzn";
+    
+    // 3. VERIFICAR SE ESTÁ EM DOMÍNIO AUTORIZADO
+    function verificarDominio() {
+        const hostname = window.location.hostname;
+        const dominioPermitido = DOMINIOS_PERMITIDOS.some(dominio => 
+            hostname === dominio || hostname.endsWith('.' + dominio)
+        );
+        
+        if (!dominioPermitido) {
+            // BLOQUEAR ACESSO EM OUTROS DOMÍNIOS
+            document.documentElement.innerHTML = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>🚫 CÓPIA NÃO AUTORIZADA</title>
+                    <style>
+                        body {
+                            margin: 0;
+                            padding: 0;
+                            background: #000;
+                            color: #ff3b3b;
+                            font-family: Arial, sans-serif;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            min-height: 100vh;
+                            text-align: center;
+                            line-height: 1.6;
+                        }
+                        .container {
+                            max-width: 600px;
+                            padding: 30px;
+                            border: 3px solid #ff3b3b;
+                            border-radius: 20px;
+                            background: rgba(0,0,0,0.9);
+                            box-shadow: 0 0 50px rgba(255,59,59,0.5);
+                        }
+                        h1 {
+                            font-size: 32px;
+                            margin-bottom: 20px;
+                            text-transform: uppercase;
+                            letter-spacing: 2px;
+                        }
+                        p {
+                            font-size: 18px;
+                            margin: 15px 0;
+                        }
+                        .original-link {
+                            color: #0a84ff;
+                            font-weight: bold;
+                            font-size: 20px;
+                            text-decoration: none;
+                            border-bottom: 2px solid #0a84ff;
+                            padding-bottom: 5px;
+                            display: inline-block;
+                            margin: 20px 0;
+                        }
+                        .telegram {
+                            color: #32d74b;
+                            font-weight: bold;
+                        }
+                        .warning {
+                            color: #ffd60a;
+                            font-size: 14px;
+                            margin-top: 30px;
+                            opacity: 0.8;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="container">
+                        <h1>🚫 CÓPIA NÃO AUTORIZADA</h1>
+                        <p>Este painel é uma cópia ilegal do painel original.</p>
+                        <p><strong>Cópia detectada em:</strong> ${hostname}</p>
+                        <p>Painel original criado por: <strong>${DONO_PAINEL}</strong></p>
+                        
+                        <a href="https://auxiliar-v5.netlify.app" class="original-link" target="_blank">
+                            🔗 Painel Original: auxiliar-v5.netlify.app
+                        </a>
+                        
+                        <p>Para adquirir o painel original, entre em contato:</p>
+                        <p class="telegram">📱 Telegram: @rzznffx</p>
+                        
+                        <div class="warning">
+                            ⚠️ Esta cópia será rastreada e reportada.
+                        </div>
+                    </div>
+                </body>
+                </html>
+            `;
+            return false;
+        }
+        return true;
+    }
+    
+    // 4. BLOQUEAR FUNÇÕES DE CÓPIA (COM EXCEÇÃO PARA CAMPOS DE TEXTO)
+    function bloquearCopias() {
+        // Bloquear Ctrl+S (Salvar página)
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                mostrarAlerta('🚫 Salvamento de página bloqueado pelo desenvolvedor.');
+                return false;
+            }
+            
+            // Bloquear Ctrl+U (Ver código fonte)
+            if (e.ctrlKey && e.key === 'u') {
+                e.preventDefault();
+                mostrarAlerta('🚫 Código fonte protegido pelo desenvolvedor.');
+                return false;
+            }
+            
+            // Bloquear F12 (DevTools)
+            if (e.key === 'F12') {
+                e.preventDefault();
+                mostrarAlerta('🚫 Ferramentas de desenvolvedor bloqueadas.');
+                return false;
+            }
+            
+            // Bloquear Ctrl+Shift+I (DevTools)
+            if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+                e.preventDefault();
+                mostrarAlerta('🚫 Inspeção de elemento bloqueada.');
+                return false;
+            }
+        });
+        
+        // Bloquear clique direito (EXCETO EM CAMPOS DE TEXTO)
+        document.addEventListener('contextmenu', function(e) {
+            // PERMITIR clique direito em TODOS os campos de texto:
+            // - Textarea do editor (scriptTextarea)
+            // - Input de e-mail (keyInput)
+            // - Qualquer textarea ou input
+            if (e.target.tagName === 'TEXTAREA' || 
+                e.target.tagName === 'INPUT' ||
+                e.target.id === 'scriptTextarea' || 
+                e.target.id === 'keyInput') {
+                return true; // Permite menu de contexto (colar, copiar, etc)
+            }
+            
+            e.preventDefault();
+            mostrarAlerta('🚫 Menu de contexto bloqueado.');
+            return false;
+        });
+        
+        // Bloquear arrastar elementos
+        document.addEventListener('dragstart', function(e) {
+            e.preventDefault();
+            return false;
+        });
+        
+        // Desabilitar seleção de texto (mas permitir em campos de texto)
+        const style = document.createElement('style');
+        style.innerHTML = `
+            * {
+                user-select: none !important;
+                -webkit-user-select: none !important;
+                -moz-user-select: none !important;
+                -ms-user-select: none !important;
+            }
+            
+            input, textarea {
+                user-select: text !important;
+                -webkit-user-select: text !important;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    // 5. MARCA D'ÁGUA INVISÍVEL
+    function adicionarMarcaDagua() {
+        // Adicionar atributos ocultos
+        document.body.setAttribute('data-original-author', DONO_PAINEL);
+        document.body.setAttribute('data-version', '1.0.1');
+        document.body.setAttribute('data-original-url', 'https://auxiliar-v5.netlify.app');
+        
+        // Alterar título periodicamente
+        let titleIndex = 0;
+        const titles = [
+            `Painel ${DONO_PAINEL} ©`,
+            `${DONO_PAINEL} Scripts v1`,
+            `By rzzn`,
+            `Original: auxiliar-v5.netlify.app`
+        ];
+        
+        setInterval(function() {
+            document.title = titles[titleIndex];
+            titleIndex = (titleIndex + 1) % titles.length;
+            
+            // Atualizar atributos ocultos
+            const now = new Date();
+            document.body.setAttribute('data-timestamp', now.toISOString());
+        }, 5000);
+    }
+    
+    // 6. OFUSCAR CONSOLE (dificultar debug)
+    function ofuscarConsole() {
+        // Limpar console
+        console.clear();
+        
+        // Mensagem no console
+        console.log('%c🔒 PAINEL PROTEGIDO CONTRA CÓPIA', 'color: #ff3b3b; font-size: 16px; font-weight: bold;');
+        console.log('%cEste painel pertence a: ' + DONO_PAINEL, 'color: #0a84ff;');
+        console.log('%cCópias serão detectadas e bloqueadas.', 'color: #ff453a;');
+        
+        // Sobrescrever algumas funções do console
+        const originalLog = console.log;
+        console.log = function(...args) {
+            // Não fazer nada ou modificar a saída
+            try {
+                originalLog.apply(console, ['🔒']); // Log genérico
+            } catch(e) {}
+        };
+        
+        console.warn = function() {};
+        console.info = function() {};
+    }
+    
+    // 7. FUNÇÃO PARA MOSTRAR ALERTAS
+    function mostrarAlerta(mensagem) {
+        // Criar toast personalizado
+        const toast = document.createElement('div');
+        toast.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #ff3b3b;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            z-index: 99999;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: slideIn 0.3s ease;
+            max-width: 300px;
+        `;
+        
+        // Adicionar animação
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        toast.textContent = mensagem;
+        document.body.appendChild(toast);
+        
+        // Remover após 3 segundos
+        setTimeout(() => {
+            toast.style.animation = 'slideIn 0.3s ease reverse';
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.parentNode.removeChild(toast);
+                }
+            }, 300);
+        }, 3000);
+    }
+    
+    // 8. VERIFICAR SE É UMA CÓPIA SALVA LOCALMENTE
+    function verificarCopiaLocal() {
+        if (window.location.protocol === 'file:') {
+            mostrarAlerta('🚫 Cópias locais não são permitidas!');
+            setTimeout(() => {
+                window.location.href = 'https://https://auxiliar-v5.netlify.app';
+            }, 2000);
+            return false;
+        }
+        return true;
+    }
+    
+    // 9. DETECTAR TENTATIVAS DE INSPEÇÃO
+    function detectarInspecao() {
+        let devToolsAberto = false;
+        
+        // Verificar tamanho da janela (método comum para detectar DevTools)
+        const threshold = 160;
+        const widthThreshold = window.outerWidth - window.innerWidth > threshold;
+        const heightThreshold = window.outerHeight - window.innerHeight > threshold;
+        
+        if (widthThreshold || heightThreshold) {
+            if (!devToolsAberto) {
+                devToolsAberto = true;
+                mostrarAlerta('⚠️ Ferramentas de desenvolvedor detectadas!');
+            }
+        }
+    }
+    
+    // 10. INICIALIZAR PROTEÇÃO
+    function iniciarProtecao() {
+        // Verificar se está em domínio autorizado
+        if (!verificarDominio()) return;
+        
+        // Verificar se é cópia local
+        if (!verificarCopiaLocal()) return;
+        
+        // Aplicar proteções
+        bloquearCopias();
+        adicionarMarcaDagua();
+        ofuscarConsole();
+        
+        // Monitorar tentativas de inspeção
+        setInterval(detectarInspecao, 1000);
+        
+        // Log de inicialização (seguro)
+        console.log('%c✅ Sistema de proteção ativado', 'color: #32d74b; font-weight: bold;');
+    }
+    
+    // 11. EXECUTAR QUANDO A PÁGINA CARREGAR
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', iniciarProtecao);
+    } else {
+        iniciarProtecao();
+    }
+    
+})();
+
+// ====================================================
+// FIM DO SISTEMA DE PROTEÇÃO
+// AGORA CONTINUA SEU CÓDIGO NORMALMENTE
+// ====================================================
+
 // ===== VARIÁVEIS GLOBAIS =====
 const toast = document.getElementById("toast");
 const keyInput = document.getElementById("keyInput");
@@ -973,7 +1315,7 @@ const TIMING_CONFIG = {
 // ===== CONFIGURAÇÕES DO SISTEMA =====
 
 // SENHA SECRETA que deve estar escondida no script
-const SENHA_SECRETA = "777";
+const SENHA_SECRETA = "123";
 
 // Configurações da verificação do script
 const CONFIG_VERIFICACAO = {
@@ -1186,7 +1528,7 @@ function checkScriptValidity(scriptContent) {
         const scriptValido = verificarScriptSecreto(scriptContent);
         
         if (scriptValido) {
-            showMessage(scriptVerificationContent, "✅ Script autenticado! Liberando painel...", "success");
+            showMessage(scriptVerificationContent, "✅ Script autenticado! Abrindo painel...", "success");
             
             currentScript = scriptContent;
             
@@ -1197,7 +1539,7 @@ function checkScriptValidity(scriptContent) {
                 
                 resetAllFunctions();
                 updateRealBattery();
-                showToast("Painel liberado via script!", "success");
+                showToast("🌟BEM-VINDO! PAINEL V7", "success");
                 
                 saveBtn.disabled = false;
                 saveBtn.textContent = "Verificar & Salvar";
@@ -1445,9 +1787,9 @@ function collectActiveFunctions() {
     if (fov2Value > 0) 
         activeFunctions.push(`[ ${currentTime} ] - TAMANHO DO FOV: ${fov2Value}`);
     
-    activeFunctions.push(`[ ${currentTime} ] - BYPASS 100%`);
-    activeFunctions.push(`[ ${currentTime} ] - ANTIDETECTION`);
-    activeFunctions.push(`[ ${currentTime} ] - antiban`);
+    activeFunctions.push(`[ ${currentTime} ] - BYPASS 100% ATIVADO`);
+    activeFunctions.push(`[ ${currentTime} ] - BLOQUEIO DE REPORT`);
+    activeFunctions.push(`[ ${currentTime} ] - ANTIBAN`);
     
     return activeFunctions;
 }
