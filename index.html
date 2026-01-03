@@ -1,751 +1,1658 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Auxílio 1.0 — RzX Vip</title>
-  <style>
-    :root{
-      --bg:#060608;
-      --card:#0f0f11;
-      --muted:#bfc1c6;
-      --accent1:#8f56ff;
-      --accent2:#c89bff;
-      --glass: rgba(255,255,255,0.02);
-      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-    }
-    html,body{height:100%;}
-    body{
-      margin:0;
-      background:radial-gradient(ellipse at top left, rgba(143,86,255,0.04), transparent 10%),
-                 radial-gradient(ellipse at bottom right, rgba(200,155,255,0.02), transparent 10%),
-                 var(--bg);
-      -webkit-font-smoothing:antialiased;
-      color:#fff;
-      overflow-y:auto;
-    }
+<meta charset="UTF-8">
+<title>Painel Scripts</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#000;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#fff;min-height:100vh}
 
-    /* particle background canvas covers whole screen */
-    #particle-canvas{
-      position:fixed;
-      inset:0;
-      z-index:0;
-      pointer-events:none;
-    }
+/* ===== TOPO ===== */
+.top{display:flex;align-items:center;justify-content:space-between;padding:26px 20px 12px}
+.top h1{margin:0;font-size:28px}
+.add{width:34px;height:34px;border-radius:50%;background:#0a84ff;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:bold;cursor:pointer}
 
-    .center-wrap{
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:24px;
-      z-index:1;
-      position:relative;
-    }
+/* ===== LISTA ===== */
+.main{display:flex;justify-content:center;padding-top:20px}
+.container{width:100%;max-width:460px;display:flex;flex-direction:column;gap:20px;padding:0 16px 30px}
+.card{display:flex;align-items:center;padding:24px 22px;border-radius:22px;cursor:pointer}
+.icon{font-size:31px;margin-right:18px;transform:rotate(-25deg)}
+.title{font-size:16px;font-weight:600;flex:1}
+.menu{background:rgba(0,0,0,.25);border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center}
+.purple{background:linear-gradient(90deg,#6a3fc7,#7447d6)}
+.green{background:linear-gradient(90deg,#6dbb4b,#7ccc55)}
+.pink{background:linear-gradient(90deg,#a83cc2,#b94ad4)}
+.blue{background:linear-gradient(90deg,#3f7fd6,#4c8fe8)}
 
-    /* panel smaller like you asked */
-    .card{
-      width: min(360px, 92vw);
-      background: linear-gradient(180deg, rgba(255,100,170,0.12), rgba(255,150,200,0.1));
-      border-radius:18px;
-      padding:22px;
-      box-shadow: 0 12px 40px rgba(140,80,255,0.08), inset 0 1px 0 rgba(255,255,255,0.02);
-      border: 1px solid rgba(140,80,255,0.06);
-      backdrop-filter: blur(6px);
-    }
+/* ===== LOGIN POR E-MAIL (NUNCA LIBERA) ===== */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;z-index:100}
+.login-container{
+    width:320px;
+    background:linear-gradient(145deg, #0f0f0f, #1a1a1a);
+    border-radius:24px;
+    padding:32px 28px;
+    box-shadow:0 20px 60px rgba(255,59,59,0.15),
+               0 0 0 1px rgba(255,59,59,0.2),
+               inset 0 1px 0 rgba(255,255,255,0.1);
+    position:relative;
+    overflow:hidden;
+    animation:popupAppear 0.4s cubic-bezier(0.175,0.885,0.32,1.1);
+}
 
-    .title{
-      text-align:center;
-      font-size:22px;
-      font-weight:700;
-      margin-bottom:14px;
-    }
+/* Efeito de brilho vermelho no topo */
+.login-container::before{
+    content:'';
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    height:4px;
+    background:linear-gradient(90deg, #ff3b3b, #ff6b6b, #ff3b3b);
+    background-size:200% 100%;
+    animation:shine 3s linear infinite;
+}
 
-    .section{
-      background: rgba(255,255,255,0.02);
-      border-radius:12px;
-      padding:12px 14px;
-      margin-bottom:12px;
-      border:1px solid rgba(255,255,255,0.02);
-    }
+@keyframes shine{
+    0%{background-position:200% 0}
+    100%{background-position:-200% 0}
+}
 
-    .accordion-head{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      font-weight:600;
-      cursor:pointer;
-      user-select:none;
-    }
+@keyframes popupAppear{
+    0%{transform:scale(0.8);opacity:0}
+    100%{transform:scale(1);opacity:1}
+}
 
-    .chev{
-      width:28px;height:28px;border-radius:8px;
-      display:grid;place-items:center;background:transparent;
-      border:1px solid rgba(255,255,255,0.02);
-      transition: transform .18s ease;
-    }
+/* Cabeçalho do login */
+.login-header{
+    text-align:center;
+    margin-bottom:28px;
+}
 
-    .accordion-body{ margin-top:10px; display:none; }
-    .accordion-body.active{ display:block; }
-
-    .checkbox-row{
-      display:flex;
-      gap:12px;
-      align-items:center;
-      margin:12px 0;
-    }
-    .checkbox{
-      width:22px; height:22px; border-radius:6px; display:grid;place-items:center;
-      background:#111; border:1px solid rgba(255,255,255,0.04); cursor:pointer;
-    }
-    .checkbox input{display:none;}
-    .checkbox svg{opacity:0; transform:scale(.8); transition: all .12s ease; }
-    .checkbox.checked{ background: linear-gradient(90deg,var(--accent1),var(--accent2)); border: none; }
-    .checkbox.checked svg{ opacity:1; transform:scale(1); filter: drop-shadow(0 2px 6px rgba(140,80,255,.24)); }
-
-    .option-label{ flex:1; color:var(--muted); font-weight:600; }
-
-    .fov-row{ display:flex; align-items:center; gap:12px; margin-top:8px; color:var(--muted); }
-    .fov-row input[type=range]{ flex:1; -webkit-appearance: none; height:8px; border-radius:8px; background: linear-gradient(90deg,var(--accent1),var(--accent2)); outline:none; }
-    .fov-row input[type=range]::-webkit-slider-thumb{ -webkit-appearance:none; width:18px;height:18px;border-radius:50%; background:#fff; box-shadow:0 2px 8px rgba(0,0,0,0.5); }
-
-    .buttons{ display:flex; flex-direction:column; gap:12px; margin-top:8px; }
-    .btn{
-      padding:12px 14px; border-radius:12px; font-weight:700; border:none; cursor:pointer;
-      background: linear-gradient(90deg,var(--accent1),var(--accent2));
-      color:#fff; box-shadow: 0 6px 20px rgba(143,86,255,0.18);
-    }
-    .btn.active{
-      outline: 2px solid rgba(255,255,255,0.06);
-      transform: translateY(-1px);
-      box-shadow: 0 10px 30px rgba(143,86,255,0.22);
-    }
-    .btn.secondary{
-      background: linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
-      border:1px solid rgba(255,255,255,0.03);
-      color:var(--muted); font-weight:700;
-    }
-
-    .small-note{
-      font-size:12px;
-      color:var(--muted);
-      text-align:center;
-      margin-top:6px;
-    }
-
-    /* toast */
-    .toast{
-      position:fixed;
-      left:50%;
-      transform:translateX(-50%);
-      bottom:36px;
-      background: linear-gradient(90deg,var(--accent1),var(--accent2));
-      color:#fff; padding:10px 18px; border-radius:12px;
-      box-shadow:0 8px 30px rgba(140,80,255,0.18); z-index:200;
-      opacity:0; pointer-events:none; transition:all .25s ease;
-    }
-    .toast.show{ opacity:1; transform: translateX(-50%) translateY(0); }
-
-    /* small screens */
-    @media (max-width:420px){
-      .card{ padding:18px; border-radius:14px; }
-      .title{ font-size:20px; }
-    }
-
-  </style>
-</head>
-<body>
-<!-- RzzX: particle canvas + login overlay (injetado sem modificar o painel) -->
-<canvas id="rzzx-particle-canvas" aria-hidden="true"></canvas>
-
-<style id="rzzx-styles">
-  /* Canvas (fundo animado) */
-  #rzzx-particle-canvas{
-    position:fixed;
-    top:0; left:0;
-    width:100%; height:100%;
-    z-index:0;
-    pointer-events:none;
-    background:transparent;
-  }
-
-  /* Login overlay - bem isolado por IDs para não interferir com estilos do painel */
-  #rzzx-loginOverlay{
-    position:fixed;
-    inset:0;
+.login-icon{
+    width:60px;
+    height:60px;
+    background:linear-gradient(135deg, #ff3b3b, #ff6b6b);
+    border-radius:18px;
     display:flex;
     align-items:center;
     justify-content:center;
-    z-index:99999; /* acima de tudo */
-    background: rgba(0,0,0,0.55);
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
-  }
-  #rzzx-login-card{
-    background: linear-gradient(180deg, rgba(255,80,140,0.25), rgba(255,120,180,0.2));
-    color: #fff;
-    padding:18px;
-    border-radius:12px;
-    box-shadow: 0 10px 40px rgba(255,100,170,0.3);
-    min-width: 320px;
-    max-width:92vw;
-    text-align:center;
-    border: 1px solid rgba(255,120,180,0.25);
-  }
-  #rzzx-login-card h2{ margin:0 0 8px; font-size:18px; }
-  #rzzx-login-card p{ margin:0 0 12px; color:#cfcfd3; font-size:13px; }
+    margin:0 auto 18px;
+    font-size:28px;
+    box-shadow:0 8px 24px rgba(255,59,59,0.3);
+}
 
-  #rzzx-login-field{ display:flex; gap:8px; align-items:center; justify-content:center; }
-  #rzzx-login-field input{
-    flex:1;
-    padding:10px 12px;
-    border-radius:8px;
-    border:1px solid rgba(255,255,255,0.06);
-    background: rgba(255,255,255,0.02);
+.login-title{
+    font-size:24px;
+    font-weight:700;
+    background:linear-gradient(90deg, #ff3b3b, #ff9f43);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    margin-bottom:8px;
+    letter-spacing:0.5px;
+}
+
+.login-subtitle{
+    font-size:14px;
+    color:#aaa;
+    font-weight:500;
+}
+
+/* Input moderno */
+.input-group{
+    position:relative;
+    margin-bottom:24px;
+}
+
+.key-input{
+    width:100%;
+    padding:18px 20px;
+    padding-left:52px;
+    background:rgba(40,40,40,0.8);
+    border:2px solid rgba(255,59,59,0.3);
+    border-radius:16px;
     color:#fff;
+    font-size:16px;
+    font-weight:500;
     outline:none;
-    min-width:120px;
-    font-weight:600;
-  }
-  #rzzx-login-field button{
-    padding:10px 12px;
-    border-radius:8px;
+    transition:all 0.3s ease;
+}
+
+.key-input:focus{
+    border-color:#ff3b3b;
+    box-shadow:0 0 0 3px rgba(255,59,59,0.2);
+    background:rgba(50,50,50,0.9);
+}
+
+.key-input::placeholder{
+    color:#888;
+    font-weight:400;
+}
+
+.input-icon{
+    position:absolute;
+    left:20px;
+    top:50%;
+    transform:translateY(-50%);
+    color:#ff3b3b;
+    font-size:18px;
+}
+
+/* Botões do login */
+.login-buttons{
+    display:flex;
+    gap:12px;
+    margin-top:30px;
+}
+
+.login-btn{
+    flex:1;
+    padding:16px;
     border:none;
+    border-radius:14px;
+    font-size:15px;
+    font-weight:600;
     cursor:pointer;
-    background: linear-gradient(90deg,#ff4f9c,#ff94d9);
+    transition:all 0.3s ease;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+}
+
+.btn-cancel{
+    background:rgba(60,60,60,0.8);
+    color:#ccc;
+    border:2px solid rgba(100,100,100,0.3);
+}
+
+.btn-cancel:hover{
+    background:rgba(80,80,80,0.9);
+    border-color:rgba(150,150,150,0.5);
+    transform:translateY(-2px);
+}
+
+.btn-ok{
+    background:linear-gradient(90deg, #ff3b3b, #ff6b6b);
+    color:#fff;
+    border:none;
+    box-shadow:0 8px 20px rgba(255,59,59,0.3);
+}
+
+.btn-ok:hover{
+    background:linear-gradient(90deg, #ff5252, #ff7b7b);
+    transform:translateY(-2px);
+    box-shadow:0 12px 24px rgba(255,59,59,0.4);
+}
+
+.btn-ok:disabled{
+    background:linear-gradient(90deg, #666, #888);
+    cursor:not-allowed;
+    transform:none;
+    box-shadow:none;
+    opacity:0.7;
+}
+
+/* Área de verificação */
+.verification-area{
+    min-height:22px;
+    margin-top:18px;
+    text-align:center;
+}
+
+.verification-message{
+    font-size:13px;
+    font-weight:600;
+    transition:all 0.4s cubic-bezier(0.175,0.885,0.32,1.1);
+    opacity:0;
+    transform:translateY(-5px);
+    padding:10px 16px;
+    border-radius:12px;
+    margin:4px 0;
+    background:rgba(40,40,40,0.7);
+    display:inline-block;
+    max-width:90%;
+}
+
+.verification-message.show{
+    opacity:1;
+    transform:translateY(0);
+}
+
+.verification-message.success{
+    color:#32d74b;
+    background:rgba(50,215,75,0.1);
+    border:1px solid rgba(50,215,75,0.3);
+}
+
+.verification-message.error{
+    color:#ff453a;
+    background:rgba(255,69,58,0.1);
+    border:1px solid rgba(255,69,58,0.3);
+}
+
+.verification-message.loading{
+    color:#ffd60a;
+    background:rgba(255,214,10,0.1);
+}
+
+/* ===== EDITOR DE SCRIPT (ÚNICO QUE LIBERA) ===== */
+.editor{position:fixed;inset:0;background:#000;display:none;flex-direction:column;z-index:30}
+.editor-header{display:flex;justify-content:space-between;align-items:center;padding:18px;border-bottom:1px solid #222}
+.editor-header button{background:none;border:none;color:#0a84ff;font-size:16px;cursor:pointer;font-weight:600}
+.editor textarea{flex:1;width:100%;background:#0c0c0c;border:none;color:#00ff9c;padding:16px;font-size:14px;font-family:monospace;outline:none;resize:none;line-height:1.5}
+
+/* Overlay de verificação do script */
+.script-verification-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;z-index:40}
+.script-verification-container{
+    width:320px;
+    background:linear-gradient(145deg, #0f0f0f, #1a1a1a);
+    border-radius:24px;
+    padding:32px 28px;
+    box-shadow:0 20px 60px rgba(0,122,255,0.15),
+               0 0 0 1px rgba(0,122,255,0.2),
+               inset 0 1px 0 rgba(255,255,255,0.1);
+    position:relative;
+    overflow:hidden;
+    animation:popupAppear 0.4s cubic-bezier(0.175,0.885,0.32,1.1);
+}
+
+.script-verification-container::before{
+    content:'';
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    height:4px;
+    background:linear-gradient(90deg, #0a84ff, #64d2ff, #0a84ff);
+    background-size:200% 100%;
+    animation:shine 3s linear infinite;
+}
+
+.script-verification-header{
+    text-align:center;
+    margin-bottom:28px;
+}
+
+.script-verification-icon{
+    width:60px;
+    height:60px;
+    background:linear-gradient(135deg, #0a84ff, #64d2ff);
+    border-radius:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:0 auto 18px;
+    font-size:28px;
+    box-shadow:0 8px 24px rgba(0,122,255,0.3);
+}
+
+.script-verification-title{
+    font-size:24px;
+    font-weight:700;
+    background:linear-gradient(90deg, #0a84ff, #64d2ff);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    margin-bottom:8px;
+    letter-spacing:0.5px;
+}
+
+.script-verification-subtitle{
+    font-size:14px;
+    color:#aaa;
+    font-weight:500;
+}
+
+.script-verification-content{
+    min-height:22px;
+    margin-top:18px;
+    text-align:center;
+}
+
+/* ===== PAINEL ===== */
+.panel{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:20}
+.panel-background{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.7);
+    backdrop-filter:blur(15px);
+    -webkit-backdrop-filter:blur(15px);
+    z-index:19;
+    cursor:pointer;
+}
+.panel-box{
+    display:flex;
+    background:rgba(20,20,20,0.95);
+    border:2px solid rgba(255,59,59,0.5);
+    border-radius:20px;
+    width:590px;
+    max-width:92%;
+    padding:22px 30px 30px;
+    box-shadow:0 0 40px rgba(255,59,59,0.3);
+    backdrop-filter:blur(20px);
+    position:relative;
+    z-index:21;
+    pointer-events:auto;
+}
+
+.panel-left{display:flex;flex-direction:column;gap:8px;margin-right:25px;margin-top:0}
+.tab{
+    padding:13px 16px;
+    border-radius:16px;
+    background:#1c1c1e;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:125px;
+    font-size:15px;
+}
+.tab.active{background:#ff3b3b;color:#fff;box-shadow:0 0 15px rgba(255,59,59,0.3)}
+
+/* CONTEÚDO */
+.panel-right{flex:1}
+.content{display:none}
+.content.active{display:block}
+
+/* ===== FUNÇÕES ===== */
+.func-box{
+    background:#1c1c1e;
+    border-radius:16px;
+    padding:22px;
+    margin-bottom:20px;
+    box-shadow:0 0 15px rgba(255,59,59,0.4);
+}
+.toggle{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:#2c2c2e;
+    padding:15px 18px;
+    border-radius:12px;
+    margin-bottom:14px;
+    transition:0.3s;
+}
+.toggle:hover{background:#3a3a3c;}
+.toggle span{font-weight:600;font-size:15px;}
+.toggle input{
+    appearance:none;
+    width:52px;
+    height:30px;
+    border-radius:15px;
+    background:#555;
+    position:relative;
+    outline:none;
+    cursor:pointer;
+    transition:0.3s;
+}
+.toggle input:checked{background:#ff3b3b}
+.toggle input:before{
+    content:"";
+    position:absolute;
+    top:3px; left:3px;
+    width:24px; height:24px;
+    border-radius:50%;
+    background:#fff;
+    transition:0.3s;
+}
+.toggle input:checked:before{transform:translateX(22px);}
+
+/* ABA BÁSICO/AVANÇADO */
+.version-toggle{
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    margin-bottom:22px;
+    margin-top:8px;
+}
+.version-toggle button{
+    flex:1;
+    padding:14px 0;
+    border:none;
+    border-radius:14px;
+    background:#2c2c2e;
+    color:#fff;
+    font-weight:600;
+    font-size:15px;
+    cursor:pointer;
+    transition:0.3s;
+}
+.version-toggle button.active{
+    background:#ff3b3b;
+    box-shadow:0 0 15px rgba(255,59,59,0.6);
+    color:#fff;
+}
+
+/* SLIDERS */
+.slider-box{margin:16px 0}
+.slider-label{display:flex;justify-content:space-between;margin-bottom:8px;font-size:14px;font-weight:600;color:#c7c7cc;}
+.slider-box input[type="range"]{
+    -webkit-appearance:none;
+    width:100%;
+    height:10px;
+    border-radius:5px;
+    background:#555;
+    outline:none;
+    transition:.3s;
+}
+.slider-box input[type="range"]::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    appearance:none;
+    width:22px;
+    height:22px;
+    border-radius:50%;
+    background:#ff3b3b;
+    cursor:pointer;
+    box-shadow:0 0 12px rgba(255,59,59,0.6);
+    transition:.3s;
+}
+
+/* ===== ABA INFO ===== */
+.info-container{
+    background:#0a0a0a;
+    border-radius:12px;
+    padding:22px;
+    margin-bottom:20px;
+    border:2px solid rgba(255,59,59,0.3);
+}
+
+.info-title{
+    text-align:center;
+    font-size:20px;
+    font-weight:700;
+    color:#ff3b3b;
+    margin-bottom:25px;
+    text-transform:uppercase;
+    padding-bottom:12px;
+    border-bottom:2px solid #ff3b3b;
+}
+
+.info-line{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:16px 0;
+    margin:0 15px;
+    border-bottom:1px solid rgba(255,255,255,0.1);
+}
+
+.info-line:last-child{
+    border-bottom:none;
+}
+
+.info-label{
+    font-size:16px;
+    color:#fff;
+    font-weight:600;
+    width:50%;
+}
+
+.info-value{
+    font-size:16px;
+    font-weight:700;
+    text-align:right;
+    width:50%;
+}
+
+.version-value{
+    color:#ff3b3b;
+}
+
+.status-value{
+    color:#32d74b;
+}
+
+.battery-value{
+    color:#fff;
+}
+
+.info-divider{
+    height:3px;
+    background:#ff3b3b;
+    margin:20px 0;
+    border-radius:2px;
+}
+
+.warning-box{
+    background:rgba(10,10,10,0.9);
+    border-radius:12px;
+    padding:22px;
+    margin-top:25px;
+    border:2px solid #ff3b3b;
+    text-align:center;
+}
+
+.warning-title{
+    color:#ff3b3b;
+    font-size:18px;
+    font-weight:700;
+    margin-bottom:15px;
+    text-transform:uppercase;
+}
+
+.warning-text{
+    color:#fff;
+    font-size:14px;
+    line-height:1.6;
+    text-align:center;
+}
+
+.warning-highlight{
+    color:#ff3b3b;
+    font-weight:600;
+}
+
+/* === BLOCO DE INJEÇÃO === */
+.injection-status{
+    background:#0a0a0a;
+    border-radius:16px;
+    padding:22px;
+    margin-bottom:20px;
+    border:2px solid #ff3b3b;
+    box-shadow:0 0 15px rgba(255,59,59,0.3);
+    transition:all 0.3s ease;
+}
+.injection-status.active{
+    border-color:#32d74b;
+    box-shadow:0 0 15px rgba(50,215,75,0.4);
+}
+.status-header{
+    display:flex;
+    align-items:center;
+    margin-bottom:16px;
+}
+.status-indicator{
+    width:20px;
+    height:20px;
+    border-radius:50%;
+    background:#ff3b3b;
+    box-shadow:0 0 8px rgba(255,59,59,0.8);
+    margin-right:16px;
+    transition:all 0.3s ease;
+}
+.injection-status.active .status-indicator{
+    background:#32d74b;
+    box-shadow:0 0 8px rgba(50,215,75,0.8);
+}
+.status-title{
+    font-size:19px;
+    font-weight:700;
+    color:#ff3b3b;
+    transition:all 0.3s ease;
+}
+.injection-status.active .status-title{
+    color:#32d74b;
+}
+.status-desc{
+    font-size:14px;
+    color:#c7c7cc;
+    margin-bottom:12px;
+    min-height:22px;
+}
+.injection-progress{
+    width:100%;
+    height:10px;
+    background:#2c2c2e;
+    border-radius:5px;
+    overflow:hidden;
+    margin-top:12px;
+}
+.progress-bar{
+    height:100%;
+    width:0%;
+    background:#ff3b3b;
+    border-radius:5px;
+    transition:width 0.5s ease, background 0.3s ease;
+}
+.injection-status.active .progress-bar{
+    background:#32d74b;
+}
+
+/* FUNÇÕES LISTADAS */
+.functions-list{
+    max-height:160px;
+    overflow-y:auto;
+    margin-top:16px;
+    padding:6px;
+    background:transparent;
+    border-radius:0;
+    font-size:13px;
+}
+.function-item{
+    padding:9px 6px;
+    margin-bottom:4px;
+    border-radius:0;
+    background:transparent;
+    color:#ff3b3b;
+    transition:all 0.5s ease;
+    opacity:0;
+    transform:translateX(-10px);
+    border-bottom:1px solid rgba(255,59,59,0.1);
+    font-family:monospace;
+}
+.function-item:last-child{
+    border-bottom:none;
+}
+.function-item.completed{
+    color:#32d74b;
+    border-bottom:1px solid rgba(50,215,75,0.1);
+}
+
+/* === BLOCO ANTIBAN === */
+.antiban-box{
+    background:#1c1c1e;
+    border-radius:16px;
+    padding:22px;
+    margin-bottom:20px;
+    border:2px solid #ff3b3b;
+    box-shadow:0 0 15px rgba(255,59,59,0.3);
+}
+.antiban-header{
+    text-align:center;
+    margin-bottom:22px;
+}
+.antiban-title{
+    font-size:23px;
+    font-weight:700;
+    color:#ff3b3b;
+    margin-bottom:6px;
+}
+.antiban-subtitle{
+    font-size:14px;
+    color:#c7c7cc;
+}
+/* Slider ANTIBAN */
+.antiban-slider-box{
+    margin:22px 0;
+}
+.antiban-slider-label{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:12px;
+    font-size:15px;
+    font-weight:600;
+    color:#c7c7cc;
+}
+.antiban-slider-box input[type="range"]{
+    -webkit-appearance:none;
+    width:100%;
+    height:10px;
+    border-radius:5px;
+    background:#555;
+    outline:none;
+    transition:.3s;
+}
+.antiban-slider-box input[type="range"]::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    appearance:none;
+    width:22px;
+    height:22px;
+    border-radius:50%;
+    background:#ff3b3b;
+    cursor:pointer;
+    box-shadow:0 0 12px rgba(255,59,59,0.6);
+    transition:.3s;
+}
+
+/* INJEÇÃO BOTÃO */
+.inject-btn{
+    width:100%;
+    padding:18px;
+    border:none;
+    border-radius:14px;
+    background:#ff3b3b;
     color:#fff;
     font-weight:700;
-  }
+    font-size:17px;
+    cursor:pointer;
+    transition:0.3s;
+    box-shadow:0 0 15px rgba(255,59,59,0.4);
+    margin-top:18px;
+}
+.inject-btn:hover{
+    background:#ff5252;
+    box-shadow:0 0 20px rgba(255,59,59,0.6);
+}
+.inject-btn:disabled{
+    background:#555;
+    cursor:not-allowed;
+    box-shadow:none;
+}
 
-  #rzzx-errorMsg{ color:#ff6b6b; margin-top:10px; display:none; font-weight:700; }
-
-  /* Garantir que painel e elementos internos fiquem acima do canvas */
-  body > *:not(#rzzx-particle-canvas):not(#rzzx-styles):not(#rzzx-loginOverlay){
-    /* não alteramos visual; esta regra é leve e apenas assegura posição base */
-  }
+/* TOAST */
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#1c1c1e;padding:14px 22px;border-radius:14px;opacity:0;transition:.4s;z-index:40}
+.toast.show{opacity:1}
+.toast.success{color:#32d74b}
+.toast.error{color:#ff453a}
+.toast.loading{color:#ffd60a}
 </style>
+</head>
+<body>
 
-<div id="rzzx-loginOverlay" role="dialog" aria-modal="true">
-  <div id="rzzx-login-card" role="document" aria-labelledby="rzzx-login-title">
-    <h2 id="rzzx-login-title">Login — key de acesso</h2>
-    <p>Digite sua <strong>key de acesso</strong> para entrar no painel.</p>
-    <div id="rzzx-login-field">
-      <input id="rzzx-keyInput" type="text" placeholder="key de acesso" aria-label="key de acesso">
-      <button id="rzzx-keySubmit" type="button">Entrar</button>
-    </div>
-    <div id="rzzx-errorMsg">Key inválida!</div>
-  </div>
+<div class="top">
+    <h1>Scripts</h1>
+    <div class="add" onclick="openEditor()">+</div>
 </div>
 
-<script id="rzzx-script">
-(function(){
-  // Namespace local
-  const CORRECT_KEY = 'Admin-7-5550-6TJO-WF8P'; // chave válida (não exibida ao usuário)
-  const overlay = document.getElementById('rzzx-loginOverlay');
-  const keyInput = document.getElementById('rzzx-keyInput');
-  const keySubmit = document.getElementById('rzzx-keySubmit');
-  const errorMsg = document.getElementById('rzzx-errorMsg');
-
-  // Small toast helper (non-intrusive)
-  function showToast(msg){
-    let t = document.getElementById('rzzx-toast');
-    if(!t){
-      t = document.createElement('div');
-      t.id = 'rzzx-toast';
-      Object.assign(t.style, {position:'fixed', left:'50%', transform:'translateX(-50%)', bottom:'28px', padding:'8px 14px', borderRadius:'10px', background:'linear-gradient(90deg,#ff4f9c,#ff94d9)', color:'#fff', zIndex:100000, fontWeight:'700', opacity:0, transition:'opacity .18s ease'});
-      document.body.appendChild(t);
-    }
-    t.textContent = msg;
-    t.style.opacity = '1';
-    setTimeout(()=>{ t.style.opacity = '0'; }, 2000);
-  }
-
-  function unlockIfCorrect(){
-    const v = keyInput.value.trim();
-    if(v === CORRECT_KEY){
-      overlay.style.display = 'none';
-      // remove aria-hidden if present
-      try{ document.getElementById('mainContent')?.removeAttribute('aria-hidden'); }catch(e){}
-      showToast('Bem-vindo — acesso liberado');
-    } else {
-      // mostrar erro visível e toast
-      errorMsg.style.display = 'block';
-      // pequeno "shake"
-      const card = document.getElementById('rzzx-login-card');
-      card.classList.remove('rzzx-shake');
-      // restart animation
-      void card.offsetWidth;
-      card.classList.add('rzzx-shake');
-      showToast('Key inválida!');
-    }
-  }
-  keySubmit.addEventListener('click', unlockIfCorrect);
-  keyInput.addEventListener('keydown', function(e){ if(e.key === 'Enter') unlockIfCorrect(); });
-
-  // focus inicial
-  setTimeout(()=> keyInput.focus(), 200);
-
-  // minimal CSS for shake added dynamically to avoid conflicts
-  const style = document.createElement('style');
-  style.textContent = `
-    @keyframes rzzx-shake { 0%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-6px)} 80%{transform:translateX(6px)} 100%{transform:translateX(0)} }
-    .rzzx-shake{ animation: rzzx-shake .42s ease; }
-  `;
-  document.head.appendChild(style);
-
-  // --- Particle background (canvas) ---
-  const canvas = document.getElementById('rzzx-particle-canvas');
-  const ctx = canvas && canvas.getContext ? canvas.getContext('2d') : null;
-  if(!ctx) return;
-
-  let w = canvas.width = window.innerWidth;
-  let h = canvas.height = window.innerHeight;
-  let stars = [];
-  const STAR_COUNT = Math.min(400, Math.floor((w*h)/20000)); // density adjusted by viewport area
-
-  function rand(min,max){ return Math.random()*(max-min)+min; }
-  function initStars(){
-    stars = [];
-    for(let i=0;i<STAR_COUNT;i++){
-      stars.push({
-        x: rand(0,w), y: rand(0,h),
-        vx: rand(-0.4,0.4), vy: rand(-0.4,0.4),
-        r: rand(0.4,1.8),
-        phase: Math.random()*Math.PI*2
-      });
-    }
-  }
-  function resize(){
-    w = canvas.width = window.innerWidth;
-    h = canvas.height = window.innerHeight;
-    initStars();
-  }
-  window.addEventListener('resize', resize);
-  initStars();
-
-  function frame(){
-    ctx.clearRect(0,0,w,h);
-    // subtle gradient background to enhance visibility
-    const g = ctx.createLinearGradient(0,0,w,h);
-    g.addColorStop(0,'rgba(0,0,0,0)');
-    g.addColorStop(1,'rgba(0,0,0,0)');
-    ctx.fillStyle = g;
-    ctx.fillRect(0,0,w,h);
-
-    for(let i=0;i<stars.length;i++){
-      const s = stars[i];
-      s.phase += 0.02;
-      const alpha = 0.5 + Math.sin(s.phase)*0.5;
-      s.x += s.vx; s.y += s.vy;
-      if(s.x < -10) s.x = w + 10;
-      if(s.x > w + 10) s.x = -10;
-      if(s.y < -10) s.y = h + 10;
-      if(s.y > h + 10) s.y = -10;
-
-      ctx.beginPath();
-      ctx.arc(s.x, s.y, Math.max(0.35, s.r), 0, Math.PI*2);
-      ctx.fillStyle = 'rgba(255,200,230,' + (0.6*alpha) + ')';
-      ctx.fill();
-
-      // small streak
-      ctx.beginPath();
-      ctx.moveTo(s.x - s.vx*4, s.y - s.vy*4);
-      ctx.lineTo(s.x + s.vx*2, s.y + s.vy*2);
-      ctx.strokeStyle = 'rgba(255,255,255,' + (0.07*alpha) + ')';
-      ctx.lineWidth = Math.max(0.2, s.r/2);
-      ctx.stroke();
-
-      // connect nearby stars
-      for(let j=i+1;j<stars.length;j++){
-        const s2 = stars[j];
-        const dx = s.x - s2.x, dy = s.y - s2.y;
-        const d2 = dx*dx + dy*dy;
-        if(d2 < 6500){
-          const a = 0.00012*(6500 - d2);
-          ctx.beginPath();
-          ctx.strokeStyle = 'rgba(255,120,200,' + Math.min(0.15, a) + ')';
-          ctx.lineWidth = 0.5;
-          ctx.moveTo(s.x,s.y);
-          ctx.lineTo(s2.x,s2.y);
-          ctx.stroke();
-        }
-      }
-    }
-    requestAnimationFrame(frame);
-  }
-  requestAnimationFrame(frame);
-})();
-</script>
-<!-- /RzzX injection -->
-
-  <canvas id="particle-canvas"></canvas>
-
-  <div class="center-wrap">
-    <div class="card" role="main" aria-labelledby="pageTitle">
-      <div id="pageTitle" class="title">Auxílio 1.1.0.2V</div>
-
-      <!-- Sistema Avançado (collapsed by default) -->
-      <div class="section">
-        <div class="accordion-head" data-accordion="sistema">
-          <div>▶ Sistema Avançado</div>
-          <div class="chev" aria-hidden>▸</div>
-        </div>
-        <div class="accordion-body" id="sistema-body">
-          <div style="margin-top:10px; display:flex;align-items:center; gap:10px;">
-            <label style="display:flex;gap:10px;align-items:center;">
-              <span class="checkbox" data-option="120 FPS" tabindex="0">
-                <input type="checkbox" />
-                <svg width="12" height="9" viewBox="0 0 12 9" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10.6 1L4.3 7.5 1.4 4.6" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-              <span class="option-label">120 FPS</span>
-            </label>
-          </div>
-
-          <div style="margin-top:10px; display:flex;align-items:center; gap:10px;">
-            <label style="display:flex;gap:10px;align-items:center;">
-              <span class="checkbox" data-option="Norecoil" tabindex="0">
-                <input type="checkbox" />
-                <svg width="12" height="9" viewBox="0 0 12 9" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10.6 1L4.3 7.5 1.4 4.6" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-              <span class="option-label">Norecoil</span>
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <!-- Ajustes de Mira (open by default) -->
-      <div class="section">
-        <div class="accordion-head" data-accordion="mira">
-          <div>▼ Ajustes de Mira</div>
-          <div class="chev" aria-hidden>▾</div>
-        </div>
-        <div class="accordion-body active" id="mira-body">
-          <div class="checkbox-row">
-            <label style="display:flex;gap:10px;align-items:center;width:100%;">
-              <span class="checkbox" data-option="Aim Bot" tabindex="0">
-                <input type="checkbox" />
-                <svg width="12" height="9" viewBox="0 0 12 9" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10.6 1L4.3 7.5 1.4 4.6" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-              <span class="option-label">Aim Bot</span>
-            </label>
-          </div>
-
-          <div class="checkbox-row">
-            <label style="display:flex;gap:10px;align-items:center;width:100%;">
-              <span class="checkbox" data-option="head Trick" tabindex="0">
-                <input type="checkbox" />
-                <svg width="12" height="9" viewBox="0 0 12 9" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10.6 1L4.3 7.5 1.4 4.6" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-              <span class="option-label">Head Trick</span>
-            </label>
-          </div>
-
-          <div class="checkbox-row">
-            <label style="display:flex;gap:10px;align-items:center;width:100%;">
-              <span class="checkbox" data-option="Aumentar Precisão " tabindex="0">
-                <input type="checkbox" />
-                <svg width="12" height="9" viewBox="0 0 12 9" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10.6 1L4.3 7.5 1.4 4.6" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-              <span class="option-label">Aumentar Precisão </span>
-            </label>
-          </div>
-
-          <div class="fov-row" style="margin-top:6px;">
-            <div style="font-weight:700;color:var(--muted);min-width:40px;">FOV</div>
-            <input id="fovRange" type="range" min="0" max="100" value="40" />
-            <div id="fovValue" style="width:26px;text-align:right;font-weight:700;color:var(--muted)">40</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Replace the three gradient buttons (removed DNS ones) -->
-      <div class="buttons">
-        <button id="injectorBtn" class="btn" data-toggle="false">Injector</button>
-        <button id="resBtn" class="btn" data-toggle="false">Ativar Resolução</button>
-        <button id="applyBtn" class="btn" data-toggle="false">Aplicar pasta</button>
-      </div>
+<div class="main">
+    <div class="container">
+        <div class="card purple" onclick="openLogin()"><div class="icon">💉</div><div class="title">@meibomxr v1</div><div class="menu">•••</div></div>
+        <div class="card green" onclick="openLogin()"><div class="icon">🔥</div><div class="title">MEIBOM VIP</div><div class="menu">•••</div></div>
+        <div class="card pink" onclick="openLogin()"><div class="icon">✨</div><div class="title">Menu ATH REGEDIT</div><div class="menu">•••</div></div>
+        <div class="card blue" onclick="openLogin()"><div class="icon">♻️</div><div class="title">UPDATE MAX</div><div class="menu">•••</div></div>
     </div>
-  </div>
+</div>
 
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+<!-- LOGIN POR E-MAIL (NUNCA LIBERA) -->
+<div class="overlay" id="login">
+    <div class="login-container">
+        <div class="login-header">
+            <div class="login-icon">✉️</div>
+            <div class="login-title">VERIFICAÇÃO</div>
+            <div class="login-subtitle">Digite seu e-mail de compra</div>
+        </div>
+        
+        <div class="input-group">
+            <div class="input-icon">📧</div>
+            <input type="text" id="keyInput" class="key-input" placeholder="exemplo@gmail.com" autocomplete="off" spellcheck="false">
+        </div>
+        
+        <div class="verification-area" id="verificationSequence">
+            <!-- As mensagens aparecerão aqui -->
+        </div>
+        
+        <div class="login-buttons">
+            <button class="login-btn btn-cancel" onclick="closeLogin()">CANCELAR</button>
+            <button class="login-btn btn-ok" onclick="validateEmail()" id="okBtn">VERIFICAR</button>
+        </div>
+    </div>
+</div>
 
-  <script>
-    /***********************
-     * Particle background  *
-     ***********************/
-    const canvas = document.getElementById('particle-canvas');
-    const ctx = canvas.getContext('2d');
-    let w = canvas.width = innerWidth;
-    let h = canvas.height = innerHeight;
-    window.addEventListener('resize', () => { w = canvas.width = innerWidth; h = canvas.height = innerHeight; initParticles(); });
+<!-- EDITOR DE SCRIPT (ÚNICO QUE LIBERA) -->
+<div class="editor" id="editor">
+    <div class="editor-header">
+        <button onclick="closeEditor()">Cancelar</button>
+        <h2>Script Editor</h2>
+        <button onclick="saveScript()" id="saveBtn">Verificar & Salvar</button>
+    </div>
+    <textarea id="scriptTextarea" placeholder="// Cole seu script aqui" spellcheck="false"></textarea>
+</div>
 
-    const particles = [];
-    const PARTICLE_COUNT = Math.min(80, Math.floor((w*h)/60000)); // scale with viewport
+<!-- OVERLAY DE VERIFICAÇÃO DO SCRIPT -->
+<div class="script-verification-overlay" id="scriptVerificationOverlay">
+    <div class="script-verification-container">
+        <div class="script-verification-header">
+            <div class="script-verification-icon">🔍</div>
+            <div class="script-verification-title">VERIFICANDO SCRIPT</div>
+            <div class="script-verification-subtitle">Analisando código...</div>
+        </div>
+        
+        <div class="script-verification-content" id="scriptVerificationContent">
+            <!-- As mensagens de verificação do script aparecerão aqui -->
+        </div>
+    </div>
+</div>
 
-    function rand(min,max){ return Math.random()*(max-min)+min; }
+<!-- PAINEL -->
+<div class="panel" id="panel">
+    <div class="panel-background" onclick="closePanel()"></div>
+    
+    <div class="panel-box">
+        <div class="panel-left">
+            <div class="tab active" data-tab="mira">🎯 Mira</div>
+            <div class="tab" data-tab="files">📁 Pasta</div>
+            <div class="tab" data-tab="antiban">🔒 Antiban</div>
+            <div class="tab" data-tab="inject">💉 Injeção</div>
+            <div class="tab" data-tab="info">ℹ️ Info</div>
+        </div>
+        <div class="panel-right">
+            <!-- ABA MIRA -->
+            <div class="content active" id="mira">
+                <div class="version-toggle">
+                    <button class="active" data-version="basico">BÁSICO</button>
+                    <button data-version="avancado">AVANÇADO</button>
+                </div>
+                <div class="version-content" id="basico">
+                    <div class="func-box">
+                        <div class="toggle"><span>AIMBOT 60%</span><input type="checkbox" id="precisao"></div>
+                        <div class="toggle"><span>AUMENTAR PRECISÃO </span><input type="checkbox" id="aimb"></div>
+                        <div class="toggle"><span>FORÇAR RENDERIZAÇÃO </span><input type="checkbox" id="forca"></div>
+                        <div class="toggle"><span>PRECISÃO 60%</span><input type="checkbox" id="norecoil"></div>
+                    </div>
+                </div>
+                <div class="version-content" id="avancado" style="display:none;">
+                    <div class="func-box">
+                        <div class="toggle"><span>FORÇAR 120 FPS</span><input type="checkbox" id="fps120"></div>
+                        <div class="toggle"><span>No Recoil</span><input type="checkbox" id="norecoil2"></div>
+                        <div class="slider-box">
+                            <div class="slider-label"><span>FOV de Mira</span><span id="fov1Val">0</span></div>
+                            <input type="range" min="0" max="5" value="0" id="fov1">
+                        </div>
+                        <div class="slider-box">
+                            <div class="slider-label"><span>Tamanho do FOV</span><span id="fov2Val">0</span></div>
+                            <input type="range" min="0" max="10" value="0" id="fov2">
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    function initParticles(){
-      particles.length = 0;
-      for(let i=0;i<PARTICLE_COUNT;i++){
-        particles.push({
-          x: rand(0,w),
-          y: rand(0,h),
-          vx: rand(-0.3,0.3),
-          vy: rand(-0.3,0.3),
-          r: rand(0.8,1.8)
-        });
-      }
-    }
-    initParticles();
+            <!-- ABA 📁 -->
+            <div class="content" id="files">
+                <div class="func-box">
+                    <p>InjectaPasta</p>
+                    <input type="file" id="fileInput" multiple style="display:none;">
+                    <button class="inject-btn" id="chooseFilesBtn">Escolher Arquivos</button>
+                    <p id="fileCount">Nenhum arquivo selecionado.</p>
+                </div>
+            </div>
 
-    function step(){
-      ctx.clearRect(0,0,w,h);
-      // draw lines
-      for(let i=0;i<particles.length;i++){
-        let p = particles[i];
-        p.x += p.vx; p.y += p.vy;
-        if(p.x<0) p.x = w;
-        if(p.x> w) p.x = 0;
-        if(p.y<0) p.y = h;
-        if(p.y> h) p.y = 0;
-        // dot
-        ctx.beginPath();
-        ctx.fillStyle = 'rgba(255,255,255,0.9)';
-        ctx.globalAlpha = 0.85;
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-        ctx.fill();
-        // lines to nearby
-        for(let j=i+1;j<particles.length;j++){
-          let q = particles[j];
-          let dx = p.x - q.x, dy = p.y - q.y;
-          let d2 = dx*dx + dy*dy;
-          if(d2 < 9000){ // threshold
-            let alpha = 0.0016*(9000 - d2);
-            ctx.beginPath();
-            ctx.strokeStyle = `rgba(140,86,255,${alpha})`;
-            ctx.lineWidth = 0.8;
-            ctx.moveTo(p.x,p.y);
-            ctx.lineTo(q.x,q.y);
-            ctx.stroke();
-          }
-        }
-      }
-      ctx.globalAlpha = 1;
-      requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
+            <!-- ABA ANTIBAN -->
+            <div class="content" id="antiban">
+                <div class="antiban-box">
+                    <div class="antiban-header">
+                        <div class="antiban-title">PROTEÇÃO ATIVA</div>
+                        <div class="antiban-subtitle">Nível de proteção em tempo real</div>
+                    </div>
+                    
+                    <div class="antiban-slider-box">
+                        <div class="antiban-slider-label">
+                            <span>NÍVEL DE PROTEÇÃO</span>
+                            <span id="antibanLevelValue">50%</span>
+                        </div>
+                        <input type="range" min="0" max="100" value="50" id="antibanLevel">
+                    </div>
+                </div>
+            </div>
 
-    /*************************
-     * UI Interactions       *
-     *************************/
-    // accordions
-    document.querySelectorAll('.accordion-head').forEach(head=>{
-      head.addEventListener('click', ()=>{
-        const key = head.getAttribute('data-accordion');
-        const body = document.getElementById(key+'-body');
-        const chev = head.querySelector('.chev');
-        if(body.classList.contains('active')){
-          body.classList.remove('active'); if(chev) chev.style.transform = 'rotate(0deg)';
-        } else {
-          body.classList.add('active'); if(chev) chev.style.transform = 'rotate(90deg)';
-        }
-      });
-    });
+            <!-- ABA INJEÇÃO -->
+            <div class="content" id="inject">
+                <div class="injection-status" id="injectionStatus">
+                    <div class="status-header">
+                        <div class="status-indicator" id="statusIndicator"></div>
+                        <div class="status-title" id="statusTitle">AGUARDANDO INJEÇÃO</div>
+                    </div>
+                    <div class="status-desc" id="statusDesc">Clique no botão abaixo para iniciar a injeção.</div>
+                    
+                    <div class="functions-list" id="functionsList">
+                        <!-- As funções ativas aparecerão aqui -->
+                    </div>
+                    
+                    <div class="injection-progress">
+                        <div class="progress-bar" id="progressBar"></div>
+                    </div>
+                </div>
+                
+                <button class="inject-btn" id="injectBtn" onclick="startInjection()">INICIAR INJEÇÃO</button>
+            </div>
 
-    // Toast
-    const toastEl = document.getElementById('toast');
-    let toastTimer = null;
-    function showToast(msg){
-      if(toastTimer) { clearTimeout(toastTimer); toastTimer = null; }
-      toastEl.textContent = msg;
-      toastEl.classList.add('show');
-      toastTimer = setTimeout(()=>{ toastEl.classList.remove('show'); toastTimer = null; }, 3000);
-    }
+            <!-- ABA INFO -->
+            <div class="content" id="info">
+                <div class="info-container">
+                    <div class="info-title">INFORMAÇÕES DO PAINEL</div>
+                    
+                    <div class="info-line">
+                        <div class="info-label">VERSÃO DO PAINEL:</div>
+                        <div class="info-value version-value" id="panelVersion">1.0.1.1V</div>
+                    </div>
+                    
+                    <div class="info-line">
+                        <div class="info-label">STATUS:</div>
+                        <div class="info-value status-value" id="panelStatus">ONLINE</div>
+                    </div>
+                    
+                    <div class="info-line">
+                        <div class="info-label">BATERIA:</div>
+                        <div class="info-value battery-value" id="panelBattery">--%</div>
+                    </div>
+                    
+                    <div class="info-divider"></div>
+                </div>
+                
+                <div class="warning-box">
+                    <div class="warning-title">AVISO IMPORTANTE</div>
+                    <div class="warning-text">
+                        O painel <span class="warning-highlight">não é xit nem hack</span> — é um auxílio inteligente de mira, criado para aprimorar sua precisão e deixar seus disparos muito mais consistentes.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-    // checkbox toggles
-    document.querySelectorAll('.checkbox').forEach(cb=>{
-      const input = cb.querySelector('input[type=checkbox]');
-      if(cb.classList.contains('checked')) input.checked = true;
-      cb.addEventListener('click', ()=>{
-        input.checked = !input.checked;
-        cb.classList.toggle('checked', input.checked);
-        const name = cb.getAttribute('data-option') || 'opção';
-        const pretty = mapPrettyName(name);
-        showToast(pretty + (input.checked ? ' ativado' : ' desativado'));
-      });
-      cb.addEventListener('keydown', (ev)=>{
-        if(ev.key === 'Enter' || ev.key === ' '){
-          ev.preventDefault();
-          cb.click();
-        }
-      });
-    });
-
-    function mapPrettyName(key){
-      switch(key){
-        case '120fps': return '120fps';
-        case 'norecoil': return 'norecoil';
-        case 'aimbot 90%': return 'Aimbot 90%';
-        case 'head trick': return 'Head Trick';
-        case 'Aumentar Precisão': return 'Aumentar Precisão';
-        default: return key;
-      }
-    }
-
-    // fov range
-    const fovRange = document.getElementById('fovRange');
-    const fovValue = document.getElementById('fovValue');
-    if(fovRange){
-      fovRange.addEventListener('input', ()=> fovValue.textContent = fovRange.value);
-    }
-
-    // buttons: act as toggles and show ativado/desativado
-    function setupToggleButton(btnId, prettyName){
-      const btn = document.getElementById(btnId);
-      btn.addEventListener('click', ()=>{
-        const current = btn.getAttribute('data-toggle') === 'true';
-        const next = !current;
-        btn.setAttribute('data-toggle', next ? 'true' : 'false');
-        btn.classList.toggle('active', next);
-        showToast(prettyName + (next ? ' ativado' : ' desativado'));
-      });
-    }
-
-    // botão INJECTOR abre o Free Fire
-const injectorBtn = document.getElementById("injectorBtn");
-injectorBtn.addEventListener("click", () => {
-  const current = injectorBtn.getAttribute("data-toggle") === "true";
-  const next = !current;
-  injectorBtn.setAttribute("data-toggle", next ? "true" : "false");
-  injectorBtn.classList.toggle("active", next);
-  showToast("Injector " + (next ? "ativado" : "desativado"));
-
-  if (next) {
-    const packageName = 'com.dts.freefireth';
-    const intentURI = 'intent://#Intent;package=' + packageName + ';end';
-
-    console.log('Tentando abrir Free Fire:', intentURI);
-    showToast('Abrindo Free Fire...');
-
-    try {
-      window.location.href = intentURI;
-    } catch (e) {
-      console.error('Erro ao tentar abrir o Free Fire', e);
-      showToast('Erro ao abrir o Free Fire');
-    }
-  }
-});setupToggleButton('resBtn','Ativar Resolução');
-    setupToggleButton('applyBtn','Aplicar pasta');
-
-// --- Permissão da pasta no botão "Aplicar pasta" ---
-const applyBtnPerm = document.getElementById("applyBtn");
-
-if (applyBtnPerm) {
-  applyBtnPerm.addEventListener("click", async () => {
-    try {
-      // abre seletor pedindo uma pasta
-      const dirHandle = await window.showDirectoryPicker();
-
-      if (dirHandle) {
-        showToast("Pasta selecionada com sucesso!");
-        console.log("Pasta escolhida:", dirHandle);
-      }
-    } catch (err) {
-      console.error("Erro ao acessar pasta:", err);
-      showToast("Permissão da pasta cancelada!");
-    }
-  });
-}
-
-
-    // accessibility
-    document.querySelectorAll('.checkbox').forEach(el=> el.setAttribute('tabindex','0'));
-
-    // initialize particle count on load/resize
-    setTimeout(()=>{ w = canvas.width = innerWidth; h = canvas.height = innerHeight; initParticles(); }, 200);
-  </script>
-
-<script id="reset-funcoes">
-window.addEventListener("load", () => {
-  function resetFuncoes() {
-    try {
-      document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
-      document.querySelectorAll('[data-toggle]').forEach(btn => {
-        btn.setAttribute('data-toggle','false');
-        btn.classList.remove('active');
-      });
-    } catch(e) { console.error("Erro ao resetar funções:", e); }
-  }
-
-  // roda uma vez no início
-  resetFuncoes();
-
-  // tenta resetar de novo algumas vezes (~6s)
-  let tentativas = 0;
-  const interval = setInterval(() => {
-    resetFuncoes();
-    tentativas++;
-    if (tentativas > 20) clearInterval(interval);
-  }, 300);
-});
-</script>
-
-
-<style>
-/* Fundo escuro para destacar as estrelas */
-body {
-  background: black;
-  overflow: hidden;
-}
-
-/* Estrelas */
-.star {
-  position: absolute;
-  width: 2px;
-  height: 2px;
-  background: white;
-  border-radius: 50%;
-  animation: twinkle 3s infinite alternate;
-}
-
-@keyframes twinkle {
-  from { opacity: 0.3; }
-  to { opacity: 1; }
-}
-
-/* Linhas */
-.line {
-  position: absolute;
-  width: 1px;
-  height: 100vh;
-  background: rgba(255,255,255,0.2);
-  animation: moveLine 10s linear infinite;
-}
-
-@keyframes moveLine {
-  from { transform: translateY(-100vh); }
-  to { transform: translateY(100vh); }
-}
-</style>
+<div class="toast" id="toast"></div>
 
 <script>
-// Gerar estrelas
-for (let i = 0; i < 150; i++) {
-  let star = document.createElement("div");
-  star.className = "star";
-  star.style.top = Math.random() * window.innerHeight + "px";
-  star.style.left = Math.random() * window.innerWidth + "px";
-  document.body.appendChild(star);
+// ===== VARIÁVEIS GLOBAIS =====
+const toast = document.getElementById("toast");
+const keyInput = document.getElementById("keyInput");
+const fileInput = document.getElementById("fileInput");
+const chooseFilesBtn = document.getElementById("chooseFilesBtn");
+const fileCount = document.getElementById("fileCount");
+const okBtn = document.getElementById("okBtn");
+const verificationSequence = document.getElementById("verificationSequence");
+const scriptTextarea = document.getElementById("scriptTextarea");
+const saveBtn = document.getElementById("saveBtn");
+const scriptVerificationContent = document.getElementById("scriptVerificationContent");
+
+// Elementos da aba INFO
+const panelVersion = document.getElementById('panelVersion');
+const panelStatus = document.getElementById('panelStatus');
+const panelBattery = document.getElementById('panelBattery');
+
+// Elementos da injeção
+const injectionStatus = document.getElementById('injectionStatus');
+const statusIndicator = document.getElementById('statusIndicator');
+const statusTitle = document.getElementById('statusTitle');
+const statusDesc = document.getElementById('statusDesc');
+const functionsList = document.getElementById('functionsList');
+const progressBar = document.getElementById('progressBar');
+const injectBtn = document.getElementById('injectBtn');
+
+// Elementos do Antiban
+const antibanLevel = document.getElementById('antibanLevel');
+const antibanLevelValue = document.getElementById('antibanLevelValue');
+
+// ===== CONFIGURAÇÕES DE TEMPO (AJUSTADAS) =====
+const TIMING_CONFIG = {
+    // Login por e-mail
+    mensagemErroLogin: 3000, // ⭐ 3 SEGUNDOS para ler mensagem de erro
+    delayEntreMensagensLogin: 1000, // 1 segundo entre mensagens do login
+    
+    // Verificação de script
+    mensagemSucessoScript: 2000, // 2 segundos para sucesso
+    mensagemErroScript: 2500, // 2.5 segundos para erro
+    delayEntreMensagensScript: 1200, // ⭐ 1.2 segundos entre cada mensagem (mais devagar)
+    
+    // Injeção
+    injeçãoProgressoLento: true
+};
+
+// ===== CONFIGURAÇÕES DO SISTEMA =====
+
+// SENHA SECRETA que deve estar escondida no script
+const SENHA_SECRETA = "777";
+
+// Configurações da verificação do script
+const CONFIG_VERIFICACAO = {
+    caseSensitive: false,
+    ignorarEspacos: true,
+    procurarEmTudo: true,
+    mensagemErro: "Script incorreto ou faltando script"
+};
+
+// DOMÍNIOS VÁLIDOS para e-mail
+const DOMINIOS_VALIDOS = ["gmail.com", "hotmail.com", "outlook.com", "yahoo.com"];
+
+// Funções ativas
+let activeFunctions = [];
+
+// Variável para guardar o script atual
+let currentScript = "";
+
+// ===== SISTEMA DE BATERIA REAL =====
+function updateRealBattery() {
+    if ('getBattery' in navigator) {
+        navigator.getBattery().then(function(battery) {
+            const level = Math.round(battery.level * 100);
+            const isCharging = battery.charging;
+            
+            panelBattery.textContent = `${level}%`;
+            
+            if (isCharging) {
+                panelStatus.textContent = 'CARREGANDO';
+                panelStatus.style.color = '#ff3b3b';
+            } else {
+                panelStatus.textContent = 'ONLINE';
+                panelStatus.style.color = '#32d74b';
+            }
+            
+            battery.addEventListener('levelchange', function() {
+                const newLevel = Math.round(battery.level * 100);
+                panelBattery.textContent = `${newLevel}%`;
+            });
+            
+            battery.addEventListener('chargingchange', function() {
+                if (battery.charging) {
+                    panelStatus.textContent = 'CARREGANDO';
+                    panelStatus.style.color = '#ff3b3b';
+                } else {
+                    panelStatus.textContent = 'ONLINE';
+                    panelStatus.style.color = '#32d74b';
+                }
+            });
+            
+        }).catch(function() {
+            panelBattery.textContent = 'N/D';
+        });
+    } else {
+        panelBattery.textContent = 'N/D';
+    }
 }
 
-// Gerar linhas
-for (let i = 0; i < 30; i++) {
-  let line = document.createElement("div");
-  line.className = "line";
-  line.style.left = Math.random() * window.innerWidth + "px";
-  line.style.animationDuration = (5 + Math.random() * 10) + "s";
-  document.body.appendChild(line);
+// ===== FUNÇÃO PARA DESATIVAR TODAS AS FUNÇÕES AO INICIAR =====
+function resetAllFunctions() {
+    document.querySelectorAll('.toggle input[type="checkbox"]').forEach(checkbox => {
+        checkbox.checked = false;
+    });
+    
+    document.querySelectorAll('input[type="range"]').forEach(slider => {
+        if (slider.id !== 'antibanLevel') {
+            slider.value = 0;
+        }
+    });
+    
+    if (document.getElementById('fov1Val')) {
+        document.getElementById('fov1Val').textContent = '0';
+    }
+    if (document.getElementById('fov2Val')) {
+        document.getElementById('fov2Val').textContent = '0';
+    }
 }
+
+// ===== FUNÇÕES DE VERIFICAÇÃO EM SEQUÊNCIA =====
+function showMessage(element, text, type = "normal") {
+    element.innerHTML = '';
+    const message = document.createElement('div');
+    message.className = `verification-message ${type}`;
+    message.textContent = text;
+    element.appendChild(message);
+    
+    setTimeout(() => {
+        message.classList.add('show');
+    }, 10);
+    
+    return message;
+}
+
+// ===== TOAST =====
+function showToast(msg, type) {
+    toast.textContent = msg;
+    toast.className = `toast show ${type}`;
+    setTimeout(() => toast.className = "toast", 1800);
+}
+
+// ===== SISTEMA SECRETO DE VERIFICAÇÃO DE SCRIPT =====
+function verificarScriptSecreto(script) {
+    let textoParaVerificar = script;
+    
+    if (!CONFIG_VERIFICACAO.caseSensitive) {
+        textoParaVerificar = textoParaVerificar.toLowerCase();
+        const senhaParaComparar = SENHA_SECRETA.toLowerCase();
+        
+        if (CONFIG_VERIFICACAO.ignorarEspacos) {
+            textoParaVerificar = textoParaVerificar.replace(/\s+/g, ' ');
+        }
+        
+        return textoParaVerificar.includes(senhaParaComparar);
+    } else {
+        if (CONFIG_VERIFICACAO.ignorarEspacos) {
+            textoParaVerificar = textoParaVerificar.replace(/\s+/g, ' ');
+        }
+        
+        return textoParaVerificar.includes(SENHA_SECRETA);
+    }
+}
+
+// ===== VERIFICAÇÃO DE E-MAIL (NUNCA LIBERA) =====
+function verificarEmail(email) {
+    email = email.trim().toLowerCase();
+    
+    if (!email.includes('@')) {
+        return false;
+    }
+    
+    const dominio = email.split('@')[1];
+    
+    return DOMINIOS_VALIDOS.some(dom => dominio.endsWith(dom));
+}
+
+// ===== EDITOR DE SCRIPT (ÚNICO QUE LIBERA) =====
+function openEditor() {
+    document.getElementById("editor").style.display = "flex";
+    scriptTextarea.value = currentScript;
+    
+    setTimeout(() => {
+        scriptTextarea.focus();
+    }, 300);
+}
+
+function closeEditor() {
+    document.getElementById("editor").style.display = "none";
+}
+
+function saveScript() {
+    const scriptContent = scriptTextarea.value.trim();
+    
+    if (!scriptContent) {
+        showToast("⚠️ Cole um script primeiro", "error");
+        
+        scriptTextarea.style.animation = 'shake 0.5s';
+        setTimeout(() => {
+            scriptTextarea.style.animation = '';
+        }, 500);
+        
+        return;
+    }
+    
+    document.getElementById("scriptVerificationOverlay").style.display = "flex";
+    saveBtn.disabled = true;
+    saveBtn.textContent = "VERIFICANDO...";
+    
+    startScriptVerification(scriptContent);
+}
+
+function startScriptVerification(scriptContent) {
+    const messages = [
+        "🔍 Analisando script...",
+        "⚙️ Verificando estrutura...", 
+        "🔐 Procurando assinatura...",
+        "📊 Validando permissões..."
+    ];
+    
+    let currentIndex = 0;
+    
+    function showNextMessage() {
+        if (currentIndex >= messages.length) {
+            checkScriptValidity(scriptContent);
+            return;
+        }
+        
+        showMessage(scriptVerificationContent, messages[currentIndex], "loading");
+        currentIndex++;
+        
+        // ⭐⭐ TEMPO AUMENTADO: 1200ms (1.2 segundos) ⭐⭐
+        setTimeout(showNextMessage, TIMING_CONFIG.delayEntreMensagensScript);
+    }
+    
+    showNextMessage();
+}
+
+function checkScriptValidity(scriptContent) {
+    if (document.querySelector('#scriptVerificationContent .verification-message')) {
+        const lastMsg = document.querySelector('#scriptVerificationContent .verification-message');
+        lastMsg.classList.remove('show');
+        
+        setTimeout(() => {
+            if (lastMsg.parentNode === scriptVerificationContent) {
+                scriptVerificationContent.removeChild(lastMsg);
+            }
+        }, 300);
+    }
+    
+    setTimeout(() => {
+        const scriptValido = verificarScriptSecreto(scriptContent);
+        
+        if (scriptValido) {
+            showMessage(scriptVerificationContent, "✅ Script autenticado! Liberando painel...", "success");
+            
+            currentScript = scriptContent;
+            
+            setTimeout(() => {
+                document.getElementById("scriptVerificationOverlay").style.display = "none";
+                document.getElementById("editor").style.display = "none";
+                document.getElementById("panel").style.display = "flex";
+                
+                resetAllFunctions();
+                updateRealBattery();
+                showToast("Painel liberado via script!", "success");
+                
+                saveBtn.disabled = false;
+                saveBtn.textContent = "Verificar & Salvar";
+            }, TIMING_CONFIG.mensagemSucessoScript);
+            
+        } else {
+            showMessage(scriptVerificationContent, "❌ " + CONFIG_VERIFICACAO.mensagemErro, "error");
+            
+            setTimeout(() => {
+                document.getElementById("scriptVerificationOverlay").style.display = "none";
+                
+                saveBtn.disabled = false;
+                saveBtn.textContent = "Verificar & Salvar";
+                
+                showToast(CONFIG_VERIFICACAO.mensagemErro, "error");
+            }, TIMING_CONFIG.mensagemErroScript);
+        }
+    }, 300);
+}
+
+// ===== LOGIN POR E-MAIL (NUNCA LIBERA) =====
+function openLogin() {
+    document.getElementById("login").style.display = "flex";
+    keyInput.value = "";
+    okBtn.disabled = false;
+    keyInput.disabled = false;
+    verificationSequence.innerHTML = '';
+    keyInput.placeholder = "exemplo@gmail.com";
+    
+    setTimeout(() => {
+        keyInput.focus();
+    }, 300);
+}
+
+function closeLogin() {
+    document.getElementById("login").style.display = "none";
+}
+
+function validateEmail() {
+    const email = keyInput.value.trim();
+    
+    if (!email) {
+        showToast("Digite seu e-mail de compra", "error");
+        
+        keyInput.style.animation = 'shake 0.5s';
+        setTimeout(() => {
+            keyInput.style.animation = '';
+        }, 500);
+        
+        return;
+    }
+    
+    okBtn.disabled = true;
+    keyInput.disabled = true;
+    startEmailVerificationSequence(email);
+}
+
+function startEmailVerificationSequence(email) {
+    const messages = [
+        "🔍 Verificando e-mail...",
+        "📧 Validando domínio...", 
+        "⚙️ Checando compra...",
+        "🔐 Acessando sistema..."
+    ];
+    
+    let currentIndex = 0;
+    
+    function showNextMessage() {
+        if (currentIndex >= messages.length) {
+            checkEmailValidity(email);
+            return;
+        }
+        
+        showMessage(verificationSequence, messages[currentIndex], "loading");
+        currentIndex++;
+        
+        setTimeout(showNextMessage, TIMING_CONFIG.delayEntreMensagensLogin);
+    }
+    
+    showNextMessage();
+}
+
+function checkEmailValidity(email) {
+    if (document.querySelector('.verification-message')) {
+        const lastMsg = document.querySelector('.verification-message');
+        lastMsg.classList.remove('show');
+        
+        setTimeout(() => {
+            if (lastMsg.parentNode === verificationSequence) {
+                verificationSequence.removeChild(lastMsg);
+            }
+        }, 300);
+    }
+    
+    setTimeout(() => {
+        const emailValido = verificarEmail(email);
+        
+        if (emailValido) {
+            showMessage(verificationSequence, "❌ " + CONFIG_VERIFICACAO.mensagemErro, "error");
+            
+            okBtn.innerHTML = "✗ ERRO";
+            okBtn.style.background = 'linear-gradient(90deg, #ff453a, #ff6b6b)';
+            
+            // ⭐⭐ FECHA APÓS 3 SEGUNDOS (tempo para ler) ⭐⭐
+            setTimeout(() => {
+                closeLogin();
+                
+                okBtn.disabled = false;
+                keyInput.disabled = false;
+                keyInput.value = "";
+                verificationSequence.innerHTML = '';
+                
+                setTimeout(() => {
+                    okBtn.innerHTML = "VERIFICAR";
+                    okBtn.style.background = 'linear-gradient(90deg, #ff3b3b, #ff6b6b)';
+                }, 300);
+            }, TIMING_CONFIG.mensagemErroLogin); // 3000ms = 3 segundos
+            
+        } else {
+            showMessage(verificationSequence, "❌ E-mail inválido ou sem compra registrada", "error");
+            
+            okBtn.innerHTML = "✗ ERRO";
+            okBtn.style.background = 'linear-gradient(90deg, #ff453a, #ff6b6b)';
+            
+            // ⭐⭐ FECHA APÓS 3 SEGUNDOS (tempo para ler) ⭐⭐
+            setTimeout(() => {
+                closeLogin();
+                
+                okBtn.disabled = false;
+                keyInput.disabled = false;
+                keyInput.value = "";
+                verificationSequence.innerHTML = '';
+                
+                setTimeout(() => {
+                    okBtn.innerHTML = "VERIFICAR";
+                    okBtn.style.background = 'linear-gradient(90deg, #ff3b3b, #ff6b6b)';
+                }, 300);
+            }, TIMING_CONFIG.mensagemErroLogin); // 3000ms = 3 segundos
+        }
+    }, 300);
+}
+
+// Permitir Enter para enviar
+keyInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        validateEmail();
+    }
+});
+
+scriptTextarea.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.key === 'Enter') {
+        saveScript();
+    }
+});
+
+// ===== FUNÇÕES DO PAINEL =====
+function closePanel() {
+    document.getElementById("panel").style.display = "none";
+    currentScript = "";
+    resetAllFunctions();
+    showToast("Painel fechado - Script resetado", "loading");
+}
+
+// ===== TABS PRINCIPAIS =====
+document.querySelectorAll(".tab").forEach(tab => {
+    tab.onclick = () => {
+        document.querySelectorAll(".tab,.content").forEach(e => e.classList.remove("active"));
+        tab.classList.add("active");
+        document.getElementById(tab.dataset.tab).classList.add("active");
+        
+        if (tab.dataset.tab === 'info') {
+            updateRealBattery();
+        }
+    }
+});
+
+// ===== VERSÕES BÁSICO/AVANÇADO =====
+document.querySelectorAll(".version-toggle button").forEach(btn => {
+    btn.onclick = () => {
+        document.querySelectorAll(".version-toggle button").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        document.querySelectorAll(".version-content").forEach(v => v.style.display = "none");
+        document.getElementById(btn.dataset.version).style.display = "block";
+    }
+});
+
+// ===== SLIDERS =====
+const fov1 = document.getElementById("fov1");
+const fov1Val = document.getElementById("fov1Val");
+fov1.oninput = () => { fov1Val.textContent = fov1.value; }
+
+const fov2 = document.getElementById("fov2");
+const fov2Val = document.getElementById("fov2Val");
+fov2.oninput = () => { fov2Val.textContent = fov2.value; }
+
+// ===== SLIDER ANTIBAN =====
+antibanLevel.oninput = () => {
+    antibanLevelValue.textContent = antibanLevel.value + '%';
+}
+
+// ===== ARQUIVOS 📁 =====
+chooseFilesBtn.onclick = () => { fileInput.click(); }
+fileInput.onchange = () => {
+    const count = fileInput.files.length;
+    if (count > 0) {
+        fileCount.textContent = `${count} arquivo(s) selecionado(s).`;
+        showToast("Arquivos selecionados", "success");
+    } else {
+        fileCount.textContent = "Nenhum arquivo selecionado.";
+    }
+}
+
+// ===== PEGAR HORA ATUAL =====
+function getCurrentTime() {
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    return `${hours}:${minutes}`;
+}
+
+// ===== COLETAR FUNÇÕES ATIVAS =====
+function collectActiveFunctions() {
+    activeFunctions = [];
+    const currentTime = getCurrentTime();
+    
+    if (document.getElementById('precisao').checked) 
+        activeFunctions.push(`[ ${currentTime} ] - PRECISÃO - ATIVADO`);
+    if (document.getElementById('aimb').checked) 
+        activeFunctions.push(`[ ${currentTime} ] - AIMBOT ATIVADO`);
+    if (document.getElementById('forca').checked) 
+        activeFunctions.push(`[ ${currentTime} ] - 120 FPS - ATIVADO`);
+    if (document.getElementById('norecoil').checked) 
+        activeFunctions.push(`[ ${currentTime} ] - NO RECOIL- ATIVADO`);
+    
+    if (document.getElementById('fps120').checked) 
+        activeFunctions.push(`[ ${currentTime} ] - 120 FPS`);
+    if (document.getElementById('norecoil2').checked) 
+        activeFunctions.push(`[ ${currentTime} ] - NO RECOIL 95%`);
+    
+    const fov1Value = document.getElementById('fov1').value;
+    if (fov1Value > 0) 
+        activeFunctions.push(`[ ${currentTime} ] - FOV DE MIRA: ${fov1Value}`);
+    
+    const fov2Value = document.getElementById('fov2').value;
+    if (fov2Value > 0) 
+        activeFunctions.push(`[ ${currentTime} ] - TAMANHO DO FOV: ${fov2Value}`);
+    
+    activeFunctions.push(`[ ${currentTime} ] - BYPASS 100%`);
+    activeFunctions.push(`[ ${currentTime} ] - ANTIDETECTION`);
+    activeFunctions.push(`[ ${currentTime} ] - antiban`);
+    
+    return activeFunctions;
+}
+
+// ===== EXIBIR FUNÇÕES NA LISTA =====
+function displayFunctionsSequentially() {
+    functionsList.innerHTML = '';
+    
+    if (activeFunctions.length === 0) {
+        const item = document.createElement('div');
+        item.className = 'function-item';
+        item.textContent = '[ --:-- ] - Nenhuma função ativada';
+        item.style.opacity = '1';
+        item.style.transform = 'translateX(0)';
+        functionsList.appendChild(item);
+        return;
+    }
+    
+    let currentIndex = 0;
+    
+    function showNextFunction() {
+        if (currentIndex >= activeFunctions.length) return;
+        
+        const func = activeFunctions[currentIndex];
+        const item = document.createElement('div');
+        item.className = 'function-item';
+        item.textContent = func;
+        item.style.opacity = '0';
+        item.style.transform = 'translateX(-10px)';
+        functionsList.appendChild(item);
+        
+        setTimeout(() => {
+            item.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            item.style.opacity = '1';
+            item.style.transform = 'translateX(0)';
+        }, 50);
+        
+        functionsList.scrollTop = functionsList.scrollHeight;
+        currentIndex++;
+        
+        if (currentIndex < activeFunctions.length) {
+            setTimeout(showNextFunction, 1000);
+        }
+    }
+    
+    showNextFunction();
+}
+
+// ===== MUDAR FUNÇÕES PARA VERDE CLARO =====
+function makeFunctionsGreen() {
+    const items = functionsList.querySelectorAll('.function-item');
+    items.forEach(item => {
+        item.classList.add('completed');
+    });
+}
+
+// ===== SISTEMA DE ABERTURA DO FREE FIRE DIRETAMENTE =====
+function openFreeFireDirectly() {
+    const packageName = 'com.dts.freefireth';
+    
+    const intentUrl = `intent://#Intent;package=${packageName};action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;S.browser_fallback_url=https://play.google.com/store/apps/details?id=${packageName};end`;
+    
+    const universalUrl = `freefire://app`;
+    
+    const playStoreUrl = `https://play.google.com/store/apps/details?id=${packageName}`;
+    
+    showToast('Abrindo Free Fire...', 'loading');
+    
+    setTimeout(() => {
+        try {
+            window.location.href = intentUrl;
+        } catch (e) {
+            console.log('Intent falhou, tentando próximo método...');
+        }
+    }, 100);
+    
+    setTimeout(() => {
+        try {
+            window.location.href = universalUrl;
+        } catch (e) {
+            console.log('Universal URL falhou...');
+        }
+    }, 300);
+    
+    setTimeout(() => {
+        try {
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = `market://details?id=${packageName}`;
+            document.body.appendChild(iframe);
+            
+            setTimeout(() => {
+                document.body.removeChild(iframe);
+                window.open(playStoreUrl, '_blank');
+            }, 2000);
+        } catch (e) {
+            window.open(playStoreUrl, '_blank');
+        }
+    }, 600);
+    
+    setTimeout(() => {
+        if (document.hasFocus()) {
+            window.open(playStoreUrl, '_blank');
+        }
+    }, 2000);
+}
+
+// ===== INJEÇÃO (COM TIMING MAIS DEVAGAR) =====
+function startInjection() {
+    collectActiveFunctions();
+    
+    injectBtn.disabled = true;
+    injectBtn.textContent = 'INJETANDO...';
+    
+    injectionStatus.classList.remove('active');
+    statusIndicator.style.background = '#ff3b3b';
+    statusTitle.textContent = 'INICIANDO INJEÇÃO...';
+    statusTitle.style.color = '#ff3b3b';
+    statusDesc.textContent = 'Iniciando processo de injeção...';
+    progressBar.style.width = '0%';
+    progressBar.style.background = '#ff3b3b';
+    
+    functionsList.innerHTML = '';
+    
+    const timeForAllFunctions = activeFunctions.length * 1200; // ⭐ Aumentado para 1.2s cada
+    
+    setTimeout(() => {
+        displayFunctionsSequentially();
+    }, 500);
+    
+    let progress = 0;
+    const baseProgress = 40;
+    
+    // ⭐⭐ STEPS COM TEMPOS MAIORES (mais devagar) ⭐⭐
+    const steps = [
+        {progress: 10, message: "Inicializando sistema...", delay: 1200},
+        {progress: 20, message: "Coletando configurações...", delay: 1800},
+        {progress: baseProgress, message: "Ativando funções...", delay: timeForAllFunctions},
+        {progress: 60, message: "Aplicando configurações...", delay: 2200},
+        {progress: 75, message: "Ativando antiban...", delay: 1900},
+        {progress: 85, message: "Injetando scripts...", delay: 2500},
+        {progress: 95, message: "Finalizando...", delay: 1600},
+        {progress: 100, message: "Injeção concluída!", delay: 1000}
+    ];
+    
+    let totalDelay = 0;
+    steps.forEach((step) => {
+        setTimeout(() => {
+            progress = step.progress;
+            progressBar.style.width = progress + '%';
+            statusDesc.textContent = step.message;
+            
+            if (progress === 100) {
+                // ⭐⭐ ATRASAR MUDANÇA PARA VERDE ⭐⭐
+                setTimeout(() => {
+                    injectionStatus.classList.add('active');
+                    statusIndicator.style.background = '#32d74b';
+                    statusTitle.textContent = 'INJEÇÃO CONCLUÍDA!';
+                    statusTitle.style.color = '#32d74b';
+                    statusDesc.textContent = 'Abrindo Free Fire...';
+                    progressBar.style.background = '#32d74b';
+                    
+                    makeFunctionsGreen();
+                    showToast('Injeção 100% concluída!', 'success');
+                    
+                    setTimeout(() => {
+                        openFreeFireDirectly();
+                        
+                        setTimeout(() => {
+                            injectBtn.disabled = false;
+                            injectBtn.textContent = 'INICIAR INJEÇÃO';
+                        }, 3000);
+                    }, 1500);
+                }, 800); // ⭐ Espera 800ms antes de ficar verde
+            }
+        }, totalDelay);
+        totalDelay += step.delay;
+    });
+}
+
+// ===== INICIAR TUDO =====
+window.addEventListener('load', function() {
+    fov1.oninput();
+    fov2.oninput();
+    antibanLevel.oninput();
+    resetAllFunctions();
+    
+    updateRealBattery();
+    
+    console.log(`%c🔐 SISTEMA DE VERIFICAÇÃO ATIVO`, 'color: #ff3b3b; font-size: 16px; font-weight: bold;');
+    console.log(`%cSenha secreta: "${SENHA_SECRETA}"`, 'color: #0a84ff;');
+    console.log(`%cDomínios válidos: ${DOMINIOS_VALIDOS.join(', ')}`, 'color: #32d74b;');
+    console.log(`%cTiming ajustado: Mensagens mais lentas`, 'color: #ffd60a;');
+});
+
+// Adicionar animação de shake
+const style = document.createElement('style');
+style.textContent = `
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+`;
+document.head.appendChild(style);
 </script>
 
 </body>
