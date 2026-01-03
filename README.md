@@ -1,1242 +1,1659 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Painel Mod Menu Ultimate - PRO</title>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    
-    <style>
-        /* === CONFIGURAÇÕES VISUAIS (IOS NEON PRO) - APENAS BRILHO DAS FONTES REDUZIDO === */
-        :root {
-            --primary-color: #9d00ff; /* Roxo Neon Principal */
-            --secondary-color: #39ff14; /* VERDE ELÉTRICO */
-            --tab-panel-bg: rgba(255, 255, 255, 0.04); 
-            --tab-panel-border-color: rgba(157, 0, 255, 0.5); 
-            --bg-color: #000000; 
-            --panel-bg-blur: rgba(255, 255, 255, 0.04); 
-            --glass-border: rgba(255, 255, 255, 0.15); 
-            --text-color: #c0c0c0; /* Texto mais suave */
-            --secondary-text-color: #808080; /* Texto secundário mais escuro */
-            --danger-color: #cc2b2b; /* VERMELHO MAIS ESCURO - era #ff3b30 */
-            --ios-radius: 14px; 
-            --sutil-glow: 0 0 2px rgba(255, 255, 255, 0.1); /* Glow reduzido nas fontes */
-            --tab-bar-width: 70px;
-            --footer-height: 58px;
-            --header-height: 65px;
-        }
+<meta charset="UTF-8">
+<title>Painel Scripts</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#000;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#fff;min-height:100vh}
 
-        /* RESET GERAL E FONTES */
-        * { 
-            box-sizing: border-box; 
-            user-select: none; 
-            scrollbar-width: none; 
-            -ms-overflow-style: none;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-        }
-        *::-webkit-scrollbar { display: none; }
+/* ===== TOPO ===== */
+.top{display:flex;align-items:center;justify-content:space-between;padding:26px 20px 12px}
+.top h1{margin:0;font-size:28px}
+.add{width:34px;height:34px;border-radius:50%;background:#0a84ff;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:bold;cursor:pointer}
 
-        body {
-            margin: 0; padding: 0; background-color: var(--bg-color); 
-            color: var(--text-color); height: 100vh; width: 100vw;
-            overflow: hidden; display: flex; justify-content: center;
-            align-items: center; position: relative; font-size: 14px;
-        }
-        
-        /* FUNDO DE ESTRELAS (MANTIDO ORIGINAL) */
-        body::before, body::after { content: ''; position: absolute; background-repeat: repeat; pointer-events: none; z-index: -1; }
-        body::before { top: 0; left: 0; width: 100%; height: 100%; background-image: radial-gradient(1px 1px at 50% 50%, #9d00ffb0, transparent); background-size: 80px 80px; animation: starMove1 80s linear infinite; opacity: 0.8; }
-        body::after { top: -50%; left: -50%; width: 200%; height: 200%; background-image: radial-gradient(2px 2px at 50% 50%, #9d00ff80, transparent); background-size: 150px 150px; animation: starMove2 120s linear infinite reverse; opacity: 0.6; }
+/* ===== LISTA ===== */
+.main{display:flex;justify-content:center;padding-top:20px}
+.container{width:100%;max-width:460px;display:flex;flex-direction:column;gap:20px;padding:0 16px 30px}
+.card{display:flex;align-items:center;padding:24px 22px;border-radius:22px;cursor:pointer}
+.icon{font-size:31px;margin-right:18px;transform:rotate(-25deg)}
+.title{font-size:16px;font-weight:600;flex:1}
+.menu{background:rgba(0,0,0,.25);border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center}
+.purple{background:linear-gradient(90deg,#6a3fc7,#7447d6)}
+.green{background:linear-gradient(90deg,#6dbb4b,#7ccc55)}
+.pink{background:linear-gradient(90deg,#a83cc2,#b94ad4)}
+.blue{background:linear-gradient(90deg,#3f7fd6,#4c8fe8)}
 
-        @keyframes starMove1 { from { background-position: 0 0; } to { background-position: 800px 800px; } } 
-        @keyframes starMove2 { from { background-position: 0 0; } to { background-position: -1000px -1000px; } } 
+/* ===== LOGIN POR E-MAIL (NUNCA LIBERA) ===== */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;z-index:100}
+.login-container{
+    width:320px;
+    background:linear-gradient(145deg, #0f0f0f, #1a1a1a);
+    border-radius:24px;
+    padding:32px 28px;
+    box-shadow:0 20px 60px rgba(255,59,59,0.15),
+               0 0 0 1px rgba(255,59,59,0.2),
+               inset 0 1px 0 rgba(255,255,255,0.1);
+    position:relative;
+    overflow:hidden;
+    animation:popupAppear 0.4s cubic-bezier(0.175,0.885,0.32,1.1);
+}
 
-        /* PAINEL GLASSMORHPISM PRO (MANTIDO ORIGINAL) */
-        .panel-container {
-            width: 95%; 
-            max-width: 450px; 
-            height: 85vh; 
-            max-height: 750px; 
-            background: var(--panel-bg-blur); 
-            backdrop-filter: blur(35px) saturate(200%); 
-            -webkit-backdrop-filter: blur(35px) saturate(200%);
-            border: 1px solid var(--glass-border); 
-            box-shadow: 0 0 15px rgba(157, 0, 255, 0.2), 0 8px 60px 0 rgba(0, 0, 0, 0.8), inset 0 0 5px rgba(255, 255, 255, 0.1); 
-            display: flex; 
-            flex-direction: column; 
-            position: relative; z-index: 1; 
-            overflow: hidden; 
-            border-radius: 20px; 
-            display: none;
-        }
-        
-        /* ABAS (PAINEL LATERAL) - MANTIDO ORIGINAL */
-        .tabs-header {
-            display: flex; flex-direction: column; 
-            position: absolute; 
-            top: 0; 
-            right: 0; 
-            width: var(--tab-bar-width); 
-            
-            background: rgba(0, 0, 0, 0.7); 
-            backdrop-filter: blur(20px) saturate(180%); 
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border-radius: 0 20px 0 0; 
-            
-            padding: 25px 0 5px 0; 
-            
-            border-left: 1px solid var(--tab-panel-border-color); 
-            box-shadow: -5px 0 25px rgba(157, 0, 255, 0.8), inset 2px 0 10px rgba(157, 0, 255, 0.6); 
-            
-            z-index: 20; 
-            
-            overflow: hidden; 
-        }
+/* Efeito de brilho vermelho no topo */
+.login-container::before{
+    content:'';
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    height:4px;
+    background:linear-gradient(90deg, #ff3b3b, #ff6b6b, #ff3b3b);
+    background-size:200% 100%;
+    animation:shine 3s linear infinite;
+}
 
-        .tab-btn {
-            flex: none; width: 100%; background: none; border: none; 
-            padding: 8px 0; 
-            color: var(--secondary-text-color); 
-            cursor: pointer; display: flex;
-            flex-direction: column; align-items: center; font-size: 10px; 
-            font-weight: 500; transition: all 0.2s ease-in-out; border-radius: 0; 
-            margin-bottom: 5px; 
-            border-left: 3px solid transparent; 
-        }
+@keyframes shine{
+    0%{background-position:200% 0}
+    100%{background-position:-200% 0}
+}
 
-        .tab-btn i { 
-            display: block; font-size: 20px; margin-bottom: 5px; line-height: 1;
-            color: var(--primary-color); 
-            text-shadow: 0 0 3px var(--primary-color);
-            transition: all 0.3s ease-in-out;
-        }
-        
-        .tab-btn.active i { 
-            color: var(--secondary-color); 
-            text-shadow: 0 0 4px var(--secondary-color);
-            transform: scale(1.15); 
-        }
-        .tab-btn.active {
-            color: var(--secondary-color); 
-            background: rgba(57, 255, 20, 0.15); 
-            border-left-color: var(--secondary-color); 
-        }
+@keyframes popupAppear{
+    0%{transform:scale(0.8);opacity:0}
+    100%{transform:scale(1);opacity:1}
+}
 
-        .content-body { 
-            flex: 1; 
-            padding: 0 calc(var(--tab-bar-width) + 10px) 0 25px; 
-            overflow: hidden; 
-            position: relative; 
-            display: flex; 
-            flex-direction: column; 
-            padding-top: var(--header-height);
-        } 
-        
-        /* CABEÇALHO DA FUNÇÃO - Fixo e abaixo das abas */
-        .function-header {
-            height: var(--header-height); 
-            display: flex; align-items: center; 
-            padding-bottom: 15px;
-            margin-bottom: 15px; 
-            border-bottom: 1px solid rgba(255, 255, 255, 0.15); 
-            padding-left: 25px; 
-            flex-shrink: 0; 
-            
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 15; 
-            background: rgba(0, 0, 0, 0.7); 
-            backdrop-filter: blur(10px);
-            border-radius: 20px 0 0 0; 
-        }
+/* Cabeçalho do login */
+.login-header{
+    text-align:center;
+    margin-bottom:28px;
+}
 
-        .func-header-emoji {
-            font-size: 26px; margin-right: 12px; line-height: 1;
-            color: var(--primary-color); 
-        }
-        .function-header .func-name {
-            color: var(--text-color); font-weight: 700; text-transform: uppercase;
-            margin-left: 5px; text-shadow: 0 0 2px var(--primary-color);
-        }
-        
-        /* Contêiner de conteúdo das abas - Controla o overflow e rolagem */
-        .tab-content-wrapper {
-            flex: 1; 
-            overflow-y: auto; 
-            padding-top: 15px; 
-            padding-bottom: 15px; 
-        }
-        
-        /* Essencial: Esconde todas as abas por padrão */
-        .tab-content { 
-            display: none; 
-            flex-direction: column; 
-            height: 100%; 
-        }
-        /* Essencial: Mostra apenas a aba ativa */
-        .tab-content.active { display: flex; animation: fadeIn 0.3s; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.login-icon{
+    width:60px;
+    height:60px;
+    background:linear-gradient(135deg, #ff3b3b, #ff6b6b);
+    border-radius:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:0 auto 18px;
+    font-size:28px;
+    box-shadow:0 8px 24px rgba(255,59,59,0.3);
+}
 
-        /* === SUB-ABAS (Estilo para MIRA) === */
-        .sub-tabs-header {
-            display: flex;
-            justify-content: space-around;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: var(--ios-radius);
-            margin-bottom: 20px;
-            padding: 5px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .sub-tab-btn {
-            flex: 1; padding: 10px 5px; background: none; border: none;
-            color: var(--secondary-text-color); font-size: 12px; font-weight: 600;
-            border-radius: var(--ios-radius); cursor: pointer;
-            transition: all 0.3s;
-        }
-        .sub-tab-btn.active {
-            background: var(--primary-color);
-            color: var(--text-color);
-            box-shadow: 0 0 12px var(--primary-color), inset 0 0 5px rgba(255, 255, 255, 0.7);
-        }
+.login-title{
+    font-size:24px;
+    font-weight:700;
+    background:linear-gradient(90deg, #ff3b3b, #ff9f43);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    margin-bottom:8px;
+    letter-spacing:0.5px;
+}
 
-        .sub-tab-content { 
-            display: none; 
-            padding: 5px 0;
-            animation: fadeIn 0.3s;
-        }
-        .sub-tab-content.active { display: block; }
+.login-subtitle{
+    font-size:14px;
+    color:#aaa;
+    font-weight:500;
+}
 
-        /* === Estilos de Controles e ANTIBAN === */
-        
-        .active-neon-glass {
-            background: rgba(57, 255, 20, 0.1) !important; 
-            border: 1px solid var(--secondary-color) !important; 
-            box-shadow: 0 0 12px rgba(57, 255, 20, 0.6), inset 0 0 8px rgba(57, 255, 20, 0.7) !important; 
-            color: var(--text-color) !important; 
-            text-shadow: 0 0 6px var(--secondary-color) !important;
-        }
-        
-        .active-neon-danger {
-            background: rgba(204, 43, 43, 0.1) !important; 
-            border: 1px solid var(--danger-color) !important; 
-            box-shadow: 0 0 12px rgba(204, 43, 43, 0.6), inset 0 0 8px rgba(204, 43, 43, 0.7) !important; 
-            color: var(--text-color) !important; 
-            text-shadow: 0 0 6px var(--danger-color) !important;
-        }
+/* Input moderno */
+.input-group{
+    position:relative;
+    margin-bottom:24px;
+}
 
-        .active-neon-processing {
-            background: rgba(157, 0, 255, 0.1) !important; 
-            border: 1px solid var(--primary-color) !important; 
-            box-shadow: 0 0 12px rgba(157, 0, 255, 0.6), inset 0 0 8px rgba(157, 0, 255, 0.7) !important; 
-            color: var(--text-color) !important; 
-            text-shadow: 0 0 6px var(--primary-color) !important;
-        }
+.key-input{
+    width:100%;
+    padding:18px 20px;
+    padding-left:52px;
+    background:rgba(40,40,40,0.8);
+    border:2px solid rgba(255,59,59,0.3);
+    border-radius:16px;
+    color:#fff;
+    font-size:16px;
+    font-weight:500;
+    outline:none;
+    transition:all 0.3s ease;
+}
 
-        .control-row {
-            background: rgba(255, 255, 255, 0.08); 
-            padding: 15px; border-radius: var(--ios-radius);
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 12px; font-size: 15px; font-weight: 500;
-            transition: all 0.2s ease-out; color: var(--text-color); 
-            text-shadow: var(--sutil-glow); cursor: pointer; 
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-        }
-        .control-row.active {
-            background: rgba(57, 255, 20, 0.1); 
-            border-color: var(--secondary-color); 
-            box-shadow: 0 0 12px rgba(57, 255, 20, 0.6), inset 0 0 8px rgba(57, 255, 20, 0.7); 
-            color: var(--text-color); 
-            text-shadow: 0 0 6px var(--secondary-color);
-        }
-        
-        .antiban-status-row {
-            background: rgba(0, 0, 0, 0.4); 
-            padding: 12px 20px; 
-            border-radius: var(--ios-radius);
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-            margin-bottom: 10px; 
-            font-size: 14px; 
-            font-weight: 500;
-            border: 1px solid var(--secondary-color); 
-            box-shadow: 0 0 8px rgba(57, 255, 20, 0.4), inset 0 0 5px rgba(57, 255, 20, 0.6); 
-        }
+.key-input:focus{
+    border-color:#ff3b3b;
+    box-shadow:0 0 0 3px rgba(255,59,59,0.2);
+    background:rgba(50,50,50,0.9);
+}
 
-        .antiban-status-tag {
-            color: var(--secondary-color); 
-            font-weight: 700; 
-            text-shadow: 0 0 2px var(--secondary-color);
-        }
+.key-input::placeholder{
+    color:#888;
+    font-weight:400;
+}
 
-        /* Aba ANTIBAN (Layout Centralizado) */
-        #antiban {
-            justify-content: center; 
-            align-items: center; 
-            text-align: center;
-            height: 100%; 
-        }
-        
-        .antiban-header { margin-bottom: 25px; width: 100%; padding-bottom: 10px; }
-        
-        .antiban-emoji-large {
-            font-size: 75px; 
-            background: rgba(57, 255, 20, 0.05); 
-            padding: 25px; border-radius: 50%; margin-bottom: 10px;
-            box-shadow: 0 0 15px var(--secondary-color), 0 0 25px rgba(57, 255, 20, 0.4);
-            color: var(--secondary-color); 
-            animation: shieldPulse 2.5s infinite ease-in-out; 
-            display: inline-flex; align-items: center; justify-content: center;
-        }
+.input-icon{
+    position:absolute;
+    left:20px;
+    top:50%;
+    transform:translateY(-50%);
+    color:#ff3b3b;
+    font-size:18px;
+}
 
-        @keyframes shieldPulse {
-            0% { box-shadow: 0 0 15px var(--secondary-color); }
-            50% { box-shadow: 0 0 25px var(--secondary-color); }
-            100% { box-shadow: 0 0 15px var(--secondary-color); }
-        }
+/* Botões do login */
+.login-buttons{
+    display:flex;
+    gap:12px;
+    margin-top:30px;
+}
 
-        #antiban h2 { 
-            font-size: 26px; 
-            color: var(--secondary-color); 
-            font-weight: 800;
-            text-transform: uppercase;
-            animation: textGlow 2s infinite ease-in-out; 
-            margin-top: 15px;
-            margin-bottom: 5px;
-        }
+.login-btn{
+    flex:1;
+    padding:16px;
+    border:none;
+    border-radius:14px;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    transition:all 0.3s ease;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+}
 
-        @keyframes textGlow {
-            0% { text-shadow: 0 0 2px var(--secondary-color); }
-            50% { text-shadow: 0 0 5px var(--secondary-color); }
-            100% { text-shadow: 0 0 2px var(--secondary-color); }
-        }
-        
-        /* Estilos de Botões e Switches */
-        .switch { position: relative; display: inline-block; width: 60px; height: 34px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
-        .switch input:checked + .slider { 
-            background-color: var(--secondary-color); 
-            box-shadow: 0 0 12px rgba(57, 255, 20, 0.6);
-        }
-        .switch input:checked + .slider:before { transform: translateX(26px); }
+.btn-cancel{
+    background:rgba(60,60,60,0.8);
+    color:#ccc;
+    border:2px solid rgba(100,100,100,0.3);
+}
 
-        input[type=range] { -webkit-appearance: none; width: 100%; height: 8px; background: rgba(255, 255, 255, 0.2); border-radius: 4px; margin-top: 10px; }
-        input[type=range]::-webkit-slider-thumb { 
-            -webkit-appearance: none; width: 28px; height: 28px; border-radius: 50%; 
-            background: var(--secondary-color); cursor: pointer; 
-            box-shadow: 0 0 15px var(--secondary-color), 0 0 8px rgba(255,255,255,0.7);
-            border: 2px solid var(--text-color); 
-        }
+.btn-cancel:hover{
+    background:rgba(80,80,80,0.9);
+    border-color:rgba(150,150,150,0.5);
+    transform:translateY(-2px);
+}
 
-        .btn { 
-            width: 100%; padding: 15px; margin-bottom: 10px; 
-            background: rgba(157, 0, 255, 0.25); 
-            border: 1px solid var(--primary-color); 
-            color: white; border-radius: var(--ios-radius); 
-            font-weight: 600; cursor: pointer; transition: 0.2s ease-out; 
-            text-transform: uppercase; font-size: 14px; 
-            box-shadow: 0 4px 15px rgba(157, 0, 255, 0.2); 
-            text-shadow: var(--sutil-glow); 
-        }
-        .btn:hover:not(:disabled) { opacity: 0.8; }
-        .btn.selected {
-            background: rgba(57, 255, 20, 0.1); 
-            border-color: var(--secondary-color); 
-            box-shadow: 0 0 12px rgba(57, 255, 20, 0.7), inset 0 0 5px rgba(57, 255, 20, 0.5); 
-            color: var(--text-color);
-            text-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
-        }
+.btn-ok{
+    background:linear-gradient(90deg, #ff3b3b, #ff6b6b);
+    color:#fff;
+    border:none;
+    box-shadow:0 8px 20px rgba(255,59,59,0.3);
+}
 
-        .btn-action { 
-            background: var(--primary-color); 
-            border: 1px solid var(--secondary-color); 
-            box-shadow: 0 0 25px var(--primary-color);
-            text-shadow: 0 0 8px rgba(255,255,255,0.8); margin-top: 20px; 
-        }
-        
-        .status-card { 
-            background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); border-radius: var(--ios-radius); 
-            padding: 20px; 
-            box-shadow: 0 0 12px rgba(255, 255, 255, 0.1), inset 0 0 5px rgba(255, 255, 255, 0.05); 
-            display: flex; align-items: flex-start;
-            min-height: 80px; 
-            margin-bottom: 25px;
-            transition: all 0.4s;
-        }
-        
-        .progress-bar-container {
-            width: 100%;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-            margin-top: 10px;
-            overflow: hidden;
-        }
-        .progress-bar {
-            height: 100%;
-            width: 0%;
-            background: var(--primary-color);
-            border-radius: 4px;
-            transition: width 0.6s ease-out, background-color 0.6s, box-shadow 0.6s;
-            box-shadow: 0 0 4px var(--primary-color);
-        }
+.btn-ok:hover{
+    background:linear-gradient(90deg, #ff5252, #ff7b7b);
+    transform:translateY(-2px);
+    box-shadow:0 12px 24px rgba(255,59,59,0.4);
+}
 
-        /* ABA INFO */
-        #info {
-            padding: 20px 0;
-        }
-        .info-status-row {
-            background: rgba(255, 255, 255, 0.08); 
-            padding: 15px; border-radius: var(--ios-radius);
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 12px; font-size: 15px; font-weight: 500;
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-        }
-        .info-status-row i {
-            font-size: 20px;
-            margin-right: 15px;
-            color: var(--primary-color);
-            text-shadow: 0 0 4px var(--primary-color);
-        }
-        .info-value {
-            font-weight: 700;
-            color: var(--secondary-color);
-            text-shadow: 0 0 3px var(--secondary-color);
-        }
-        .disclaimer-box {
-            background: rgba(0, 0, 0, 0.5);
-            padding: 20px;
-            border-radius: var(--ios-radius);
-            border: 1px solid var(--primary-color);
-            margin-top: 40px;
-            box-shadow: 0 0 12px rgba(157, 0, 255, 0.5);
-        }
-        .disclaimer-box p {
-            font-size: 13px;
-            color: var(--secondary-text-color);
-            line-height: 1.5;
-            text-align: center;
-            margin: 0;
-        }
+.btn-ok:disabled{
+    background:linear-gradient(90deg, #666, #888);
+    cursor:not-allowed;
+    transform:none;
+    box-shadow:none;
+    opacity:0.7;
+}
 
-        
-        .footer-info { 
-            height: var(--footer-height); 
-            background: rgba(0,0,0,0.7); padding: 10px 30px; font-size: 12px; 
-            border-radius: 0 0 20px 20px; border-top: 1px solid var(--glass-border); 
-            display: flex; justify-content: space-between; align-items: center;
-            flex-shrink: 0; 
-        }
-        .footer-info .footer-row {
-            width: 48%; display: flex; flex-direction: column; 
-        }
-        .footer-info .footer-row span:last-child {
-            color: var(--secondary-text-color); 
-        }
+/* Área de verificação */
+.verification-area{
+    min-height:22px;
+    margin-top:18px;
+    text-align:center;
+}
 
-        /* === ESTILO: STATUS EM CAMADA INFERIOR (BRILHO REDUZIDO) === */
-        #status-message-container {
-            position: fixed; 
-            bottom: 0px; 
-            left: 0; 
-            right: 0;
-            width: 100%; 
-            transform: none; 
-            max-width: none; 
-            z-index: 100;
-            background: rgba(0, 0, 0, 0.85); 
-            border: none;
-            padding: 18px 25px; 
-            border-radius: 0; 
-            font-size: 16px; 
-            font-weight: 800;
-            opacity: 0; visibility: hidden;
-            transition: opacity 0.3s, visibility 0.3s, transform 0.3s;
-            text-align: center;
-            transform: translateY(100%);
-        }
-        
-        #status-message-container.show { 
-            opacity: 1; 
-            visibility: visible; 
-            transform: translateY(0);
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5); 
-        }
+.verification-message{
+    font-size:13px;
+    font-weight:600;
+    transition:all 0.4s cubic-bezier(0.175,0.885,0.32,1.1);
+    opacity:0;
+    transform:translateY(-5px);
+    padding:10px 16px;
+    border-radius:12px;
+    margin:4px 0;
+    background:rgba(40,40,40,0.7);
+    display:inline-block;
+    max-width:90%;
+}
 
-        /* Adicionado para o Ícone Giratório */
-        @keyframes fa-spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(359deg); }
-        }
+.verification-message.show{
+    opacity:1;
+    transform:translateY(0);
+}
 
-        /* Cores para os status do login */
-        .login-status-error { color: var(--danger-color); text-shadow: 0 0 2px var(--danger-color); }
-        .login-status-processing { color: var(--primary-color); text-shadow: 0 0 2px var(--primary-color); }
-        .login-status-success { color: var(--secondary-color); text-shadow: 0 0 2px var(--secondary-color); }
+.verification-message.success{
+    color:#32d74b;
+    background:rgba(50,215,75,0.1);
+    border:1px solid rgba(50,215,75,0.3);
+}
 
-        /* Estilo da Área de Status de Login */
-        #login-status-area i {
-            transition: color 0.3s ease-in-out;
-        }
+.verification-message.error{
+    color:#ff453a;
+    background:rgba(255,69,58,0.1);
+    border:1px solid rgba(255,69,58,0.3);
+}
 
-    </style>
+.verification-message.loading{
+    color:#ffd60a;
+    background:rgba(255,214,10,0.1);
+}
+
+/* ===== EDITOR DE SCRIPT (ÚNICO QUE LIBERA) ===== */
+.editor{position:fixed;inset:0;background:#000;display:none;flex-direction:column;z-index:30}
+.editor-header{display:flex;justify-content:space-between;align-items:center;padding:18px;border-bottom:1px solid #222}
+.editor-header button{background:none;border:none;color:#0a84ff;font-size:16px;cursor:pointer;font-weight:600}
+.editor textarea{flex:1;width:100%;background:#0c0c0c;border:none;color:#00ff9c;padding:16px;font-size:14px;font-family:monospace;outline:none;resize:none;line-height:1.5}
+
+/* Overlay de verificação do script */
+.script-verification-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;z-index:40}
+.script-verification-container{
+    width:320px;
+    background:linear-gradient(145deg, #0f0f0f, #1a1a1a);
+    border-radius:24px;
+    padding:32px 28px;
+    box-shadow:0 20px 60px rgba(0,122,255,0.15),
+               0 0 0 1px rgba(0,122,255,0.2),
+               inset 0 1px 0 rgba(255,255,255,0.1);
+    position:relative;
+    overflow:hidden;
+    animation:popupAppear 0.4s cubic-bezier(0.175,0.885,0.32,1.1);
+}
+
+.script-verification-container::before{
+    content:'';
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    height:4px;
+    background:linear-gradient(90deg, #0a84ff, #64d2ff, #0a84ff);
+    background-size:200% 100%;
+    animation:shine 3s linear infinite;
+}
+
+.script-verification-header{
+    text-align:center;
+    margin-bottom:28px;
+}
+
+.script-verification-icon{
+    width:60px;
+    height:60px;
+    background:linear-gradient(135deg, #0a84ff, #64d2ff);
+    border-radius:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:0 auto 18px;
+    font-size:28px;
+    box-shadow:0 8px 24px rgba(0,122,255,0.3);
+}
+
+.script-verification-title{
+    font-size:24px;
+    font-weight:700;
+    background:linear-gradient(90deg, #0a84ff, #64d2ff);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    margin-bottom:8px;
+    letter-spacing:0.5px;
+}
+
+.script-verification-subtitle{
+    font-size:14px;
+    color:#aaa;
+    font-weight:500;
+}
+
+.script-verification-content{
+    min-height:22px;
+    margin-top:18px;
+    text-align:center;
+}
+
+/* ===== PAINEL ===== */
+.panel{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:20}
+.panel-background{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.7);
+    backdrop-filter:blur(15px);
+    -webkit-backdrop-filter:blur(15px);
+    z-index:19;
+    cursor:pointer;
+}
+.panel-box{
+    display:flex;
+    background:rgba(20,20,20,0.95);
+    border:2px solid rgba(255,59,59,0.5);
+    border-radius:20px;
+    width:590px;
+    max-width:92%;
+    padding:22px 30px 30px;
+    box-shadow:0 0 40px rgba(255,59,59,0.3);
+    backdrop-filter:blur(20px);
+    position:relative;
+    z-index:21;
+    pointer-events:auto;
+}
+
+.panel-left{display:flex;flex-direction:column;gap:8px;margin-right:25px;margin-top:0}
+.tab{
+    padding:13px 16px;
+    border-radius:16px;
+    background:#1c1c1e;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:125px;
+    font-size:15px;
+}
+.tab.active{background:#ff3b3b;color:#fff;box-shadow:0 0 15px rgba(255,59,59,0.3)}
+
+/* CONTEÚDO */
+.panel-right{flex:1}
+.content{display:none}
+.content.active{display:block}
+
+/* ===== FUNÇÕES ===== */
+.func-box{
+    background:#1c1c1e;
+    border-radius:16px;
+    padding:22px;
+    margin-bottom:20px;
+    box-shadow:0 0 15px rgba(255,59,59,0.4);
+}
+.toggle{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:#2c2c2e;
+    padding:15px 18px;
+    border-radius:12px;
+    margin-bottom:14px;
+    transition:0.3s;
+}
+.toggle:hover{background:#3a3a3c;}
+.toggle span{font-weight:600;font-size:15px;}
+.toggle input{
+    appearance:none;
+    width:52px;
+    height:30px;
+    border-radius:15px;
+    background:#555;
+    position:relative;
+    outline:none;
+    cursor:pointer;
+    transition:0.3s;
+}
+.toggle input:checked{background:#ff3b3b}
+.toggle input:before{
+    content:"";
+    position:absolute;
+    top:3px; left:3px;
+    width:24px; height:24px;
+    border-radius:50%;
+    background:#fff;
+    transition:0.3s;
+}
+.toggle input:checked:before{transform:translateX(22px);}
+
+/* ABA BÁSICO/AVANÇADO */
+.version-toggle{
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    margin-bottom:22px;
+    margin-top:8px;
+}
+.version-toggle button{
+    flex:1;
+    padding:14px 0;
+    border:none;
+    border-radius:14px;
+    background:#2c2c2e;
+    color:#fff;
+    font-weight:600;
+    font-size:15px;
+    cursor:pointer;
+    transition:0.3s;
+}
+.version-toggle button.active{
+    background:#ff3b3b;
+    box-shadow:0 0 15px rgba(255,59,59,0.6);
+    color:#fff;
+}
+
+/* SLIDERS */
+.slider-box{margin:16px 0}
+.slider-label{display:flex;justify-content:space-between;margin-bottom:8px;font-size:14px;font-weight:600;color:#c7c7cc;}
+.slider-box input[type="range"]{
+    -webkit-appearance:none;
+    width:100%;
+    height:10px;
+    border-radius:5px;
+    background:#555;
+    outline:none;
+    transition:.3s;
+}
+.slider-box input[type="range"]::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    appearance:none;
+    width:22px;
+    height:22px;
+    border-radius:50%;
+    background:#ff3b3b;
+    cursor:pointer;
+    box-shadow:0 0 12px rgba(255,59,59,0.6);
+    transition:.3s;
+}
+
+/* ===== ABA INFO ===== */
+.info-container{
+    background:#0a0a0a;
+    border-radius:12px;
+    padding:22px;
+    margin-bottom:20px;
+    border:2px solid rgba(255,59,59,0.3);
+}
+
+.info-title{
+    text-align:center;
+    font-size:20px;
+    font-weight:700;
+    color:#ff3b3b;
+    margin-bottom:25px;
+    text-transform:uppercase;
+    padding-bottom:12px;
+    border-bottom:2px solid #ff3b3b;
+}
+
+.info-line{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:16px 0;
+    margin:0 15px;
+    border-bottom:1px solid rgba(255,255,255,0.1);
+}
+
+.info-line:last-child{
+    border-bottom:none;
+}
+
+.info-label{
+    font-size:16px;
+    color:#fff;
+    font-weight:600;
+    width:50%;
+}
+
+.info-value{
+    font-size:16px;
+    font-weight:700;
+    text-align:right;
+    width:50%;
+}
+
+.version-value{
+    color:#ff3b3b;
+}
+
+.status-value{
+    color:#32d74b;
+}
+
+.battery-value{
+    color:#fff;
+}
+
+.info-divider{
+    height:3px;
+    background:#ff3b3b;
+    margin:20px 0;
+    border-radius:2px;
+}
+
+.warning-box{
+    background:rgba(10,10,10,0.9);
+    border-radius:12px;
+    padding:22px;
+    margin-top:25px;
+    border:2px solid #ff3b3b;
+    text-align:center;
+}
+
+.warning-title{
+    color:#ff3b3b;
+    font-size:18px;
+    font-weight:700;
+    margin-bottom:15px;
+    text-transform:uppercase;
+}
+
+.warning-text{
+    color:#fff;
+    font-size:14px;
+    line-height:1.6;
+    text-align:center;
+}
+
+.warning-highlight{
+    color:#ff3b3b;
+    font-weight:600;
+}
+
+/* === BLOCO DE INJEÇÃO === */
+.injection-status{
+    background:#0a0a0a;
+    border-radius:16px;
+    padding:22px;
+    margin-bottom:20px;
+    border:2px solid #ff3b3b;
+    box-shadow:0 0 15px rgba(255,59,59,0.3);
+    transition:all 0.3s ease;
+}
+.injection-status.active{
+    border-color:#32d74b;
+    box-shadow:0 0 15px rgba(50,215,75,0.4);
+}
+.status-header{
+    display:flex;
+    align-items:center;
+    margin-bottom:16px;
+}
+.status-indicator{
+    width:20px;
+    height:20px;
+    border-radius:50%;
+    background:#ff3b3b;
+    box-shadow:0 0 8px rgba(255,59,59,0.8);
+    margin-right:16px;
+    transition:all 0.3s ease;
+}
+.injection-status.active .status-indicator{
+    background:#32d74b;
+    box-shadow:0 0 8px rgba(50,215,75,0.8);
+}
+.status-title{
+    font-size:19px;
+    font-weight:700;
+    color:#ff3b3b;
+    transition:all 0.3s ease;
+}
+.injection-status.active .status-title{
+    color:#32d74b;
+}
+.status-desc{
+    font-size:14px;
+    color:#c7c7cc;
+    margin-bottom:12px;
+    min-height:22px;
+}
+.injection-progress{
+    width:100%;
+    height:10px;
+    background:#2c2c2e;
+    border-radius:5px;
+    overflow:hidden;
+    margin-top:12px;
+}
+.progress-bar{
+    height:100%;
+    width:0%;
+    background:#ff3b3b;
+    border-radius:5px;
+    transition:width 0.5s ease, background 0.3s ease;
+}
+.injection-status.active .progress-bar{
+    background:#32d74b;
+}
+
+/* FUNÇÕES LISTADAS */
+.functions-list{
+    max-height:160px;
+    overflow-y:auto;
+    margin-top:16px;
+    padding:6px;
+    background:transparent;
+    border-radius:0;
+    font-size:13px;
+}
+.function-item{
+    padding:9px 6px;
+    margin-bottom:4px;
+    border-radius:0;
+    background:transparent;
+    color:#ff3b3b;
+    transition:all 0.5s ease;
+    opacity:0;
+    transform:translateX(-10px);
+    border-bottom:1px solid rgba(255,59,59,0.1);
+    font-family:monospace;
+}
+.function-item:last-child{
+    border-bottom:none;
+}
+.function-item.completed{
+    color:#32d74b;
+    border-bottom:1px solid rgba(50,215,75,0.1);
+}
+
+/* === BLOCO ANTIBAN === */
+.antiban-box{
+    background:#1c1c1e;
+    border-radius:16px;
+    padding:22px;
+    margin-bottom:20px;
+    border:2px solid #ff3b3b;
+    box-shadow:0 0 15px rgba(255,59,59,0.3);
+}
+.antiban-header{
+    text-align:center;
+    margin-bottom:22px;
+}
+.antiban-title{
+    font-size:23px;
+    font-weight:700;
+    color:#ff3b3b;
+    margin-bottom:6px;
+}
+.antiban-subtitle{
+    font-size:14px;
+    color:#c7c7cc;
+}
+/* Slider ANTIBAN */
+.antiban-slider-box{
+    margin:22px 0;
+}
+.antiban-slider-label{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:12px;
+    font-size:15px;
+    font-weight:600;
+    color:#c7c7cc;
+}
+.antiban-slider-box input[type="range"]{
+    -webkit-appearance:none;
+    width:100%;
+    height:10px;
+    border-radius:5px;
+    background:#555;
+    outline:none;
+    transition:.3s;
+}
+.antiban-slider-box input[type="range"]::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    appearance:none;
+    width:22px;
+    height:22px;
+    border-radius:50%;
+    background:#ff3b3b;
+    cursor:pointer;
+    box-shadow:0 0 12px rgba(255,59,59,0.6);
+    transition:.3s;
+}
+
+/* INJEÇÃO BOTÃO */
+.inject-btn{
+    width:100%;
+    padding:18px;
+    border:none;
+    border-radius:14px;
+    background:#ff3b3b;
+    color:#fff;
+    font-weight:700;
+    font-size:17px;
+    cursor:pointer;
+    transition:0.3s;
+    box-shadow:0 0 15px rgba(255,59,59,0.4);
+    margin-top:18px;
+}
+.inject-btn:hover{
+    background:#ff5252;
+    box-shadow:0 0 20px rgba(255,59,59,0.6);
+}
+.inject-btn:disabled{
+    background:#555;
+    cursor:not-allowed;
+    box-shadow:none;
+}
+
+/* TOAST */
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#1c1c1e;padding:14px 22px;border-radius:14px;opacity:0;transition:.4s;z-index:40}
+.toast.show{opacity:1}
+.toast.success{color:#32d74b}
+.toast.error{color:#ff453a}
+.toast.loading{color:#ffd60a}
+</style>
 </head>
 <body>
 
-    <div id="login-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; z-index: 1000; flex-direction: column;">
-        <div class="login-panel" style="width: 90%; max-width: 350px; padding: 30px; border-radius: 20px; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(25px); border: 1px solid var(--primary-color); box-shadow: 0 0 25px rgba(157, 0, 255, 0.5), inset 0 0 10px rgba(157, 0, 255, 0.8);">
-            
-            <h2 id="login-title" style="color: var(--primary-color); text-align: center; margin-bottom: 25px; font-size: 24px; text-shadow: 0 0 6px var(--primary-color);">
-                PAINEL PRO<br><span style="font-size: 14px; font-weight: 400; color: #fff;">Chave de Acesso Necessária</span>
-            </h2>
+<div class="top">
+    <h1>Scripts</h1>
+    <div class="add" onclick="openEditor()">+</div>
+</div>
 
-            <input type="text" id="login-key" placeholder="INSIRA SUA CHAVE DE ACESSO" style="width: 100%; padding: 15px; margin-bottom: 25px; border-radius: var(--ios-radius); border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(0, 0, 0, 0.5); color: var(--text-color); font-size: 14px; outline: none; transition: border-color 0.3s; box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);" onfocus="this.style.borderColor='var(--primary-color)'" onblur="this.style.borderColor='rgba(255, 255, 255, 0.3)'">
-
-            <button class="btn btn-action" id="login-button" onclick="attemptLogin()" style="margin-top: 0; background: var(--primary-color); border-color: var(--secondary-color); box-shadow: 0 0 25px var(--primary-color);">
-                <i class="fas fa-lock-open"></i> ENTRAR
-            </button>
-            
-            <div id="login-status-area" style="text-align: center; margin-top: 25px; font-size: 14px; color: var(--primary-color); opacity: 0; transition: opacity 0.3s ease-in-out;">
-                <i id="login-status-icon" class="fas fa-sync-alt fa-spin" style="margin-right: 10px; font-size: 18px; color: var(--primary-color);"></i>
-                <span id="login-status-message"></span>
-            </div>
-            
-        </div>
+<div class="main">
+    <div class="container">
+        <div class="card purple" onclick="openLogin()"><div class="icon">💉</div><div class="title">@meibomxr v1</div><div class="menu">•••</div></div>
+        <div class="card green" onclick="openLogin()"><div class="icon">🔥</div><div class="title">MEIBOM VIP</div><div class="menu">•••</div></div>
+        <div class="card pink" onclick="openLogin()"><div class="icon">✨</div><div class="title">Menu ATH REGEDIT</div><div class="menu">•••</div></div>
+        <div class="card blue" onclick="openLogin()"><div class="icon">♻️</div><div class="title">UPDATE MAX</div><div class="menu">•••</div></div>
     </div>
-    <input type="file" id="file-upload" style="display: none;" webkitdirectory directory>
+</div>
 
-    <div class="panel-container" id="main-panel">
-        
-        <div class="function-header">
-            <span id="current-func-icon" class="func-header-emoji"><i class="fas fa-crosshairs"></i></span>
-            <span>MÓDULO:</span> <span class="func-name" id="current-func-name">MIRA</span>
-        </div>
-
-        <div class="tabs-header">
-            <button class="tab-btn active" onclick="openTab('mira', this, 'MIRA', 'fa-crosshairs')">
-                <i class="fas fa-crosshairs"></i>
-                <span>MIRA</span>
-            </button>
-            <button class="tab-btn" onclick="openTab('pasta', this, 'PASTA', 'fa-folder-open')">
-                <i class="fas fa-folder-open"></i>
-                <span>PASTA</span>
-            </button>
-            <button class="tab-btn" onclick="openTab('antiban', this, 'PROTEÇÃO ANT', 'fa-shield-alt')">
-                <i class="fas fa-shield-alt"></i>
-                <span>ANTIBAN</span>
-            </button>
-            <button class="tab-btn" onclick="openTab('injector', this, 'INJECTOR', 'fa-syringe')">
-                <i class="fas fa-syringe"></i>
-                <span>INJECTOR</span>
-            </button>
-            <button class="tab-btn" onclick="openTab('info', this, 'INFO', 'fa-info-circle')">
-                <i class="fas fa-info-circle"></i>
-                <span>INFO</span>
-            </button>
-            </div>
-
-        <div class="content-body">
-            
-            <div class="tab-content-wrapper">
-                
-                <div id="mira" class="tab-content active">
-                    <p style="font-size:12px; color:var(--secondary-text-color); margin-top:-10px; margin-bottom:15px; font-weight: 300;">Sistema de mira e estabilização avançada.</p>
-
-                    <div class="sub-tabs-header">
-                        <button class="sub-tab-btn active" onclick="openSubTab('mira-basico', this)">BÁSICO</button>
-                        <button class="sub-tab-btn" onclick="openSubTab('mira-avancado-settings', this)">AVANÇADO</button>
-                    </div>
-
-                    <div id="mira-basico" class="sub-tab-content active">
-                        <div class="control-row" id="row-aimbot" onclick="handleToggle('checkbox-aimbot', 'row-aimbot', 'AIMBOT [360]')">
-                            <span>AIMBOT [360]</span>
-                            <label class="switch">
-                                <input type="checkbox" id="checkbox-aimbot"> 
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                        <div class="control-row" id="row-headshot" onclick="handleToggle('checkbox-headshot', 'row-headshot', 'HEADSHOT ASSIST')">
-                            <span>HEADSHOT ASSIST</span>
-                            <label class="switch">
-                                <input type="checkbox" id="checkbox-headshot">
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                        <div class="control-row" id="row-precisao" onclick="handleToggle('checkbox-precisao', 'row-precisao', 'PRECISÃO MÁXIMA')">
-                            <span>PRECISÃO MÁXIMA</span>
-                            <label class="switch">
-                                <input type="checkbox" id="checkbox-precisao">
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                        <div class="control-row" id="row-render" onclick="handleToggle('checkbox-render', 'row-render', 'RENDERIZAÇÃO HD')">
-                            <span>ATIVAR RENDERIZAÇÃO HD</span>
-                            <label class="switch">
-                                <input type="checkbox" id="checkbox-render">
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div id="mira-avancado-settings" class="sub-tab-content">
-                        
-                        <div class="control-row" id="row-120fps" onclick="handleToggle('checkbox-120fps', 'row-120fps', '120FPS')">
-                            <span>120FPS</span>
-                            <label class="switch">
-                                <input type="checkbox" id="checkbox-120fps">
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                        <div class="control-row" id="row-hadtrick" onclick="handleToggle('checkbox-hadtrick', 'row-hadtrick', 'HADTRICK')">
-                            <span>HADTRICK</span>
-                            <label class="switch">
-                                <input type="checkbox" id="checkbox-hadtrick">
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-
-                        <h4 style="color:var(--primary-color); margin-top:30px; margin-bottom:10px; font-size:16px;">Configurações de Campo de Visão (FOV)</h4>
-
-                        <div style="margin-top:0px; padding: 10px 0;">
-                            <div style="display:flex; justify-content:space-between; align-items:center;">
-                                <small style="color:var(--secondary-text-color); font-weight: 500; text-shadow: none;">RAIO DE FOV DE MIRA</small>
-                                <span id="fov-value" style="font-weight:700; color:var(--primary-color); text-shadow:0 0 4px var(--primary-color);">5</span>
-                            </div>
-                            <input type="range" id="fov-slider" min="1" max="10" value="5" step="1" oninput="updateFovValue(this.value)">
-                        </div>
-                        
-                        <div style="margin-top:20px; padding: 10px 0;">
-                            <div style="display:flex; justify-content:space-between; align-items:center;">
-                                <small style="color:var(--secondary-text-color); font-weight: 500; text-shadow: none;">FOV DE PRECISÃO</small>
-                                <span id="precision-fov-value" style="font-weight:700; color:var(--primary-color); text-shadow:0 0 4px var(--primary-color);">5%</span>
-                            </div>
-                            <input type="range" id="precision-fov-slider" min="1" max="10" value="5" step="1" oninput="updatePrecisionFovValue(this.value)">
-                        </div>
-                    </div>
-
-                </div>
-
-                <div id="pasta" class="tab-content">
-                    <h3 style="text-align:center; font-size:18px; color:var(--primary-color); text-shadow: 0 0 4px var(--primary-color); margin-top:0; margin-bottom:25px; font-weight: 600;">SELEÇÃO DE VERSÃO</h3>
-
-                    <button id="btn-com.dts.freefireth" class="btn" onclick="selectGame('com.dts.freefireth', 'FREE FIRE NORMAL', true)">
-                        <i class="fas fa-mobile-alt"></i> FREE FIRE NORMAL
-                    </button>
-                    <button id="btn-com.dts.freefiremax" class="btn" onclick="selectGame('com.dts.freefiremax', 'FREE FIRE MAX', true)">
-                        <i class="fas fa-desktop"></i> FREE FIRE MAX
-                    </button>
-
-                    <hr style="border:0; border-top:1px solid rgba(255, 255, 255, 0.15); width:100%; margin:25px 0;">
-
-                    <button class="btn btn-action" onclick="triggerFile()">
-                        <i class="fas fa-upload"></i> INJETAR ARQUIVOS DA PASTA
-                    </button>
-                </div>
-
-                <div id="antiban" class="tab-content">
-                    <div class="antiban-header" style="margin-top: auto;"> 
-                        <span class="antiban-emoji-large"><i class="fas fa-shield-virus"></i></span> 
-                        <h2>PROTEÇÃO ATIVA</h2>
-                        <p class="antiban-info" style="color:var(--secondary-text-color); font-size:13px; margin-bottom: 20px;">Sistema de proteção em tempo real está totalmente operacional.</p> 
-                    </div>
-
-                    <div class="antiban-status-row" style="width: 100%;">
-                        <span>BYPASS DE SEGURANÇA:</span>
-                        <span class="antiban-status-tag">ATIVADO</span>
-                    </div>
-
-                    <div class="antiban-status-row" style="width: 100%; margin-bottom: auto;"> 
-                        <span>BLOQUEIO DE REPORT:</span>
-                        <span class="antiban-status-tag">ATIVADO</span>
-                    </div>
-                </div>
-
-                <div id="injector" class="tab-content" style="justify-content: center; align-items: center;">
-                    
-                    <h3 style="text-align:center; font-size:22px; color:var(--secondary-color); text-shadow: 0 0 4px var(--secondary-color); margin-top:0; margin-bottom:25px; font-weight: 800; text-transform: uppercase;">INJEÇÃO RÁPIDA</h3>
-
-                    <div class="status-card active-neon-danger" id="status-panel" style="width: 100%; margin-bottom: 40px; transition: none;">
-                        <div class="status-indicator" id="injector-status-indicator" style="width: 18px; height: 18px; background-color: var(--danger-color); border-radius: 50%; box-shadow: 0 0 6px var(--danger-color); margin-right: 20px; flex-shrink: 0; transition: all 0.4s;"></div>
-                        <div class="status-text-content" style="flex-grow: 1;">
-                            <h3 id="status-text" style="color: #fff; font-weight: 700; font-size: 18px; margin: 0 0 5px 0; text-shadow: var(--sutil-glow); transition: all 0.4s;">AGUARDANDO INJEÇÃO...</h3> 
-                            <p id="status-desc" style="font-size: 12px; color: var(--secondary-text-color); margin: 0;">Clique em uma opção abaixo para injetar e abrir o jogo.</p>
-                            <div class="progress-bar-container">
-                                <div class="progress-bar" id="injection-progress-bar" style="height: 100%; width: 0%;"></div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <button class="btn btn-action" style="background: var(--primary-color); border-color: var(--secondary-color); margin-bottom: 20px;" onclick="startSimplifiedInjection('com.dts.freefireth', 'FREE FIRE NORMAL')">
-                        <i class="fas fa-mobile-alt"></i> INJETAR E ABRIR FF NORMAL
-                    </button>
-                    
-                    <button class="btn btn-action" style="background: var(--primary-color); border-color: var(--secondary-color);" onclick="startSimplifiedInjection('com.dts.freefiremax', 'FREE FIRE MAX')">
-                        <i class="fas fa-desktop"></i> INJETAR E ABRIR FF MAX
-                    </button>
-
-                </div>
-                
-                <div id="info" class="tab-content" style="padding-top: 0;">
-                    
-                    <h3 style="text-align:center; font-size:20px; color:var(--primary-color); text-shadow: 0 0 4px var(--primary-color); margin-top:5px; margin-bottom:25px; font-weight: 600;">STATUS DO DISPOSITIVO</h3>
-
-                    <div class="info-status-row">
-                        <i class="fas fa-mobile-alt"></i>
-                        <span>MARCA DO DISPOSITIVO:</span>
-                        <span class="info-value">ANDROID</span>
-                    </div>
-
-                    <div class="info-status-row">
-                        <i class="fas fa-battery-full" id="battery-icon"></i>
-                        <span>BATERIA ATUAL:</span>
-                        <span class="info-value" id="battery-level">--%</span>
-                    </div>
-
-                    <div class="disclaimer-box">
-                        <h4 style="color:var(--secondary-color); text-align:center; font-size:15px; margin-bottom:10px; text-shadow: 0 0 2px var(--secondary-color);">AVISO IMPORTANTE:</h4>
-                        <p>O painel **não é xit nem hack** — é um auxílio inteligente de mira, criado para aprimorar sua precisão e deixar seus disparos muito mais consistentes. Jogue de forma justa e estratégica.</p>
-                    </div>
-
-                </div>
-                </div>
-
+<!-- LOGIN POR E-MAIL (NUNCA LIBERA) -->
+<div class="overlay" id="login">
+    <div class="login-container">
+        <div class="login-header">
+            <div class="login-icon">✉️</div>
+            <div class="login-title">VERIFICAÇÃO</div>
+            <div class="login-subtitle">Digite seu e-mail de compra</div>
         </div>
         
-        <div class="footer-info">
-            <div class="footer-row">
-                <span>STATUS DO SERVIDOR: <span class="online-tag" style="color: var(--secondary-color); font-weight: 700;">ONLINE</span></span>
-                <span>VERSÃO: 1.0.0.2.5</span>
-            </div>
-            <div class="footer-row">
-                <span>DESENVOLVEDOR: RzzX</span>
-                <span>DATA: 19/11/25</span>
-            </div>
+        <div class="input-group">
+            <div class="input-icon">📧</div>
+            <input type="text" id="keyInput" class="key-input" placeholder="exemplo@gmail.com" autocomplete="off" spellcheck="false">
         </div>
-
+        
+        <div class="verification-area" id="verificationSequence">
+            <!-- As mensagens aparecerão aqui -->
+        </div>
+        
+        <div class="login-buttons">
+            <button class="login-btn btn-cancel" onclick="closeLogin()">CANCELAR</button>
+            <button class="login-btn btn-ok" onclick="validateEmail()" id="okBtn">VERIFICAR</button>
+        </div>
     </div>
+</div>
+
+<!-- EDITOR DE SCRIPT (ÚNICO QUE LIBERA) -->
+<div class="editor" id="editor">
+    <div class="editor-header">
+        <button onclick="closeEditor()">Cancelar</button>
+        <h2>Script Editor</h2>
+        <button onclick="saveScript()" id="saveBtn">Verificar & Salvar</button>
+    </div>
+    <textarea id="scriptTextarea" placeholder="// Cole seu script aqui" spellcheck="false"></textarea>
+</div>
+
+<!-- OVERLAY DE VERIFICAÇÃO DO SCRIPT -->
+<div class="script-verification-overlay" id="scriptVerificationOverlay">
+    <div class="script-verification-container">
+        <div class="script-verification-header">
+            <div class="script-verification-icon">🔍</div>
+            <div class="script-verification-title">VERIFICANDO SCRIPT</div>
+            <div class="script-verification-subtitle">Analisando código...</div>
+        </div>
+        
+        <div class="script-verification-content" id="scriptVerificationContent">
+            <!-- As mensagens de verificação do script aparecerão aqui -->
+        </div>
+    </div>
+</div>
+
+<!-- PAINEL -->
+<div class="panel" id="panel">
+    <div class="panel-background" onclick="closePanel()"></div>
     
-    <div id="status-message-container"></div>
+    <div class="panel-box">
+        <div class="panel-left">
+            <div class="tab active" data-tab="mira">🎯 Mira</div>
+            <div class="tab" data-tab="files">📁 Pasta</div>
+            <div class="tab" data-tab="antiban">🔒 Antiban</div>
+            <div class="tab" data-tab="inject">💉 Injeção</div>
+            <div class="tab" data-tab="info">ℹ️ Info</div>
+        </div>
+        <div class="panel-right">
+            <!-- ABA MIRA -->
+            <div class="content active" id="mira">
+                <div class="version-toggle">
+                    <button class="active" data-version="basico">BÁSICO</button>
+                    <button data-version="avancado">AVANÇADO</button>
+                </div>
+                <div class="version-content" id="basico">
+                    <div class="func-box">
+                        <div class="toggle"><span>AIMBOT 60%</span><input type="checkbox" id="precisao"></div>
+                        <div class="toggle"><span>AUMENTAR PRECISÃO </span><input type="checkbox" id="aimb"></div>
+                        <div class="toggle"><span>FORÇAR RENDERIZAÇÃO </span><input type="checkbox" id="forca"></div>
+                        <div class="toggle"><span>PRECISÃO 60%</span><input type="checkbox" id="norecoil"></div>
+                    </div>
+                </div>
+                <div class="version-content" id="avancado" style="display:none;">
+                    <div class="func-box">
+                        <div class="toggle"><span>FORÇAR 120 FPS</span><input type="checkbox" id="fps120"></div>
+                        <div class="toggle"><span>No Recoil</span><input type="checkbox" id="norecoil2"></div>
+                        <div class="slider-box">
+                            <div class="slider-label"><span>FOV de Mira</span><span id="fov1Val">0</span></div>
+                            <input type="range" min="0" max="5" value="0" id="fov1">
+                        </div>
+                        <div class="slider-box">
+                            <div class="slider-label"><span>Tamanho do FOV</span><span id="fov2Val">0</span></div>
+                            <input type="range" min="0" max="10" value="0" id="fov2">
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+            <!-- ABA 📁 -->
+            <div class="content" id="files">
+                <div class="func-box">
+                    <p>InjectaPasta</p>
+                    <input type="file" id="fileInput" multiple style="display:none;">
+                    <button class="inject-btn" id="chooseFilesBtn">Escolher Arquivos</button>
+                    <p id="fileCount">Nenhum arquivo selecionado.</p>
+                </div>
+            </div>
 
-    <script>
-        
-        let statusTimeout;
-        let selectedGamePackage = null; 
-        let selectedGameName = '';
-
-        function showStatusMessage(message, color) {
-            const messageContainer = document.getElementById('status-message-container');
-            clearTimeout(statusTimeout);
-            
-            messageContainer.innerText = message;
-            messageContainer.style.color = color;
-            
-            // Ajuste específico para o vermelho - menos brilho
-            if (color === 'var(--danger-color)') {
-                messageContainer.style.textShadow = `0 0 3px var(--danger-color)`;
-            } else {
-                messageContainer.style.textShadow = `0 0 4px ${color}`;
-            }
-            
-            messageContainer.classList.add('show');
-
-            statusTimeout = setTimeout(() => {
-                messageContainer.classList.remove('show');
-            }, 2500);
-        }
-
-        function handleToggle(checkboxId, rowId, functionName) {
-            const checkbox = document.getElementById(checkboxId);
-            const row = document.getElementById(rowId);
-            
-            checkbox.checked = !checkbox.checked;
-            const isActive = checkbox.checked;
-
-            if (isActive) {
-                row.classList.add('active'); 
-            } else {
-                row.classList.remove('active');
-            }
-            
-            const statusText = isActive ? "ATIVADA" : "DESATIVADA";
-            const statusColor = isActive ? "var(--secondary-color)" : "var(--danger-color)";
-
-            showStatusMessage(`${functionName} - ${statusText}`, statusColor);
-        }
-        
-        function openTab(tabId, element, funcName, funcIconName) {
-            const contentElements = document.querySelectorAll('.tab-content');
-            const buttonElements = document.querySelectorAll('.tab-btn');
-            const targetContent = document.getElementById(tabId);
-            const currentFuncIconSpan = document.getElementById('current-func-icon');
-            const currentFuncName = document.getElementById('current-func-name');
-
-            contentElements.forEach(c => c.classList.remove('active'));
-            buttonElements.forEach(b => b.classList.remove('active'));
-
-            targetContent.classList.add('active');
-            element.classList.add('active');
-
-            currentFuncIconSpan.innerHTML = `<i class="fas ${funcIconName}"></i>`;
-            currentFuncName.textContent = funcName;
-            
-            if (tabId === 'info') {
-                updateBatteryStatus();
-            }
-        }
-
-        function openSubTab(subTabId, element) {
-            const subContentElements = element.closest('.tab-content').querySelectorAll('.sub-tab-content');
-            const subButtonElements = element.closest('.sub-tabs-header').querySelectorAll('.sub-tab-btn');
-            
-            subContentElements.forEach(c => c.classList.remove('active'));
-            subButtonElements.forEach(b => b.classList.remove('active'));
-            
-            document.getElementById(subTabId).classList.add('active');
-            element.classList.add('active');
-        }
-        
-        function updateFovValue(value) {
-            document.getElementById('fov-value').textContent = value;
-            showStatusMessage(`FOV DE MIRA ajustado para ${value}`, "var(--primary-color)");
-        }
-        
-        function updatePrecisionFovValue(value) {
-            document.getElementById('precision-fov-value').textContent = `${value}%`;
-            showStatusMessage(`FOV DE PRECISÃO ajustado para ${value}%`, "var(--primary-color)");
-        }
-        
-        function selectGame(packageId, gameName, isButton) {
-            selectedGamePackage = packageId;
-            selectedGameName = gameName;
-
-            document.querySelectorAll('#pasta .btn').forEach(btn => {
-                if (btn.id.startsWith('btn-com.dts.')) {
-                    btn.classList.remove('selected');
-                }
-            });
-            if (isButton) {
-                document.getElementById(`btn-${packageId}`).classList.add('selected');
-            }
-
-            const color = "var(--primary-color)";
-            showStatusMessage(`PACOTE SELECIONADO: ${gameName}`, color);
-        }
-
-        function triggerFile() {
-            if (!selectedGamePackage) {
-                showStatusMessage('ERRO: Selecione primeiro um jogo (FF Normal ou FF Max)!', "var(--danger-color)");
-                return;
-            }
-
-            const triggerButton = document.querySelector('#pasta .btn-action');
-            triggerButton.disabled = true;
-
-            showStatusMessage(`BUSCANDO PASTA PARA ${selectedGameName}...`, "var(--primary-color)");
-
-            document.getElementById('file-upload').click();
-            
-            setTimeout(() => {
-                const successMessage = `PASTA SELECIONADA COM SUCESSO! Injeção liberada.`;
-                showStatusMessage(successMessage, "var(--secondary-color)");
-                triggerButton.disabled = false;
-            }, 1500);
-        }
-
-        
-        function updateInjectorStatus(statusText, statusDesc, color, progress) {
-            const statusPanel = document.getElementById('status-panel');
-            const statusIndicator = document.getElementById('injector-status-indicator');
-            const statusBar = document.getElementById('injection-progress-bar');
-            
-            document.getElementById('status-text').textContent = statusText;
-            document.getElementById('status-desc').innerHTML = statusDesc;
-            
-            statusPanel.classList.remove('active-neon-glass', 'active-neon-danger', 'active-neon-processing');
-
-            let indicatorColor = 'var(--primary-color)';
-            if (color === 'green') {
-                statusPanel.classList.add('active-neon-glass');
-                indicatorColor = 'var(--secondary-color)';
-            } else if (color === 'red') {
-                statusPanel.classList.add('active-neon-danger');
-                indicatorColor = 'var(--danger-color)';
-            } else if (color === 'purple') {
-                statusPanel.classList.add('active-neon-processing');
-                indicatorColor = 'var(--primary-color)';
-            }
-            
-            statusIndicator.style.backgroundColor = indicatorColor;
-            statusIndicator.style.boxShadow = `0 0 6px ${indicatorColor}`;
-            statusBar.style.backgroundColor = indicatorColor;
-            statusBar.style.boxShadow = `0 0 3px ${indicatorColor}`;
-
-            if (progress !== undefined) {
-                statusBar.style.width = `${progress}%`;
-            }
-        }
-        
-        function collectActiveSettings() {
-            const settings = [];
-            
-            const miraToggles = [
-                { id: 'checkbox-aimbot', name: 'AIMBOT [360]' },
-                { id: 'checkbox-headshot', name: 'HEADSHOT ASSIST' },
-                { id: 'checkbox-precisao', name: 'PRECISÃO MÁXIMA' },
-                { id: 'checkbox-render', name: 'RENDERIZAÇÃO HD' },
-                { id: 'checkbox-120fps', name: '120FPS' },
-                { id: 'checkbox-hadtrick', name: 'HADTRICK' },
-            ];
-
-            miraToggles.forEach(toggle => {
-                if (document.getElementById(toggle.id).checked) {
-                    settings.push(`✅ ${toggle.name}`);
-                }
-            });
-            
-            if (settings.filter(s => s.startsWith('✅')).length === 0) {
-                 settings.push(`❌ Nenhuma Função de MIRA Ativada.`);
-            }
-
-            const fovMira = document.getElementById('fov-value').textContent;
-            const fovPrecisao = document.getElementById('precision-fov-value').textContent;
-            
-            settings.push(`🎯 FOV DE MIRA: ${fovMira}`);
-            settings.push(`⚙️ FOV DE PRECISÃO: ${fovPrecisao}`);
-            
-            const selectedGameButton = document.querySelector('#pasta .btn.selected');
-            let pastaStatus = '';
-            if (selectedGameButton) {
-                pastaStatus = `🟢 PACOTE: ${selectedGameName}`;
-            } else {
-                pastaStatus = `🔴 PACOTE: Nenhuma Seleção (Padrão)`;
-            }
-            settings.push(pastaStatus);
-            
-            return settings;
-        }
-        
-        function displayDynamicSettings(settings, baseHtml) {
-            const descElement = document.getElementById('status-desc');
-            let currentIndex = 0;
-            
-            const dynamicContainer = document.createElement('div');
-            dynamicContainer.style.maxHeight = '120px';
-            dynamicContainer.style.overflowY = 'auto';
-            
-            descElement.innerHTML = baseHtml;
-            descElement.prepend(dynamicContainer);
-            
-            const interval = setInterval(() => {
-                if (currentIndex < settings.length) {
-                    const setting = settings[currentIndex];
-                    const item = document.createElement('span');
-                    item.style.display = 'block';
-                    item.style.marginTop = '3px';
-                    item.style.color = 'var(--secondary-text-color)';
-                    item.style.fontSize = '11px';
-                    item.style.textShadow = 'none';
-                    item.style.opacity = '0';
-                    item.style.transition = 'opacity 0.4s ease-in';
+            <!-- ABA ANTIBAN -->
+            <div class="content" id="antiban">
+                <div class="antiban-box">
+                    <div class="antiban-header">
+                        <div class="antiban-title">PROTEÇÃO ATIVA</div>
+                        <div class="antiban-subtitle">Nível de proteção em tempo real</div>
+                    </div>
                     
-                    item.innerHTML = setting;
-                    dynamicContainer.appendChild(item);
-                    
-                    setTimeout(() => { item.style.opacity = '1'; }, 10);
-                    
-                    dynamicContainer.scrollTop = dynamicContainer.scrollHeight;
-                    
-                    currentIndex++;
-                } else {
-                    clearInterval(interval);
-                }
-            }, 350);
-        }
+                    <div class="antiban-slider-box">
+                        <div class="antiban-slider-label">
+                            <span>NÍVEL DE PROTEÇÃO</span>
+                            <span id="antibanLevelValue">50%</span>
+                        </div>
+                        <input type="range" min="0" max="100" value="50" id="antibanLevel">
+                    </div>
+                </div>
+            </div>
 
-        function startSimplifiedInjection(packageId, gameName) {
-            
-            const activeSettings = collectActiveSettings();
-            
-            const firstActiveFeature = activeSettings.length > 0 ? activeSettings.find(s => s.startsWith('✅') || s.startsWith('❌') || s.startsWith('🟢') || s.startsWith('🔴'))?.replace(/^(✅|❌|🟢|🔴)\s*/, '') : 'Configurações de Injeção';
-
-            const baseStatusHtml = `
-                <span style="display:block; font-weight: 600; color: #fff; margin-bottom: 5px;">RESUMO DA INJEÇÃO:</span>
-                <span style="display:block; margin-top: 10px; color: var(--primary-color); font-weight: 500;">Preparando arquivos e bypass de segurança...</span>
-            `;
-            
-            let progress = 0;
-            const injectionButton = event.currentTarget; 
-            
-            injectionButton.disabled = true;
-
-            updateInjectorStatus('INICIANDO INJEÇÃO...', baseStatusHtml, 'purple', 0);
-            
-            displayDynamicSettings(activeSettings, baseStatusHtml);
-
-            let injectionStarted = false;
-            
-            const delayBeforeStart = activeSettings.length * 350 + 500;
-
-            setTimeout(() => {
-                injectionStarted = true;
-                const interval = setInterval(() => {
-                    progress += Math.floor(Math.random() * 15) + 5; 
+            <!-- ABA INJEÇÃO -->
+            <div class="content" id="inject">
+                <div class="injection-status" id="injectionStatus">
+                    <div class="status-header">
+                        <div class="status-indicator" id="statusIndicator"></div>
+                        <div class="status-title" id="statusTitle">AGUARDANDO INJEÇÃO</div>
+                    </div>
+                    <div class="status-desc" id="statusDesc">Clique no botão abaixo para iniciar a injeção.</div>
                     
-                    if (progress >= 100) {
-                        progress = 100;
-                        clearInterval(interval);
-                        
-                        const successDesc = `
-                            <span style="display:block; font-weight: 600; color: #fff; margin-bottom: 5px;">INJEÇÃO CONCLUÍDA!</span>
-                            <span style="display:block; margin-top: 3px; color: var(--secondary-text-color); font-size: 11px; text-shadow:none;">Todos os mods e configurações foram injetados com sucesso.</span>
-                            <span style="display:block; margin-top: 10px; color: var(--secondary-color); font-weight: 500;">Abrindo ${gameName}. Boa partida!</span>
-                        `;
-                        
-                        updateInjectorStatus('INJEÇÃO CONCLUÍDA!', successDesc, 'green', 100);
-                        showStatusMessage(`Injeção no ${gameName} CONCLUÍDA!`, 'var(--secondary-color)');
-                        injectionButton.disabled = false;
-                        
-                        // === ABRE O JOGO APÓS TODA A ANIMAÇÃO ===
-                        setTimeout(() => {
-                            openGameDirectly(packageId, gameName);
-                        }, 1000);
-                        
-                        return;
-                    }
+                    <div class="functions-list" id="functionsList">
+                        <!-- As funções ativas aparecerão aqui -->
+                    </div>
                     
-                    let statusMessage = '';
-                    if (progress < 30) {
-                        statusMessage = `Iniciando sistema de injeção...`;
-                    } else if (progress < 50) {
-                        statusMessage = `Ativando bypass de segurança...`;
-                    } else if (progress < 70) {
-                        statusMessage = `Injetando [${firstActiveFeature}]...`;
-                    } else if (progress < 85) {
-                        statusMessage = 'Validando arquivos e aplicando AntiBan...';
-                    } else {
-                         statusMessage = 'Finalizando ajustes de FOV e mira...';
-                    }
-                    
-                    const processingDesc = `
-                        <span style="display:block; font-weight: 600; color: #fff; margin-bottom: 5px;">PROCESSANDO INJEÇÃO - ${progress}%</span>
-                        <span style="display:block; margin-top: 3px; color: var(--secondary-text-color); font-size: 11px; text-shadow:none;">${statusMessage}</span>
-                        <span style="display:block; margin-top: 10px; color: var(--primary-color); font-weight: 500;">Não feche o painel.</span>
-                    `;
-
-                    updateInjectorStatus(`INJETANDO - ${progress}%`, processingDesc, 'purple', progress);
-                    
-                }, 600);
-            }, delayBeforeStart);
-        }
-
-        function openGameDirectly(packageId, gameName) {
-            console.log(`Abrindo jogo: ${packageId} - ${gameName}`);
-            
-            // Tenta abrir o jogo via Intent Android
-            try {
-                // Método 1: Intent direto para o pacote
-                const intentUrl = `intent://#Intent;package=${packageId};action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;end;`;
-                window.location.href = intentUrl;
+                    <div class="injection-progress">
+                        <div class="progress-bar" id="progressBar"></div>
+                    </div>
+                </div>
                 
-                // Método 2: Fallback após 1 segundo - Play Store
-                setTimeout(() => {
-                    try {
-                        window.location.href = `market://details?id=${packageId}`;
-                    } catch (e) {
-                        // Método 3: Fallback final - Play Store Web
-                        window.open(`https://play.google.com/store/apps/details?id=${packageId}`, '_blank');
-                    }
-                }, 1000);
+                <button class="inject-btn" id="injectBtn" onclick="startInjection()">INICIAR INJEÇÃO</button>
+            </div>
+
+            <!-- ABA INFO -->
+            <div class="content" id="info">
+                <div class="info-container">
+                    <div class="info-title">INFORMAÇÕES DO PAINEL</div>
+                    
+                    <div class="info-line">
+                        <div class="info-label">VERSÃO DO PAINEL:</div>
+                        <div class="info-value version-value" id="panelVersion">1.0.1.1V</div>
+                    </div>
+                    
+                    <div class="info-line">
+                        <div class="info-label">STATUS:</div>
+                        <div class="info-value status-value" id="panelStatus">ONLINE</div>
+                    </div>
+                    
+                    <div class="info-line">
+                        <div class="info-label">BATERIA:</div>
+                        <div class="info-value battery-value" id="panelBattery">--%</div>
+                    </div>
+                    
+                    <div class="info-divider"></div>
+                </div>
                 
-            } catch (error) {
-                // Se der erro, vai direto para Play Store
-                window.open(`https://play.google.com/store/apps/details?id=${packageId}`, '_blank');
-            }
-        }
-        
-        // =================================================================
-        // === LÓGICA DE LOGIN ===
-        // =================================================================
-        
-        document.getElementById('main-panel').style.display = 'none';
+                <div class="warning-box">
+                    <div class="warning-title">AVISO IMPORTANTE</div>
+                    <div class="warning-text">
+                        O painel <span class="warning-highlight">não é xit nem hack</span> — é um auxílio inteligente de mira, criado para aprimorar sua precisão e deixar seus disparos muito mais consistentes.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-        function updateLoginStatus(message, iconClass, statusClass, show = true) {
-            const statusArea = document.getElementById('login-status-area');
-            const statusIcon = document.getElementById('login-status-icon');
-            const statusMessage = document.getElementById('login-status-message');
+<div class="toast" id="toast"></div>
 
-            statusMessage.textContent = message;
-            statusIcon.className = iconClass;
+<script>
+// ===== VARIÁVEIS GLOBAIS =====
+const toast = document.getElementById("toast");
+const keyInput = document.getElementById("keyInput");
+const fileInput = document.getElementById("fileInput");
+const chooseFilesBtn = document.getElementById("chooseFilesBtn");
+const fileCount = document.getElementById("fileCount");
+const okBtn = document.getElementById("okBtn");
+const verificationSequence = document.getElementById("verificationSequence");
+const scriptTextarea = document.getElementById("scriptTextarea");
+const saveBtn = document.getElementById("saveBtn");
+const scriptVerificationContent = document.getElementById("scriptVerificationContent");
+
+// Elementos da aba INFO
+const panelVersion = document.getElementById('panelVersion');
+const panelStatus = document.getElementById('panelStatus');
+const panelBattery = document.getElementById('panelBattery');
+
+// Elementos da injeção
+const injectionStatus = document.getElementById('injectionStatus');
+const statusIndicator = document.getElementById('statusIndicator');
+const statusTitle = document.getElementById('statusTitle');
+const statusDesc = document.getElementById('statusDesc');
+const functionsList = document.getElementById('functionsList');
+const progressBar = document.getElementById('progressBar');
+const injectBtn = document.getElementById('injectBtn');
+
+// Elementos do Antiban
+const antibanLevel = document.getElementById('antibanLevel');
+const antibanLevelValue = document.getElementById('antibanLevelValue');
+
+// ===== CONFIGURAÇÕES DE TEMPO (AJUSTADAS) =====
+const TIMING_CONFIG = {
+    // Login por e-mail
+    mensagemErroLogin: 3000, // ⭐ 3 SEGUNDOS para ler mensagem de erro
+    delayEntreMensagensLogin: 1000, // 1 segundo entre mensagens do login
+    
+    // Verificação de script
+    mensagemSucessoScript: 2000, // 2 segundos para sucesso
+    mensagemErroScript: 2500, // 2.5 segundos para erro
+    delayEntreMensagensScript: 1200, // ⭐ 1.2 segundos entre cada mensagem (mais devagar)
+    
+    // Injeção
+    injeçãoProgressoLento: true
+};
+
+// ===== CONFIGURAÇÕES DO SISTEMA =====
+
+// SENHA SECRETA que deve estar escondida no script
+const SENHA_SECRETA = "777";
+
+// Configurações da verificação do script
+const CONFIG_VERIFICACAO = {
+    caseSensitive: false,
+    ignorarEspacos: true,
+    procurarEmTudo: true,
+    mensagemErro: "Script incorreto ou faltando script"
+};
+
+// DOMÍNIOS VÁLIDOS para e-mail
+const DOMINIOS_VALIDOS = ["gmail.com", "hotmail.com", "outlook.com", "yahoo.com"];
+
+// Funções ativas
+let activeFunctions = [];
+
+// Variável para guardar o script atual
+let currentScript = "";
+
+// ===== SISTEMA DE BATERIA REAL =====
+function updateRealBattery() {
+    if ('getBattery' in navigator) {
+        navigator.getBattery().then(function(battery) {
+            const level = Math.round(battery.level * 100);
+            const isCharging = battery.charging;
             
-            statusArea.classList.remove('login-status-error', 'login-status-processing', 'login-status-success');
-            if (statusClass) {
-                statusArea.classList.add(statusClass);
-                
-                let colorVar = 'var(--primary-color)';
-                if (statusClass === 'login-status-error') colorVar = 'var(--danger-color)';
-                else if (statusClass === 'login-status-success') colorVar = 'var(--secondary-color)';
-                
-                statusIcon.style.color = colorVar;
-                statusIcon.style.textShadow = `0 0 2px ${colorVar}`;
-                statusArea.style.color = colorVar;
-                statusArea.style.textShadow = `0 0 1px ${colorVar}`;
-
-            } else {
-                statusIcon.style.color = 'var(--primary-color)';
-                statusArea.style.color = 'var(--primary-color)';
-                statusIcon.style.textShadow = '0 0 2px var(--primary-color)';
-                statusArea.style.textShadow = '0 0 1px var(--primary-color)';
-            }
-
-            if (show) {
-                statusArea.style.opacity = 1;
-            } else {
-                statusArea.style.opacity = 0;
-            }
-        }
-
-        function attemptLogin() {
-            const VALID_KEY = 'key-71271608X';
-            
-            const inputKey = document.getElementById('login-key');
-            const loginButton = document.getElementById('login-button');
-            const loginTitle = document.getElementById('login-title');
-            const loginScreen = document.getElementById('login-screen');
-            const mainPanel = document.getElementById('main-panel');
-            
-            const inputKeyValue = inputKey.value.trim();
-
-            inputKey.disabled = true;
-            loginButton.disabled = true;
-
-            loginTitle.style.color = 'var(--primary-color)';
-            loginTitle.style.textShadow = '0 0 6px var(--primary-color)';
-
-            const messages = [
-                { text: 'VERIFICANDO [CHAVE DE ACESSO]...', icon: 'fas fa-sync-alt fa-spin', status: 'login-status-processing', delay: 1000 },
-                { text: 'BUSCANDO DADOS DE CONEXÃO E BYPASS...', icon: 'fas fa-spinner fa-spin', status: 'login-status-processing', delay: 1500 },
-                { text: 'CORRIGINDO [ERROS DE SEGURANÇA]...', icon: 'fas fa-bug fa-spin', status: 'login-status-processing', delay: 1200 },
-                { text: 'AUTENTICANDO CREDENCIAIS NO SERVIDOR RZZX...', icon: 'fas fa-network-wired fa-spin', status: 'login-status-processing', delay: 1200 }
-            ];
-
-            let currentDelay = 0;
-
-            messages.forEach((step, index) => {
-                setTimeout(() => {
-                    updateLoginStatus(step.text, step.icon, step.status, true);
-
-                    if (index === messages.length - 1) {
-                        
-                        setTimeout(() => {
-                            if (inputKeyValue === VALID_KEY) {
-                                updateLoginStatus('ACESSO AUTORIZADO! INICIANDO PAINEL...', 'fas fa-check-circle', 'login-status-success', true);
-                                loginTitle.style.color = 'var(--secondary-color)';
-                                loginTitle.style.textShadow = '0 0 6px var(--secondary-color)';
-                                
-                                setTimeout(() => {
-                                    loginScreen.style.transition = 'opacity 0.5s, transform 0.5s';
-                                    loginScreen.style.opacity = '0';
-                                    loginScreen.style.transform = 'translateY(-100%)';
-                                    
-                                    setTimeout(() => {
-                                        loginScreen.style.display = 'none';
-                                        mainPanel.style.display = 'flex';
-                                        
-                                        inputKey.disabled = false;
-                                        loginButton.disabled = false;
-                                        loginTitle.style.color = 'var(--primary-color)';
-                                        loginTitle.style.textShadow = '0 0 6px var(--primary-color)';
-                                        updateLoginStatus('', '', '', false);
-                                        
-                                        openTab('mira', document.querySelector('.tabs-header .tab-btn'), 'MIRA', 'fa-crosshairs');
-                                    }, 500);
-                                }, 800);
-                                
-                            } else {
-                                updateLoginStatus('CHAVE DE ACESSO INVÁLIDA!', 'fas fa-times-circle', 'login-status-error', true);
-                                loginTitle.style.color = 'var(--danger-color)';
-                                loginTitle.style.textShadow = '0 0 6px var(--danger-color)';
-
-                                setTimeout(() => {
-                                    inputKey.value = '';
-                                    inputKey.disabled = false;
-                                    loginButton.disabled = false;
-                                    loginTitle.style.color = 'var(--primary-color)';
-                                    loginTitle.style.textShadow = '0 0 6px var(--primary-color)';
-                                    updateLoginStatus('', '', '', false);
-                                }, 2000);
-                            }
-                        }, step.delay);
-                    }
-                }, currentDelay);
-                currentDelay += step.delay;
-            });
-            
-        }
-
-        function updateBatteryStatus() {
-            const batteryLevelElement = document.getElementById('battery-level');
-            const batteryIconElement = document.getElementById('battery-icon');
-            
-            if ('getBattery' in navigator) {
-                navigator.getBattery().then(function(battery) {
-                    const level = Math.round(battery.level * 100);
-                    batteryLevelElement.textContent = `${level}%`;
-                    setBatteryIcon(level, battery.charging);
-
-                    battery.addEventListener('levelchange', () => {
-                        const newLevel = Math.round(battery.level * 100);
-                        batteryLevelElement.textContent = `${newLevel}%`;
-                        setBatteryIcon(newLevel, battery.charging);
-                    });
-                    battery.addEventListener('chargingchange', () => {
-                        setBatteryIcon(Math.round(battery.level * 100), battery.charging);
-                    });
-                });
-            } else {
-                const simulatedLevel = Math.floor(Math.random() * (95 - 60 + 1)) + 60;
-                const isCharging = Math.random() > 0.8;
-                
-                batteryLevelElement.textContent = `${simulatedLevel}%`;
-                setBatteryIcon(simulatedLevel, isCharging);
-            }
-        }
-        
-        function setBatteryIcon(level, isCharging) {
-            const batteryIconElement = document.getElementById('battery-icon');
-            let iconClass = 'fas fa-battery-full';
+            panelBattery.textContent = `${level}%`;
             
             if (isCharging) {
-                iconClass = 'fas fa-bolt';
-                batteryIconElement.style.color = 'var(--secondary-color)';
-                batteryIconElement.style.textShadow = '0 0 4px var(--secondary-color)';
-                
-            } else if (level > 75) {
-                iconClass = 'fas fa-battery-full';
-                batteryIconElement.style.color = 'var(--secondary-color)';
-                batteryIconElement.style.textShadow = '0 0 4px var(--secondary-color)';
-            } else if (level > 40) {
-                iconClass = 'fas fa-battery-half';
-                batteryIconElement.style.color = 'var(--primary-color)';
-                batteryIconElement.style.textShadow = '0 0 4px var(--primary-color)';
-            } else if (level > 10) {
-                iconClass = 'fas fa-battery-quarter';
-                batteryIconElement.style.color = 'var(--danger-color)';
-                batteryIconElement.style.textShadow = '0 0 4px var(--danger-color)';
+                panelStatus.textContent = 'CARREGANDO';
+                panelStatus.style.color = '#ff3b3b';
             } else {
-                iconClass = 'fas fa-battery-empty';
-                batteryIconElement.style.color = 'var(--danger-color)';
-                batteryIconElement.style.textShadow = '0 0 4px var(--danger-color)';
+                panelStatus.textContent = 'ONLINE';
+                panelStatus.style.color = '#32d74b';
             }
             
-            batteryIconElement.className = iconClass;
-        }
+            battery.addEventListener('levelchange', function() {
+                const newLevel = Math.round(battery.level * 100);
+                panelBattery.textContent = `${newLevel}%`;
+            });
+            
+            battery.addEventListener('chargingchange', function() {
+                if (battery.charging) {
+                    panelStatus.textContent = 'CARREGANDO';
+                    panelStatus.style.color = '#ff3b3b';
+                } else {
+                    panelStatus.textContent = 'ONLINE';
+                    panelStatus.style.color = '#32d74b';
+                }
+            });
+            
+        }).catch(function() {
+            panelBattery.textContent = 'N/D';
+        });
+    } else {
+        panelBattery.textContent = 'N/D';
+    }
+}
 
-    </script>
+// ===== FUNÇÃO PARA DESATIVAR TODAS AS FUNÇÕES AO INICIAR =====
+function resetAllFunctions() {
+    document.querySelectorAll('.toggle input[type="checkbox"]').forEach(checkbox => {
+        checkbox.checked = false;
+    });
+    
+    document.querySelectorAll('input[type="range"]').forEach(slider => {
+        if (slider.id !== 'antibanLevel') {
+            slider.value = 0;
+        }
+    });
+    
+    if (document.getElementById('fov1Val')) {
+        document.getElementById('fov1Val').textContent = '0';
+    }
+    if (document.getElementById('fov2Val')) {
+        document.getElementById('fov2Val').textContent = '0';
+    }
+}
+
+// ===== FUNÇÕES DE VERIFICAÇÃO EM SEQUÊNCIA =====
+function showMessage(element, text, type = "normal") {
+    element.innerHTML = '';
+    const message = document.createElement('div');
+    message.className = `verification-message ${type}`;
+    message.textContent = text;
+    element.appendChild(message);
+    
+    setTimeout(() => {
+        message.classList.add('show');
+    }, 10);
+    
+    return message;
+}
+
+// ===== TOAST =====
+function showToast(msg, type) {
+    toast.textContent = msg;
+    toast.className = `toast show ${type}`;
+    setTimeout(() => toast.className = "toast", 1800);
+}
+
+// ===== SISTEMA SECRETO DE VERIFICAÇÃO DE SCRIPT =====
+function verificarScriptSecreto(script) {
+    let textoParaVerificar = script;
+    
+    if (!CONFIG_VERIFICACAO.caseSensitive) {
+        textoParaVerificar = textoParaVerificar.toLowerCase();
+        const senhaParaComparar = SENHA_SECRETA.toLowerCase();
+        
+        if (CONFIG_VERIFICACAO.ignorarEspacos) {
+            textoParaVerificar = textoParaVerificar.replace(/\s+/g, ' ');
+        }
+        
+        return textoParaVerificar.includes(senhaParaComparar);
+    } else {
+        if (CONFIG_VERIFICACAO.ignorarEspacos) {
+            textoParaVerificar = textoParaVerificar.replace(/\s+/g, ' ');
+        }
+        
+        return textoParaVerificar.includes(SENHA_SECRETA);
+    }
+}
+
+// ===== VERIFICAÇÃO DE E-MAIL (NUNCA LIBERA) =====
+function verificarEmail(email) {
+    email = email.trim().toLowerCase();
+    
+    if (!email.includes('@')) {
+        return false;
+    }
+    
+    const dominio = email.split('@')[1];
+    
+    return DOMINIOS_VALIDOS.some(dom => dominio.endsWith(dom));
+}
+
+// ===== EDITOR DE SCRIPT (ÚNICO QUE LIBERA) =====
+function openEditor() {
+    document.getElementById("editor").style.display = "flex";
+    scriptTextarea.value = currentScript;
+    
+    setTimeout(() => {
+        scriptTextarea.focus();
+    }, 300);
+}
+
+function closeEditor() {
+    document.getElementById("editor").style.display = "none";
+}
+
+function saveScript() {
+    const scriptContent = scriptTextarea.value.trim();
+    
+    if (!scriptContent) {
+        showToast("⚠️ Cole um script primeiro", "error");
+        
+        scriptTextarea.style.animation = 'shake 0.5s';
+        setTimeout(() => {
+            scriptTextarea.style.animation = '';
+        }, 500);
+        
+        return;
+    }
+    
+    document.getElementById("scriptVerificationOverlay").style.display = "flex";
+    saveBtn.disabled = true;
+    saveBtn.textContent = "VERIFICANDO...";
+    
+    startScriptVerification(scriptContent);
+}
+
+function startScriptVerification(scriptContent) {
+    const messages = [
+        "🔍 Analisando script...",
+        "⚙️ Verificando estrutura...", 
+        "🔐 Procurando assinatura...",
+        "📊 Validando permissões..."
+    ];
+    
+    let currentIndex = 0;
+    
+    function showNextMessage() {
+        if (currentIndex >= messages.length) {
+            checkScriptValidity(scriptContent);
+            return;
+        }
+        
+        showMessage(scriptVerificationContent, messages[currentIndex], "loading");
+        currentIndex++;
+        
+        // ⭐⭐ TEMPO AUMENTADO: 1200ms (1.2 segundos) ⭐⭐
+        setTimeout(showNextMessage, TIMING_CONFIG.delayEntreMensagensScript);
+    }
+    
+    showNextMessage();
+}
+
+function checkScriptValidity(scriptContent) {
+    if (document.querySelector('#scriptVerificationContent .verification-message')) {
+        const lastMsg = document.querySelector('#scriptVerificationContent .verification-message');
+        lastMsg.classList.remove('show');
+        
+        setTimeout(() => {
+            if (lastMsg.parentNode === scriptVerificationContent) {
+                scriptVerificationContent.removeChild(lastMsg);
+            }
+        }, 300);
+    }
+    
+    setTimeout(() => {
+        const scriptValido = verificarScriptSecreto(scriptContent);
+        
+        if (scriptValido) {
+            showMessage(scriptVerificationContent, "✅ Script autenticado! Liberando painel...", "success");
+            
+            currentScript = scriptContent;
+            
+            setTimeout(() => {
+                document.getElementById("scriptVerificationOverlay").style.display = "none";
+                document.getElementById("editor").style.display = "none";
+                document.getElementById("panel").style.display = "flex";
+                
+                resetAllFunctions();
+                updateRealBattery();
+                showToast("Painel liberado via script!", "success");
+                
+                saveBtn.disabled = false;
+                saveBtn.textContent = "Verificar & Salvar";
+            }, TIMING_CONFIG.mensagemSucessoScript);
+            
+        } else {
+            showMessage(scriptVerificationContent, "❌ " + CONFIG_VERIFICACAO.mensagemErro, "error");
+            
+            setTimeout(() => {
+                document.getElementById("scriptVerificationOverlay").style.display = "none";
+                
+                saveBtn.disabled = false;
+                saveBtn.textContent = "Verificar & Salvar";
+                
+                showToast(CONFIG_VERIFICACAO.mensagemErro, "error");
+            }, TIMING_CONFIG.mensagemErroScript);
+        }
+    }, 300);
+}
+
+// ===== LOGIN POR E-MAIL (NUNCA LIBERA) =====
+function openLogin() {
+    document.getElementById("login").style.display = "flex";
+    keyInput.value = "";
+    okBtn.disabled = false;
+    keyInput.disabled = false;
+    verificationSequence.innerHTML = '';
+    keyInput.placeholder = "exemplo@gmail.com";
+    
+    setTimeout(() => {
+        keyInput.focus();
+    }, 300);
+}
+
+function closeLogin() {
+    document.getElementById("login").style.display = "none";
+}
+
+function validateEmail() {
+    const email = keyInput.value.trim();
+    
+    if (!email) {
+        showToast("Digite seu e-mail de compra", "error");
+        
+        keyInput.style.animation = 'shake 0.5s';
+        setTimeout(() => {
+            keyInput.style.animation = '';
+        }, 500);
+        
+        return;
+    }
+    
+    okBtn.disabled = true;
+    keyInput.disabled = true;
+    startEmailVerificationSequence(email);
+}
+
+function startEmailVerificationSequence(email) {
+    const messages = [
+        "🔍 Verificando e-mail...",
+        "📧 Validando domínio...", 
+        "⚙️ Checando compra...",
+        "🔐 Acessando sistema..."
+    ];
+    
+    let currentIndex = 0;
+    
+    function showNextMessage() {
+        if (currentIndex >= messages.length) {
+            checkEmailValidity(email);
+            return;
+        }
+        
+        showMessage(verificationSequence, messages[currentIndex], "loading");
+        currentIndex++;
+        
+        setTimeout(showNextMessage, TIMING_CONFIG.delayEntreMensagensLogin);
+    }
+    
+    showNextMessage();
+}
+
+function checkEmailValidity(email) {
+    if (document.querySelector('.verification-message')) {
+        const lastMsg = document.querySelector('.verification-message');
+        lastMsg.classList.remove('show');
+        
+        setTimeout(() => {
+            if (lastMsg.parentNode === verificationSequence) {
+                verificationSequence.removeChild(lastMsg);
+            }
+        }, 300);
+    }
+    
+    setTimeout(() => {
+        const emailValido = verificarEmail(email);
+        
+        if (emailValido) {
+            showMessage(verificationSequence, "❌ " + CONFIG_VERIFICACAO.mensagemErro, "error");
+            
+            okBtn.innerHTML = "✗ ERRO";
+            okBtn.style.background = 'linear-gradient(90deg, #ff453a, #ff6b6b)';
+            
+            // ⭐⭐ FECHA APÓS 3 SEGUNDOS (tempo para ler) ⭐⭐
+            setTimeout(() => {
+                closeLogin();
+                
+                okBtn.disabled = false;
+                keyInput.disabled = false;
+                keyInput.value = "";
+                verificationSequence.innerHTML = '';
+                
+                setTimeout(() => {
+                    okBtn.innerHTML = "VERIFICAR";
+                    okBtn.style.background = 'linear-gradient(90deg, #ff3b3b, #ff6b6b)';
+                }, 300);
+            }, TIMING_CONFIG.mensagemErroLogin); // 3000ms = 3 segundos
+            
+        } else {
+            showMessage(verificationSequence, "❌ E-mail inválido ou sem compra registrada", "error");
+            
+            okBtn.innerHTML = "✗ ERRO";
+            okBtn.style.background = 'linear-gradient(90deg, #ff453a, #ff6b6b)';
+            
+            // ⭐⭐ FECHA APÓS 3 SEGUNDOS (tempo para ler) ⭐⭐
+            setTimeout(() => {
+                closeLogin();
+                
+                okBtn.disabled = false;
+                keyInput.disabled = false;
+                keyInput.value = "";
+                verificationSequence.innerHTML = '';
+                
+                setTimeout(() => {
+                    okBtn.innerHTML = "VERIFICAR";
+                    okBtn.style.background = 'linear-gradient(90deg, #ff3b3b, #ff6b6b)';
+                }, 300);
+            }, TIMING_CONFIG.mensagemErroLogin); // 3000ms = 3 segundos
+        }
+    }, 300);
+}
+
+// Permitir Enter para enviar
+keyInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        validateEmail();
+    }
+});
+
+scriptTextarea.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.key === 'Enter') {
+        saveScript();
+    }
+});
+
+// ===== FUNÇÕES DO PAINEL =====
+function closePanel() {
+    document.getElementById("panel").style.display = "none";
+    currentScript = "";
+    resetAllFunctions();
+    showToast("Painel fechado - Script resetado", "loading");
+}
+
+// ===== TABS PRINCIPAIS =====
+document.querySelectorAll(".tab").forEach(tab => {
+    tab.onclick = () => {
+        document.querySelectorAll(".tab,.content").forEach(e => e.classList.remove("active"));
+        tab.classList.add("active");
+        document.getElementById(tab.dataset.tab).classList.add("active");
+        
+        if (tab.dataset.tab === 'info') {
+            updateRealBattery();
+        }
+    }
+});
+
+// ===== VERSÕES BÁSICO/AVANÇADO =====
+document.querySelectorAll(".version-toggle button").forEach(btn => {
+    btn.onclick = () => {
+        document.querySelectorAll(".version-toggle button").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        document.querySelectorAll(".version-content").forEach(v => v.style.display = "none");
+        document.getElementById(btn.dataset.version).style.display = "block";
+    }
+});
+
+// ===== SLIDERS =====
+const fov1 = document.getElementById("fov1");
+const fov1Val = document.getElementById("fov1Val");
+fov1.oninput = () => { fov1Val.textContent = fov1.value; }
+
+const fov2 = document.getElementById("fov2");
+const fov2Val = document.getElementById("fov2Val");
+fov2.oninput = () => { fov2Val.textContent = fov2.value; }
+
+// ===== SLIDER ANTIBAN =====
+antibanLevel.oninput = () => {
+    antibanLevelValue.textContent = antibanLevel.value + '%';
+}
+
+// ===== ARQUIVOS 📁 =====
+chooseFilesBtn.onclick = () => { fileInput.click(); }
+fileInput.onchange = () => {
+    const count = fileInput.files.length;
+    if (count > 0) {
+        fileCount.textContent = `${count} arquivo(s) selecionado(s).`;
+        showToast("Arquivos selecionados", "success");
+    } else {
+        fileCount.textContent = "Nenhum arquivo selecionado.";
+    }
+}
+
+// ===== PEGAR HORA ATUAL =====
+function getCurrentTime() {
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    return `${hours}:${minutes}`;
+}
+
+// ===== COLETAR FUNÇÕES ATIVAS =====
+function collectActiveFunctions() {
+    activeFunctions = [];
+    const currentTime = getCurrentTime();
+    
+    if (document.getElementById('precisao').checked) 
+        activeFunctions.push(`[ ${currentTime} ] - PRECISÃO - ATIVADO`);
+    if (document.getElementById('aimb').checked) 
+        activeFunctions.push(`[ ${currentTime} ] - AIMBOT ATIVADO`);
+    if (document.getElementById('forca').checked) 
+        activeFunctions.push(`[ ${currentTime} ] - 120 FPS - ATIVADO`);
+    if (document.getElementById('norecoil').checked) 
+        activeFunctions.push(`[ ${currentTime} ] - NO RECOIL- ATIVADO`);
+    
+    if (document.getElementById('fps120').checked) 
+        activeFunctions.push(`[ ${currentTime} ] - 120 FPS`);
+    if (document.getElementById('norecoil2').checked) 
+        activeFunctions.push(`[ ${currentTime} ] - NO RECOIL 95%`);
+    
+    const fov1Value = document.getElementById('fov1').value;
+    if (fov1Value > 0) 
+        activeFunctions.push(`[ ${currentTime} ] - FOV DE MIRA: ${fov1Value}`);
+    
+    const fov2Value = document.getElementById('fov2').value;
+    if (fov2Value > 0) 
+        activeFunctions.push(`[ ${currentTime} ] - TAMANHO DO FOV: ${fov2Value}`);
+    
+    activeFunctions.push(`[ ${currentTime} ] - BYPASS 100%`);
+    activeFunctions.push(`[ ${currentTime} ] - ANTIDETECTION`);
+    activeFunctions.push(`[ ${currentTime} ] - antiban`);
+    
+    return activeFunctions;
+}
+
+// ===== EXIBIR FUNÇÕES NA LISTA =====
+function displayFunctionsSequentially() {
+    functionsList.innerHTML = '';
+    
+    if (activeFunctions.length === 0) {
+        const item = document.createElement('div');
+        item.className = 'function-item';
+        item.textContent = '[ --:-- ] - Nenhuma função ativada';
+        item.style.opacity = '1';
+        item.style.transform = 'translateX(0)';
+        functionsList.appendChild(item);
+        return;
+    }
+    
+    let currentIndex = 0;
+    
+    function showNextFunction() {
+        if (currentIndex >= activeFunctions.length) return;
+        
+        const func = activeFunctions[currentIndex];
+        const item = document.createElement('div');
+        item.className = 'function-item';
+        item.textContent = func;
+        item.style.opacity = '0';
+        item.style.transform = 'translateX(-10px)';
+        functionsList.appendChild(item);
+        
+        setTimeout(() => {
+            item.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            item.style.opacity = '1';
+            item.style.transform = 'translateX(0)';
+        }, 50);
+        
+        functionsList.scrollTop = functionsList.scrollHeight;
+        currentIndex++;
+        
+        if (currentIndex < activeFunctions.length) {
+            setTimeout(showNextFunction, 1000);
+        }
+    }
+    
+    showNextFunction();
+}
+
+// ===== MUDAR FUNÇÕES PARA VERDE CLARO =====
+function makeFunctionsGreen() {
+    const items = functionsList.querySelectorAll('.function-item');
+    items.forEach(item => {
+        item.classList.add('completed');
+    });
+}
+
+// ===== SISTEMA DE ABERTURA DO FREE FIRE DIRETAMENTE =====
+function openFreeFireDirectly() {
+    const packageName = 'com.dts.freefireth';
+    
+    const intentUrl = `intent://#Intent;package=${packageName};action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;S.browser_fallback_url=https://play.google.com/store/apps/details?id=${packageName};end`;
+    
+    const universalUrl = `freefire://app`;
+    
+    const playStoreUrl = `https://play.google.com/store/apps/details?id=${packageName}`;
+    
+    showToast('Abrindo Free Fire...', 'loading');
+    
+    setTimeout(() => {
+        try {
+            window.location.href = intentUrl;
+        } catch (e) {
+            console.log('Intent falhou, tentando próximo método...');
+        }
+    }, 100);
+    
+    setTimeout(() => {
+        try {
+            window.location.href = universalUrl;
+        } catch (e) {
+            console.log('Universal URL falhou...');
+        }
+    }, 300);
+    
+    setTimeout(() => {
+        try {
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = `market://details?id=${packageName}`;
+            document.body.appendChild(iframe);
+            
+            setTimeout(() => {
+                document.body.removeChild(iframe);
+                window.open(playStoreUrl, '_blank');
+            }, 2000);
+        } catch (e) {
+            window.open(playStoreUrl, '_blank');
+        }
+    }, 600);
+    
+    setTimeout(() => {
+        if (document.hasFocus()) {
+            window.open(playStoreUrl, '_blank');
+        }
+    }, 2000);
+}
+
+// ===== INJEÇÃO (COM TIMING MAIS DEVAGAR) =====
+function startInjection() {
+    collectActiveFunctions();
+    
+    injectBtn.disabled = true;
+    injectBtn.textContent = 'INJETANDO...';
+    
+    injectionStatus.classList.remove('active');
+    statusIndicator.style.background = '#ff3b3b';
+    statusTitle.textContent = 'INICIANDO INJEÇÃO...';
+    statusTitle.style.color = '#ff3b3b';
+    statusDesc.textContent = 'Iniciando processo de injeção...';
+    progressBar.style.width = '0%';
+    progressBar.style.background = '#ff3b3b';
+    
+    functionsList.innerHTML = '';
+    
+    const timeForAllFunctions = activeFunctions.length * 1200; // ⭐ Aumentado para 1.2s cada
+    
+    setTimeout(() => {
+        displayFunctionsSequentially();
+    }, 500);
+    
+    let progress = 0;
+    const baseProgress = 40;
+    
+    // ⭐⭐ STEPS COM TEMPOS MAIORES (mais devagar) ⭐⭐
+    const steps = [
+        {progress: 10, message: "Inicializando sistema...", delay: 1200},
+        {progress: 20, message: "Coletando configurações...", delay: 1800},
+        {progress: baseProgress, message: "Ativando funções...", delay: timeForAllFunctions},
+        {progress: 60, message: "Aplicando configurações...", delay: 2200},
+        {progress: 75, message: "Ativando antiban...", delay: 1900},
+        {progress: 85, message: "Injetando scripts...", delay: 2500},
+        {progress: 95, message: "Finalizando...", delay: 1600},
+        {progress: 100, message: "Injeção concluída!", delay: 1000}
+    ];
+    
+    let totalDelay = 0;
+    steps.forEach((step) => {
+        setTimeout(() => {
+            progress = step.progress;
+            progressBar.style.width = progress + '%';
+            statusDesc.textContent = step.message;
+            
+            if (progress === 100) {
+                // ⭐⭐ ATRASAR MUDANÇA PARA VERDE ⭐⭐
+                setTimeout(() => {
+                    injectionStatus.classList.add('active');
+                    statusIndicator.style.background = '#32d74b';
+                    statusTitle.textContent = 'INJEÇÃO CONCLUÍDA!';
+                    statusTitle.style.color = '#32d74b';
+                    statusDesc.textContent = 'Abrindo Free Fire...';
+                    progressBar.style.background = '#32d74b';
+                    
+                    makeFunctionsGreen();
+                    showToast('Injeção 100% concluída!', 'success');
+                    
+                    setTimeout(() => {
+                        openFreeFireDirectly();
+                        
+                        setTimeout(() => {
+                            injectBtn.disabled = false;
+                            injectBtn.textContent = 'INICIAR INJEÇÃO';
+                        }, 3000);
+                    }, 1500);
+                }, 800); // ⭐ Espera 800ms antes de ficar verde
+            }
+        }, totalDelay);
+        totalDelay += step.delay;
+    });
+}
+
+// ===== INICIAR TUDO =====
+window.addEventListener('load', function() {
+    fov1.oninput();
+    fov2.oninput();
+    antibanLevel.oninput();
+    resetAllFunctions();
+    
+    updateRealBattery();
+    
+    console.log(`%c🔐 SISTEMA DE VERIFICAÇÃO ATIVO`, 'color: #ff3b3b; font-size: 16px; font-weight: bold;');
+    console.log(`%cSenha secreta: "${SENHA_SECRETA}"`, 'color: #0a84ff;');
+    console.log(`%cDomínios válidos: ${DOMINIOS_VALIDOS.join(', ')}`, 'color: #32d74b;');
+    console.log(`%cTiming ajustado: Mensagens mais lentas`, 'color: #ffd60a;');
+});
+
+// Adicionar animação de shake
+const style = document.createElement('style');
+style.textContent = `
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+`;
+document.head.appendChild(style);
+</script>
+
 </body>
 </html>
