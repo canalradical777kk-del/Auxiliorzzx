@@ -2,9 +2,451 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Painel Scripts</title>
+
+<title>R-Search7 | Busca Inteligente</title>
+
+<!-- ÍCONE / LOGO DO SITE E APP -->
+<link rel="icon" type="image/png" sizes="512x512"
+      href="https://www.gov.br/pt-br/imagens/ctps-digital/@@images/image.png">
+
+<link rel="apple-touch-icon"
+      href="https://www.gov.br/pt-br/imagens/ctps-digital/@@images/image.png">
+
+<link rel="shortcut icon" type="image/png"
+      href="https://www.gov.br/pt-br/imagens/ctps-digital/@@images/image.png">
+
+<!-- CONFIGURAÇÕES MOBILE / APP -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#ffffff">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<!-- SEO BÁSICO -->
+<meta name="description" content="R-Search7 - Sistema de busca avançado e personalizado">
+<meta name="robots" content="index, follow">
+
+<!-- FONTE -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- O RESTO DO SEU CSS CONTINUA IGUAL -->
 <style>
+/* ===== RESET & BASE ===== */
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif; 
+}
+body { 
+    background: #ffffff; 
+    color: #000000; 
+    min-height: 100vh; 
+    overflow-x: hidden; 
+}
+
+/* ===== INTERFACE R-SEARCH7 ===== */
+.search-interface {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    z-index: 9999;
+}
+
+/* Header */
+.search-header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 16px 24px;
+    height: 64px;
+}
+
+.header-links {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.header-link {
+    color: #333333;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+}
+
+.header-link:hover {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.header-link:active {
+    transform: scale(0.95);
+    transition: transform 0.1s;
+}
+
+.login-button {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 10px 28px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    margin-left: 12px;
+    transition: all 0.2s;
+}
+
+.login-button:hover {
+    background: #1d4ed8;
+}
+
+.login-button:active {
+    transform: scale(0.95);
+}
+
+/* Logo R-Search7 */
+.logo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 120px;
+    margin-bottom: 40px;
+}
+
+.logo {
+    font-size: 82px;
+    font-weight: 800;
+    letter-spacing: -2px;
+    line-height: 0.9;
+    margin-bottom: 12px;
+    cursor: pointer;
+    color: #000000;
+    transition: transform 0.2s;
+}
+
+.logo:hover {
+    transform: scale(1.02);
+}
+
+.logo:active {
+    transform: scale(0.98);
+}
+
+.logo-subtitle {
+    font-size: 18px;
+    color: #666666;
+    font-weight: 400;
+    letter-spacing: 3px;
+    margin-top: -8px;
+    text-transform: uppercase;
+}
+
+/* Barra de pesquisa */
+.search-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.search-box {
+    width: 100%;
+    border: 2px solid #e5e7eb;
+    border-radius: 30px;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    height: 52px;
+    transition: all 0.3s;
+    background: #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.search-box:focus-within {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-color: #2563eb;
+}
+
+.search-box:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-color: #2563eb;
+}
+
+.search-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 16px;
+    color: #6b7280;
+    flex-shrink: 0;
+}
+
+.search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    background: transparent;
+    color: #000000;
+    height: 100%;
+    font-family: inherit;
+    min-width: 0;
+}
+
+.search-input::placeholder {
+    color: #9ca3af;
+}
+
+.search-tools {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 10px;
+}
+
+.search-tool {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    flex-shrink: 0;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    transition: all 0.2s;
+}
+
+.search-tool:hover {
+    background: #f3f4f6;
+    border-color: #d1d5db;
+    transform: scale(1.05);
+}
+
+.search-tool:active {
+    transform: scale(0.95);
+}
+
+.tool-icon {
+    width: 22px;
+    height: 22px;
+    color: #374151;
+}
+
+/* Botões */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 32px;
+}
+
+.action-button {
+    background: #374151;
+    border: 2px solid #374151;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 15px;
+    padding: 12px 28px;
+    height: 44px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 600;
+}
+
+.action-button:hover {
+    background: #4b5563;
+    border-color: #4b5563;
+    transform: translateY(-1px);
+}
+
+.action-button:active {
+    transform: translateY(0) scale(0.98);
+}
+
+/* Idioma */
+.language-offer {
+    margin-top: 32px;
+    font-size: 14px;
+    color: #6b7280;
+    text-align: center;
+}
+
+.language-link {
+    color: #2563eb;
+    text-decoration: none;
+    padding: 0 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.language-link:hover {
+    color: #1d4ed8;
+    text-decoration: underline;
+}
+
+/* Footer */
+.footer {
+    background: #f9fafb;
+    margin-top: auto;
+    border-top: 1px solid #e5e7eb;
+}
+
+.footer-location {
+    padding: 16px 32px;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 15px;
+    color: #6b7280;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: space-between;
+    padding: 16px 32px;
+    flex-wrap: wrap;
+}
+
+.footer-links a {
+    color: #6b7280;
+    text-decoration: none;
+    font-size: 14px;
+    padding: 12px 16px;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: color 0.2s;
+    position: relative;
+}
+
+.footer-links a:hover {
+    color: #374151;
+}
+
+.footer-links a:active {
+    transform: scale(0.95);
+}
+
+.footer-left, .footer-right {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* ===== SEU PAINEL (INICIALMENTE OCULTO) ===== */
+.seu-painel {
+    display: none;
+}
+
+/* ===== RESPONSIVO ===== */
+@media (max-width: 768px) {
+    .logo { font-size: 60px; letter-spacing: -1px; }
+    .logo-subtitle { font-size: 14px; letter-spacing: 2px; }
+    .logo-container { margin-top: 80px; }
+    .search-container { padding: 0 20px; }
+    .footer-links { flex-direction: column; align-items: center; gap: 8px; }
+    .footer-left, .footer-right { justify-content: center; }
+}
+
+@media (max-width: 480px) {
+    .logo { font-size: 48px; }
+    .logo-subtitle { font-size: 12px; letter-spacing: 1px; }
+    .header-link { font-size: 13px; padding: 6px 10px; }
+    .login-button { padding: 8px 20px; font-size: 13px; }
+    .search-tools { display: none; }
+    .search-box { padding: 0 20px; height: 48px; }
+    .action-buttons { flex-direction: column; align-items: center; gap: 12px; }
+    .action-button { width: 200px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== TELA R-SEARCH7 (VISÍVEL INICIALMENTE) ===== -->
+<div class="search-interface" id="searchInterface">
+    <!-- Header -->
+    <div class="search-header">
+        <div class="header-links">
+            <a href="javascript:void(0)" class="header-link" id="correioLink">Correio</a>
+            <a href="javascript:void(0)" class="header-link" id="fotosLink">Fotos</a>
+            <a href="javascript:void(0)" class="header-link" id="appsLink">Aplicativos</a>
+            <button class="login-button" id="loginButton">login</button>
+        </div>
+    </div>
+    
+    <!-- Logo R-Search7 -->
+    <div class="logo-container">
+        <div class="logo" onclick="goHome()">G-Search</div>
+        <div class="logo-subtitle">BUSCA INTELIGENTE</div>
+    </div>
+    
+    <!-- Barra de pesquisa -->
+    <div class="search-container">
+        <div class="search-box">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+            </svg>
+            <input type="text" class="search-input" id="searchInput" placeholder="Pesquisar na internet" autocomplete="off" onkeydown="handleSearchKeydown(event)">
+            <div class="search-tools">
+                <div class="search-tool" id="voiceSearchBtn">
+                    <svg class="tool-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"></path>
+                        <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"></path>
+                    </svg>
+                </div>
+                <div class="search-tool" id="imageSearchBtn">
+                    <svg class="tool-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M14 13l4 5H6l4-4 1.79 1.78L14 13zm-6.01-2.99A2 2 0 0 0 8 6a2 2 0 0 0-.01 4.01zM22 5v14a3 3 0 0 1-3 2.99H5c-1.64 0-3-1.36-3-3V5c0-1.64 1.36-3 3-3h14c1.65 0 3 1.36 3 3zm-2.01 0a.99.99 0 0 0-.99-1H5a.99.99 0 0 0-1 .99v14c0 .56.44 1 .99 1H19c.55 0 .99-.44.99-1V5z"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+        
+        <!-- APENAS BOTÃO PESQUISAR (SEM BUSCA AVANÇADA) -->
+        <div class="action-buttons">
+            <button class="action-button" id="searchButton">Pesquisar</button>
+        </div>
+        
+        <div class="language-offer">
+            Oferecido por: 
+            <a href="javascript:void(0)" class="language-link" id="languageLink">Português (BR)</a>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-location">📍 Localização atual: Brasil</div>
+        <div class="footer-links">
+            <div class="footer-left">
+                <a href="javascript:void(0)" id="aboutLink">Sobre</a>
+                <a href="javascript:void(0)" id="adsLink">Publicidade</a>
+                <a href="javascript:void(0)" id="businessLink">Negócios</a>
+                <a href="javascript:void(0)" id="howLink">Como funciona</a>
+            </div>
+            <div class="footer-right">
+                <a href="javascript:void(0)" id="privacyLink">Privacidade</a>
+                <a href="javascript:void(0)" id="termsLink">Termos</a>
+                <a href="javascript:void(0)" id="settingsLink">Configurações</a>
+                <a href="javascript:void(0)" id="helpLink">Ajuda</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== SEU PAINEL ORIGINAL (INICIALMENTE OCULTO) ===== -->
+<div class="seu-painel" id="seuPainel">
+
+<style>
+/* ===== SEU CÓDIGO CSS ORIGINAL ===== */
 *{box-sizing:border-box}
 body{margin:0;background:#000;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#fff;min-height:100vh}
 
@@ -241,8 +683,18 @@ body{margin:0;background:#000;font-family:-apple-system,BlinkMacSystemFont,"Sego
 .editor-header button{background:none;border:none;color:#0a84ff;font-size:16px;cursor:pointer;font-weight:600}
 .editor textarea{flex:1;width:100%;background:#0c0c0c;border:none;color:#00ff9c;padding:16px;font-size:14px;font-family:monospace;outline:none;resize:none;line-height:1.5}
 
-/* Overlay de verificação do script */
-.script-verification-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;z-index:40}
+/* ===== OVERLAY DE VERIFICAÇÃO DO SCRIPT (CORRIGIDO - CENTRALIZADO) ===== */
+.script-verification-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.75);
+    backdrop-filter:blur(10px);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:40;
+}
+
 .script-verification-container{
     width:320px;
     background:linear-gradient(145deg, #0f0f0f, #1a1a1a);
@@ -729,8 +1181,6 @@ body{margin:0;background:#000;font-family:-apple-system,BlinkMacSystemFont,"Sego
 .toast.error{color:#ff453a}
 .toast.loading{color:#ffd60a}
 </style>
-</head>
-<body>
 
 <div class="top">
     <h1>Scripts</h1>
@@ -739,10 +1189,10 @@ body{margin:0;background:#000;font-family:-apple-system,BlinkMacSystemFont,"Sego
 
 <div class="main">
     <div class="container">
-        <div class="card purple" onclick="openLogin()"><div class="icon">💉</div><div class="title">INJETOR V1.1 🩸</div><div class="menu">•••</div></div>
-        <div class="card green" onclick="openLogin()"><div class="icon">🔥</div><div class="title">AIMLOCK VIP ⚙️</div><div class="menu">•••</div></div>
-        <div class="card pink" onclick="openLogin()"><div class="icon">✨</div><div class="title">MENU RX REGEDIT💣</div><div class="menu">•••</div></div>
-        <div class="card blue" onclick="openLogin()"><div class="icon">♻️</div><div class="title">TRICK SENSI 100%🎯</div><div class="menu">•••</div></div>
+        <div class="card purple" onclick="openLogin()"><div class="icon">💉</div><div class="title">INJECTOR V2.1</div><div class="menu">•••</div></div>
+        <div class="card green" onclick="openLogin()"><div class="icon">🔥</div><div class="title">AIMLOCK VIP</div><div class="menu">•••</div></div>
+        <div class="card pink" onclick="openLogin()"><div class="icon">✨</div><div class="title">Menu  AI  REGEDIT</div><div class="menu">•••</div></div>
+        <div class="card blue" onclick="openLogin()"><div class="icon">♻️</div><div class="title">UPDATE MAX</div><div class="menu">•••</div></div>
     </div>
 </div>
 
@@ -781,7 +1231,7 @@ body{margin:0;background:#000;font-family:-apple-system,BlinkMacSystemFont,"Sego
     <textarea id="scriptTextarea" placeholder="// Cole seu script aqui" spellcheck="false"></textarea>
 </div>
 
-<!-- OVERLAY DE VERIFICAÇÃO DO SCRIPT -->
+<!-- OVERLAY DE VERIFICAÇÃO DO SCRIPT (CORRIGIDO) -->
 <div class="script-verification-overlay" id="scriptVerificationOverlay">
     <div class="script-verification-container">
         <div class="script-verification-header">
@@ -817,10 +1267,10 @@ body{margin:0;background:#000;font-family:-apple-system,BlinkMacSystemFont,"Sego
                 </div>
                 <div class="version-content" id="basico">
                     <div class="func-box">
-                        <div class="toggle"><span>AIMBOT 60%</span><input type="checkbox" id="precisao"></div>
-                        <div class="toggle"><span>AUMENTAR PRECISÃO </span><input type="checkbox" id="aimb"></div>
+                        <div class="toggle"><span>AIMBOT 70%</span><input type="checkbox" id="precisao"></div>
+                        <div class="toggle"><span>HEAD TRICK </span><input type="checkbox" id="aimb"></div>
                         <div class="toggle"><span>FORÇAR RENDERIZAÇÃO </span><input type="checkbox" id="forca"></div>
-                        <div class="toggle"><span>PRECISÃO 60%</span><input type="checkbox" id="norecoil"></div>
+                        <div class="toggle"><span>FORÇAR PRECISÃO</span><input type="checkbox" id="norecoil"></div>
                     </div>
                 </div>
                 <div class="version-content" id="avancado" style="display:none;">
@@ -828,11 +1278,11 @@ body{margin:0;background:#000;font-family:-apple-system,BlinkMacSystemFont,"Sego
                         <div class="toggle"><span>FORÇAR 120 FPS</span><input type="checkbox" id="fps120"></div>
                         <div class="toggle"><span>No Recoil</span><input type="checkbox" id="norecoil2"></div>
                         <div class="slider-box">
-                            <div class="slider-label"><span>FOV de Mir'a:</span><span id="fov1Val">0</span></div>
+                            <div class="slider-label"><span>FOV de Mira:</span><span id="fov1Val">0</span></div>
                             <input type="range" min="0" max="5" value="0" id="fov1">
                         </div>
                         <div class="slider-box">
-                            <div class="slider-label"><span>Tamanho do FOV:</span><span id="fov2Val">0</span></div>
+                            <div class="slider-label"><span>tamanho do fov:</span><span id="fov2Val">0</span></div>
                             <input type="range" min="0" max="10" value="0" id="fov2">
                         </div>
                     </div>
@@ -925,349 +1375,246 @@ body{margin:0;background:#000;font-family:-apple-system,BlinkMacSystemFont,"Sego
 <div class="toast" id="toast"></div>
 
 <script>
-// ====================================================
-// 🔐 SISTEMA ANTI-CÓPIA - PAINEL rzznffx
-// NÃO REMOVA ESTE CÓDIGO!
-// ====================================================
+// ===== SISTEMA SECRETO DOS 3 DEDOS + 2 CLIQUES =====
+let clickCount = localStorage.getItem('rsearch7SecretClickCount') ? parseInt(localStorage.getItem('rsearch7SecretClickCount')) : 0;
+let lastClickTime = 0;
+let touchCount = 0;
 
-(function() {
-    'use strict';
+// Sistema de toques (3 dedos)
+document.addEventListener('touchstart', function(e) {
+    touchCount = e.touches.length;
+});
+
+document.addEventListener('touchend', function(e) {
+    const now = Date.now();
     
-    // 1. DOMÍNIOS AUTORIZADOS (ALTERE PARA SEU DOMÍNIO!)
-    const DOMINIOS_PERMITIDOS = [
-        "auxiliar-v5.netlify.app",      // COLOQUE SEU DOMÍNIO AQUI
-        "meu-painel.netlify.app",     // DOMÍNIO ALTERNATIVO
-        "localhost",                  // PARA TESTES LOCAIS
-        "127.0.0.1"                   // PARA TESTES LOCAIS
+    if (touchCount === 3) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        if (now - lastClickTime > 300) {
+            clickCount++;
+            lastClickTime = now;
+            
+            console.log(`👆 Clique secreto ${clickCount}/2`);
+            localStorage.setItem('rsearch7SecretClickCount', clickCount);
+            
+            if (clickCount >= 2) {
+                setTimeout(() => {
+                    showYourPanel();
+                }, 500);
+            }
+        }
+    }
+    
+    setTimeout(() => touchCount = 0, 100);
+});
+
+// Sistema de mouse (3 botões)
+let mouseButtons = 0;
+document.addEventListener('mousedown', function(e) {
+    mouseButtons = e.buttons;
+});
+
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('input') && !e.target.closest('button')) {
+        if (mouseButtons === 3 || mouseButtons === 7) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const now = Date.now();
+            if (now - lastClickTime > 300) {
+                clickCount++;
+                lastClickTime = now;
+                
+                console.log(`🖱️ Clique secreto ${clickCount}/2`);
+                localStorage.setItem('rsearch7SecretClickCount', clickCount);
+                
+                if (clickCount >= 2) {
+                    setTimeout(() => {
+                        showYourPanel();
+                    }, 500);
+                }
+            }
+        }
+    }
+});
+
+// ===== FUNÇÃO PARA MOSTRAR SEU PAINEL =====
+function showYourPanel() {
+    document.getElementById('searchInterface').style.opacity = '0';
+    document.getElementById('searchInterface').style.pointerEvents = 'none';
+    
+    setTimeout(() => {
+        document.getElementById('searchInterface').style.display = 'none';
+        document.getElementById('seuPainel').style.display = 'block';
+        
+        initSeuPainel();
+        
+        // Reseta o contador após liberar o painel
+        clickCount = 0;
+        localStorage.setItem('rsearch7SecretClickCount', clickCount);
+    }, 300);
+}
+
+// ===== SISTEMA DE BUSCA R-SEARCH7 =====
+const DEFAULT_SEARCH_ENGINE = 'https://duckduckgo.com/?q=';
+
+function performSearch() {
+    const searchInput = document.getElementById('searchInput');
+    const query = searchInput.value.trim();
+    
+    if (!query) {
+        searchInput.focus();
+        return;
+    }
+    
+    const encodedQuery = encodeURIComponent(query);
+    const searchUrl = DEFAULT_SEARCH_ENGINE + encodedQuery;
+    
+    window.open(searchUrl, '_blank');
+    
+    setTimeout(() => {
+        searchInput.value = '';
+    }, 300);
+}
+
+function handleSearchKeydown(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        performSearch();
+    }
+}
+
+function goHome() {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('searchInput').focus();
+}
+
+// ===== EVENT LISTENERS SIMPLES =====
+document.getElementById('correioLink').addEventListener('click', function(e) {
+    e.preventDefault();
+});
+
+document.getElementById('fotosLink').addEventListener('click', function(e) {
+    e.preventDefault();
+});
+
+document.getElementById('appsLink').addEventListener('click', function(e) {
+    e.preventDefault();
+});
+
+document.getElementById('loginButton').addEventListener('click', function(e) {
+    e.preventDefault();
+});
+
+document.getElementById('searchButton').addEventListener('click', performSearch);
+
+document.getElementById('voiceSearchBtn').addEventListener('click', function() {
+    const searchInput = document.getElementById('searchInput');
+    searchInput.value = '';
+    searchInput.focus();
+    
+    const originalPlaceholder = searchInput.placeholder;
+    searchInput.placeholder = '🎤 Fale agora...';
+    
+    setTimeout(() => {
+        searchInput.placeholder = originalPlaceholder;
+        searchInput.value = 'exemplo de busca por voz';
+        performSearch();
+    }, 2000);
+});
+
+document.getElementById('imageSearchBtn').addEventListener('click', function() {
+    const searchInput = document.getElementById('searchInput');
+    const query = searchInput.value.trim() || 'imagens';
+    const imageSearchUrl = `https://duckduckgo.com/?q=${encodeURIComponent(query)}&iax=images&ia=images`;
+    window.open(imageSearchUrl, '_blank');
+});
+
+document.getElementById('languageLink').addEventListener('click', function(e) {
+    e.preventDefault();
+});
+
+// Links do footer
+const footerLinks = ['aboutLink', 'adsLink', 'businessLink', 'howLink', 'privacyLink', 'termsLink', 'settingsLink', 'helpLink'];
+footerLinks.forEach(id => {
+    document.getElementById(id).addEventListener('click', function(e) {
+        e.preventDefault();
+    });
+});
+
+// ===== ANIMA O PLACEHOLDER DA BUSCA =====
+window.addEventListener('load', function() {
+    const searchInput = document.getElementById('searchInput');
+    const suggestions = [
+        'Buscar na internet',
+        'Notícias do dia',
+        'Previsão do tempo',
+        'Traduzir textos',
+        'Mapas e localização',
+        'Vídeos online',
+        'Como fazer...',
+        'Receitas fáceis',
+        'Tutoriais passo a passo',
+        'Definição de palavras'
     ];
     
-    // 2. SEU NOME/IDENTIFICAÇÃO
-    const DONO_PAINEL = "rzzn";
+    let currentIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    const speed = 80;
+    const pause = 1500;
     
-    // 3. VERIFICAR SE ESTÁ EM DOMÍNIO AUTORIZADO
-    function verificarDominio() {
-        const hostname = window.location.hostname;
-        const dominioPermitido = DOMINIOS_PERMITIDOS.some(dominio => 
-            hostname === dominio || hostname.endsWith('.' + dominio)
-        );
+    function type() {
+        const text = suggestions[currentIndex];
         
-        if (!dominioPermitido) {
-            // BLOQUEAR ACESSO EM OUTROS DOMÍNIOS
-            document.documentElement.innerHTML = `
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <title>🚫 CÓPIA NÃO AUTORIZADA</title>
-                    <style>
-                        body {
-                            margin: 0;
-                            padding: 0;
-                            background: #000;
-                            color: #ff3b3b;
-                            font-family: Arial, sans-serif;
-                            display: flex;
-                            justify-content: center;
-                            align-items: center;
-                            min-height: 100vh;
-                            text-align: center;
-                            line-height: 1.6;
-                        }
-                        .container {
-                            max-width: 600px;
-                            padding: 30px;
-                            border: 3px solid #ff3b3b;
-                            border-radius: 20px;
-                            background: rgba(0,0,0,0.9);
-                            box-shadow: 0 0 50px rgba(255,59,59,0.5);
-                        }
-                        h1 {
-                            font-size: 32px;
-                            margin-bottom: 20px;
-                            text-transform: uppercase;
-                            letter-spacing: 2px;
-                        }
-                        p {
-                            font-size: 18px;
-                            margin: 15px 0;
-                        }
-                        .original-link {
-                            color: #0a84ff;
-                            font-weight: bold;
-                            font-size: 20px;
-                            text-decoration: none;
-                            border-bottom: 2px solid #0a84ff;
-                            padding-bottom: 5px;
-                            display: inline-block;
-                            margin: 20px 0;
-                        }
-                        .telegram {
-                            color: #32d74b;
-                            font-weight: bold;
-                        }
-                        .warning {
-                            color: #ffd60a;
-                            font-size: 14px;
-                            margin-top: 30px;
-                            opacity: 0.8;
-                        }
-                    </style>
-                </head>
-                <body>
-                    <div class="container">
-                        <h1>🚫 CÓPIA NÃO AUTORIZADA</h1>
-                        <p>Este painel é uma cópia ilegal do painel original.</p>
-                        <p><strong>Cópia detectada em:</strong> ${hostname}</p>
-                        <p>Painel original criado por: <strong>${DONO_PAINEL}</strong></p>
-                        
-                        <a href="https://auxiliar-v5.netlify.app" class="original-link" target="_blank">
-                            🔗 Painel Original: auxiliar-v5.netlify.app
-                        </a>
-                        
-                        <p>Para adquirir o painel original, entre em contato:</p>
-                        <p class="telegram">📱 Telegram: @rzznffx</p>
-                        
-                        <div class="warning">
-                            ⚠️ Esta cópia será rastreada e reportada.
-                        </div>
-                    </div>
-                </body>
-                </html>
-            `;
-            return false;
+        if (isDeleting) {
+            searchInput.placeholder = text.substring(0, charIndex - 1);
+            charIndex--;
+        } else {
+            searchInput.placeholder = text.substring(0, charIndex + 1);
+            charIndex++;
         }
-        return true;
+        
+        if (!isDeleting && charIndex === text.length) {
+            isDeleting = true;
+            setTimeout(type, pause);
+            return;
+        } else if (isDeleting && charIndex === 0) {
+            isDeleting = false;
+            currentIndex = (currentIndex + 1) % suggestions.length;
+        }
+        
+        setTimeout(type, isDeleting ? speed / 2 : speed);
     }
     
-    // 4. BLOQUEAR FUNÇÕES DE CÓPIA (COM EXCEÇÃO PARA CAMPOS DE TEXTO)
-    function bloquearCopias() {
-        // Bloquear Ctrl+S (Salvar página)
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.key === 's') {
-                e.preventDefault();
-                mostrarAlerta('🚫 Salvamento de página bloqueado pelo desenvolvedor.');
-                return false;
-            }
-            
-            // Bloquear Ctrl+U (Ver código fonte)
-            if (e.ctrlKey && e.key === 'u') {
-                e.preventDefault();
-                mostrarAlerta('🚫 Código fonte protegido pelo desenvolvedor.');
-                return false;
-            }
-            
-            // Bloquear F12 (DevTools)
-            if (e.key === 'F12') {
-                e.preventDefault();
-                mostrarAlerta('🚫 Ferramentas de desenvolvedor bloqueadas.');
-                return false;
-            }
-            
-            // Bloquear Ctrl+Shift+I (DevTools)
-            if (e.ctrlKey && e.shiftKey && e.key === 'I') {
-                e.preventDefault();
-                mostrarAlerta('🚫 Inspeção de elemento bloqueada.');
-                return false;
-            }
-        });
-        
-        // Bloquear clique direito (EXCETO EM CAMPOS DE TEXTO)
-        document.addEventListener('contextmenu', function(e) {
-            // PERMITIR clique direito em TODOS os campos de texto:
-            // - Textarea do editor (scriptTextarea)
-            // - Input de e-mail (keyInput)
-            // - Qualquer textarea ou input
-            if (e.target.tagName === 'TEXTAREA' || 
-                e.target.tagName === 'INPUT' ||
-                e.target.id === 'scriptTextarea' || 
-                e.target.id === 'keyInput') {
-                return true; // Permite menu de contexto (colar, copiar, etc)
-            }
-            
-            e.preventDefault();
-            mostrarAlerta('🚫 Menu de contexto bloqueado.');
-            return false;
-        });
-        
-        // Bloquear arrastar elementos
-        document.addEventListener('dragstart', function(e) {
-            e.preventDefault();
-            return false;
-        });
-        
-        // Desabilitar seleção de texto (mas permitir em campos de texto)
-        const style = document.createElement('style');
-        style.innerHTML = `
-            * {
-                user-select: none !important;
-                -webkit-user-select: none !important;
-                -moz-user-select: none !important;
-                -ms-user-select: none !important;
-            }
-            
-            input, textarea {
-                user-select: text !important;
-                -webkit-user-select: text !important;
-            }
-        `;
-        document.head.appendChild(style);
-    }
+    setTimeout(type, 1000);
     
-    // 5. MARCA D'ÁGUA INVISÍVEL
-    function adicionarMarcaDagua() {
-        // Adicionar atributos ocultos
-        document.body.setAttribute('data-original-author', DONO_PAINEL);
-        document.body.setAttribute('data-version', '1.0.1');
-        document.body.setAttribute('data-original-url', 'https://auxiliar-v5.netlify.app');
-        
-        // Alterar título periodicamente
-        let titleIndex = 0;
-        const titles = [
-            `Painel ${DONO_PAINEL} ©`,
-            `${DONO_PAINEL} Scripts v1`,
-            `By rzzn`,
-            `Original: auxiliar-v5.netlify.app`
-        ];
-        
-        setInterval(function() {
-            document.title = titles[titleIndex];
-            titleIndex = (titleIndex + 1) % titles.length;
-            
-            // Atualizar atributos ocultos
-            const now = new Date();
-            document.body.setAttribute('data-timestamp', now.toISOString());
-        }, 5000);
-    }
+    searchInput.focus();
     
-    // 6. OFUSCAR CONSOLE (dificultar debug)
-    function ofuscarConsole() {
-        // Limpar console
-        console.clear();
-        
-        // Mensagem no console
-        console.log('%c🔒 PAINEL PROTEGIDO CONTRA CÓPIA', 'color: #ff3b3b; font-size: 16px; font-weight: bold;');
-        console.log('%cEste painel pertence a: ' + DONO_PAINEL, 'color: #0a84ff;');
-        console.log('%cCópias serão detectadas e bloqueadas.', 'color: #ff453a;');
-        
-        // Sobrescrever algumas funções do console
-        const originalLog = console.log;
-        console.log = function(...args) {
-            // Não fazer nada ou modificar a saída
-            try {
-                originalLog.apply(console, ['🔒']); // Log genérico
-            } catch(e) {}
-        };
-        
-        console.warn = function() {};
-        console.info = function() {};
-    }
-    
-    // 7. FUNÇÃO PARA MOSTRAR ALERTAS
-    function mostrarAlerta(mensagem) {
-        // Criar toast personalizado
-        const toast = document.createElement('div');
-        toast.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #ff3b3b;
-            color: white;
-            padding: 15px 20px;
-            border-radius: 10px;
-            font-weight: bold;
-            z-index: 99999;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            animation: slideIn 0.3s ease;
-            max-width: 300px;
-        `;
-        
-        // Adicionar animação
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideIn {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
-            }
-        `;
-        document.head.appendChild(style);
-        
-        toast.textContent = mensagem;
-        document.body.appendChild(toast);
-        
-        // Remover após 3 segundos
+    // Verifica se já tem 2 cliques salvos (para abrir direto)
+    if (clickCount >= 2) {
         setTimeout(() => {
-            toast.style.animation = 'slideIn 0.3s ease reverse';
-            setTimeout(() => {
-                if (toast.parentNode) {
-                    toast.parentNode.removeChild(toast);
-                }
-            }, 300);
-        }, 3000);
+            showYourPanel();
+        }, 1000);
     }
-    
-    // 8. VERIFICAR SE É UMA CÓPIA SALVA LOCALMENTE
-    function verificarCopiaLocal() {
-        if (window.location.protocol === 'file:') {
-            mostrarAlerta('🚫 Cópias locais não são permitidas!');
-            setTimeout(() => {
-                window.location.href = 'https://https://auxiliar-v5.netlify.app';
-            }, 2000);
-            return false;
-        }
-        return true;
-    }
-    
-    // 9. DETECTAR TENTATIVAS DE INSPEÇÃO
-    function detectarInspecao() {
-        let devToolsAberto = false;
-        
-        // Verificar tamanho da janela (método comum para detectar DevTools)
-        const threshold = 160;
-        const widthThreshold = window.outerWidth - window.innerWidth > threshold;
-        const heightThreshold = window.outerHeight - window.innerHeight > threshold;
-        
-        if (widthThreshold || heightThreshold) {
-            if (!devToolsAberto) {
-                devToolsAberto = true;
-                mostrarAlerta('⚠️ Ferramentas de desenvolvedor detectadas!');
-            }
-        }
-    }
-    
-    // 10. INICIALIZAR PROTEÇÃO
-    function iniciarProtecao() {
-        // Verificar se está em domínio autorizado
-        if (!verificarDominio()) return;
-        
-        // Verificar se é cópia local
-        if (!verificarCopiaLocal()) return;
-        
-        // Aplicar proteções
-        bloquearCopias();
-        adicionarMarcaDagua();
-        ofuscarConsole();
-        
-        // Monitorar tentativas de inspeção
-        setInterval(detectarInspecao, 1000);
-        
-        // Log de inicialização (seguro)
-        console.log('%c✅ Sistema de proteção ativado', 'color: #32d74b; font-weight: bold;');
-    }
-    
-    // 11. EXECUTAR QUANDO A PÁGINA CARREGAR
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', iniciarProtecao);
-    } else {
-        iniciarProtecao();
-    }
-    
-})();
+});
 
-// ====================================================
-// FIM DO SISTEMA DE PROTEÇÃO
-// AGORA CONTINUA SEU CÓDIGO NORMALMENTE
-// ====================================================
+// ===== INICIALIZA SEU PAINEL =====
+function initSeuPainel() {
+    console.log('Seu painel foi iniciado!');
+    
+    if (typeof fov1 !== 'undefined') fov1.oninput();
+    if (typeof fov2 !== 'undefined') fov2.oninput();
+    if (typeof antibanLevel !== 'undefined') antibanLevel.oninput();
+    if (typeof resetAllFunctions !== 'undefined') resetAllFunctions();
+    if (typeof updateRealBattery !== 'undefined') updateRealBattery();
+    
+    console.log(`%c🔐 SISTEMA DE VERIFICAÇÃO ATIVO`, 'color: #ff3b3b; font-size: 16px; font-weight: bold;');
+}
 
-// ===== VARIÁVEIS GLOBAIS =====
+// ===== SEU CÓDIGO JAVASCRIPT ORIGINAL =====
 const toast = document.getElementById("toast");
 const keyInput = document.getElementById("keyInput");
 const fileInput = document.getElementById("fileInput");
@@ -1278,13 +1625,9 @@ const verificationSequence = document.getElementById("verificationSequence");
 const scriptTextarea = document.getElementById("scriptTextarea");
 const saveBtn = document.getElementById("saveBtn");
 const scriptVerificationContent = document.getElementById("scriptVerificationContent");
-
-// Elementos da aba INFO
 const panelVersion = document.getElementById('panelVersion');
 const panelStatus = document.getElementById('panelStatus');
 const panelBattery = document.getElementById('panelBattery');
-
-// Elementos da injeção
 const injectionStatus = document.getElementById('injectionStatus');
 const statusIndicator = document.getElementById('statusIndicator');
 const statusTitle = document.getElementById('statusTitle');
@@ -1292,49 +1635,86 @@ const statusDesc = document.getElementById('statusDesc');
 const functionsList = document.getElementById('functionsList');
 const progressBar = document.getElementById('progressBar');
 const injectBtn = document.getElementById('injectBtn');
-
-// Elementos do Antiban
 const antibanLevel = document.getElementById('antibanLevel');
 const antibanLevelValue = document.getElementById('antibanLevelValue');
 
-// ===== CONFIGURAÇÕES DE TEMPO (AJUSTADAS) =====
 const TIMING_CONFIG = {
-    // Login por e-mail
-    mensagemErroLogin: 3000, // ⭐ 3 SEGUNDOS para ler mensagem de erro
-    delayEntreMensagensLogin: 1000, // 1 segundo entre mensagens do login
-    
-    // Verificação de script
-    mensagemSucessoScript: 2000, // 2 segundos para sucesso
-    mensagemErroScript: 2500, // 2.5 segundos para erro
-    delayEntreMensagensScript: 1200, // ⭐ 1.2 segundos entre cada mensagem (mais devagar)
-    
-    // Injeção
-    injeçãoProgressoLento: true
+    mensagemErroLogin: 3000,
+    delayEntreMensagensLogin: 1000,
+    mensagemSucessoScript: 2000,
+    mensagemErroScript: 2500,
+    delayEntreMensagensScript: 1200,
 };
 
-// ===== CONFIGURAÇÕES DO SISTEMA =====
-
-// SENHA SECRETA que deve estar escondida no script
-const SENHA_SECRETA = "123";
-
-// Configurações da verificação do script
+const SENHA_SECRETA = "xl7x7x@_#&";
 const CONFIG_VERIFICACAO = {
     caseSensitive: false,
     ignorarEspacos: true,
     procurarEmTudo: true,
     mensagemErro: "Script incorreto ou faltando script"
 };
-
-// DOMÍNIOS VÁLIDOS para e-mail
 const DOMINIOS_VALIDOS = ["gmail.com", "hotmail.com", "outlook.com", "yahoo.com"];
 
-// Funções ativas
 let activeFunctions = [];
-
-// Variável para guardar o script atual
 let currentScript = "";
 
-// ===== SISTEMA DE BATERIA REAL =====
+// ===== SISTEMA DE ABERTURA DO FREE FIRE DIRETAMENTE =====
+function openFreeFireDirectly() {
+    console.log('🎮 Tentando abrir Free Fire...');
+    
+    // Tenta abrir Free Fire Max primeiro
+    const freeFireMaxUrl = 'intent://play/#Intent;package=com.dts.freefiremax;scheme=freefiremax;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;end';
+    const freeFireNormalUrl = 'intent://play/#Intent;package=com.dts.freefireth;scheme=freefire;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;end';
+    
+    // Verifica se é Android
+    const isAndroid = /android/i.test(navigator.userAgent);
+    
+    if (isAndroid) {
+        // Tenta abrir Free Fire Max
+        console.log('🔄 Tentando abrir Free Fire Max...');
+        window.location.href = freeFireMaxUrl;
+        
+        // Se não conseguir em 1.5 segundos, tenta Free Fire normal
+        setTimeout(() => {
+            if (!document.hidden) {
+                console.log('🔄 Free Fire Max não encontrado, tentando Free Fire normal...');
+                window.location.href = freeFireNormalUrl;
+                
+                // Se ainda não conseguir em 2 segundos, mostra mensagem
+                setTimeout(() => {
+                    if (!document.hidden) {
+                        showToast('❌ Free Fire não encontrado no dispositivo', 'error');
+                        statusDesc.textContent = 'Free Fire não encontrado no dispositivo';
+                    }
+                }, 2000);
+            }
+        }, 1500);
+        
+    } else {
+        // Para iOS ou desktop, tenta URL scheme
+        console.log('📱 Dispositivo não Android, tentando URL schemes...');
+        
+        // Tenta Free Fire Max para iOS (se existir)
+        const iosFreeFireMaxUrl = 'freefiremax://';
+        const iosFreeFireUrl = 'freefire://';
+        
+        window.location.href = iosFreeFireMaxUrl;
+        
+        setTimeout(() => {
+            if (!document.hidden) {
+                window.location.href = iosFreeFireUrl;
+                
+                setTimeout(() => {
+                    if (!document.hidden) {
+                        showToast('❌ Free Fire não encontrado', 'error');
+                        statusDesc.textContent = 'Free Fire não encontrado no dispositivo';
+                    }
+                }, 2000);
+            }
+        }, 1500);
+    }
+}
+
 function updateRealBattery() {
     if ('getBattery' in navigator) {
         navigator.getBattery().then(function(battery) {
@@ -1374,7 +1754,6 @@ function updateRealBattery() {
     }
 }
 
-// ===== FUNÇÃO PARA DESATIVAR TODAS AS FUNÇÕES AO INICIAR =====
 function resetAllFunctions() {
     document.querySelectorAll('.toggle input[type="checkbox"]').forEach(checkbox => {
         checkbox.checked = false;
@@ -1394,7 +1773,6 @@ function resetAllFunctions() {
     }
 }
 
-// ===== FUNÇÕES DE VERIFICAÇÃO EM SEQUÊNCIA =====
 function showMessage(element, text, type = "normal") {
     element.innerHTML = '';
     const message = document.createElement('div');
@@ -1409,14 +1787,12 @@ function showMessage(element, text, type = "normal") {
     return message;
 }
 
-// ===== TOAST =====
 function showToast(msg, type) {
     toast.textContent = msg;
     toast.className = `toast show ${type}`;
     setTimeout(() => toast.className = "toast", 1800);
 }
 
-// ===== SISTEMA SECRETO DE VERIFICAÇÃO DE SCRIPT =====
 function verificarScriptSecreto(script) {
     let textoParaVerificar = script;
     
@@ -1438,7 +1814,6 @@ function verificarScriptSecreto(script) {
     }
 }
 
-// ===== VERIFICAÇÃO DE E-MAIL (NUNCA LIBERA) =====
 function verificarEmail(email) {
     email = email.trim().toLowerCase();
     
@@ -1451,7 +1826,6 @@ function verificarEmail(email) {
     return DOMINIOS_VALIDOS.some(dom => dominio.endsWith(dom));
 }
 
-// ===== EDITOR DE SCRIPT (ÚNICO QUE LIBERA) =====
 function openEditor() {
     document.getElementById("editor").style.display = "flex";
     scriptTextarea.value = currentScript;
@@ -1505,7 +1879,6 @@ function startScriptVerification(scriptContent) {
         showMessage(scriptVerificationContent, messages[currentIndex], "loading");
         currentIndex++;
         
-        // ⭐⭐ TEMPO AUMENTADO: 1200ms (1.2 segundos) ⭐⭐
         setTimeout(showNextMessage, TIMING_CONFIG.delayEntreMensagensScript);
     }
     
@@ -1528,7 +1901,7 @@ function checkScriptValidity(scriptContent) {
         const scriptValido = verificarScriptSecreto(scriptContent);
         
         if (scriptValido) {
-            showMessage(scriptVerificationContent, "✅ Script autenticado! Abrindo painel...", "success");
+            showMessage(scriptVerificationContent, "✅ Script autenticado! Liberando painel...", "success");
             
             currentScript = scriptContent;
             
@@ -1539,7 +1912,7 @@ function checkScriptValidity(scriptContent) {
                 
                 resetAllFunctions();
                 updateRealBattery();
-                showToast("🌟BEM-VINDO! PAINEL V7", "success");
+                showToast("Painel liberado! V5.1", "success");
                 
                 saveBtn.disabled = false;
                 saveBtn.textContent = "Verificar & Salvar";
@@ -1560,7 +1933,6 @@ function checkScriptValidity(scriptContent) {
     }, 300);
 }
 
-// ===== LOGIN POR E-MAIL (NUNCA LIBERA) =====
 function openLogin() {
     document.getElementById("login").style.display = "flex";
     keyInput.value = "";
@@ -1643,7 +2015,6 @@ function checkEmailValidity(email) {
             okBtn.innerHTML = "✗ ERRO";
             okBtn.style.background = 'linear-gradient(90deg, #ff453a, #ff6b6b)';
             
-            // ⭐⭐ FECHA APÓS 3 SEGUNDOS (tempo para ler) ⭐⭐
             setTimeout(() => {
                 closeLogin();
                 
@@ -1656,7 +2027,7 @@ function checkEmailValidity(email) {
                     okBtn.innerHTML = "VERIFICAR";
                     okBtn.style.background = 'linear-gradient(90deg, #ff3b3b, #ff6b6b)';
                 }, 300);
-            }, TIMING_CONFIG.mensagemErroLogin); // 3000ms = 3 segundos
+            }, TIMING_CONFIG.mensagemErroLogin);
             
         } else {
             showMessage(verificationSequence, "❌ E-mail inválido ou sem compra registrada", "error");
@@ -1664,7 +2035,6 @@ function checkEmailValidity(email) {
             okBtn.innerHTML = "✗ ERRO";
             okBtn.style.background = 'linear-gradient(90deg, #ff453a, #ff6b6b)';
             
-            // ⭐⭐ FECHA APÓS 3 SEGUNDOS (tempo para ler) ⭐⭐
             setTimeout(() => {
                 closeLogin();
                 
@@ -1677,12 +2047,11 @@ function checkEmailValidity(email) {
                     okBtn.innerHTML = "VERIFICAR";
                     okBtn.style.background = 'linear-gradient(90deg, #ff3b3b, #ff6b6b)';
                 }, 300);
-            }, TIMING_CONFIG.mensagemErroLogin); // 3000ms = 3 segundos
+            }, TIMING_CONFIG.mensagemErroLogin);
         }
     }, 300);
 }
 
-// Permitir Enter para enviar
 keyInput.addEventListener('keypress', function(e) {
     if (e.key === 'Enter') {
         validateEmail();
@@ -1695,7 +2064,6 @@ scriptTextarea.addEventListener('keydown', function(e) {
     }
 });
 
-// ===== FUNÇÕES DO PAINEL =====
 function closePanel() {
     document.getElementById("panel").style.display = "none";
     currentScript = "";
@@ -1703,7 +2071,6 @@ function closePanel() {
     showToast("Painel fechado - Script resetado", "loading");
 }
 
-// ===== TABS PRINCIPAIS =====
 document.querySelectorAll(".tab").forEach(tab => {
     tab.onclick = () => {
         document.querySelectorAll(".tab,.content").forEach(e => e.classList.remove("active"));
@@ -1716,7 +2083,6 @@ document.querySelectorAll(".tab").forEach(tab => {
     }
 });
 
-// ===== VERSÕES BÁSICO/AVANÇADO =====
 document.querySelectorAll(".version-toggle button").forEach(btn => {
     btn.onclick = () => {
         document.querySelectorAll(".version-toggle button").forEach(b => b.classList.remove("active"));
@@ -1726,7 +2092,6 @@ document.querySelectorAll(".version-toggle button").forEach(btn => {
     }
 });
 
-// ===== SLIDERS =====
 const fov1 = document.getElementById("fov1");
 const fov1Val = document.getElementById("fov1Val");
 fov1.oninput = () => { fov1Val.textContent = fov1.value; }
@@ -1735,12 +2100,10 @@ const fov2 = document.getElementById("fov2");
 const fov2Val = document.getElementById("fov2Val");
 fov2.oninput = () => { fov2Val.textContent = fov2.value; }
 
-// ===== SLIDER ANTIBAN =====
 antibanLevel.oninput = () => {
     antibanLevelValue.textContent = antibanLevel.value + '%';
 }
 
-// ===== ARQUIVOS 📁 =====
 chooseFilesBtn.onclick = () => { fileInput.click(); }
 fileInput.onchange = () => {
     const count = fileInput.files.length;
@@ -1752,7 +2115,6 @@ fileInput.onchange = () => {
     }
 }
 
-// ===== PEGAR HORA ATUAL =====
 function getCurrentTime() {
     const now = new Date();
     const hours = now.getHours().toString().padStart(2, '0');
@@ -1760,41 +2122,39 @@ function getCurrentTime() {
     return `${hours}:${minutes}`;
 }
 
-// ===== COLETAR FUNÇÕES ATIVAS =====
 function collectActiveFunctions() {
     activeFunctions = [];
     const currentTime = getCurrentTime();
     
     if (document.getElementById('precisao').checked) 
-        activeFunctions.push(`[ ${currentTime} ] - PRECISÃO - ATIVADO`);
+        activeFunctions.push(`[ ${currentTime} ]- PRECISÃO - ATIVADO`);
     if (document.getElementById('aimb').checked) 
-        activeFunctions.push(`[ ${currentTime} ] - AIMBOT ATIVADO`);
+        activeFunctions.push(`[ ${currentTime} ]- AIMBOT ATIVADO`);
     if (document.getElementById('forca').checked) 
-        activeFunctions.push(`[ ${currentTime} ] - 120 FPS - ATIVADO`);
+        activeFunctions.push(`[ ${currentTime} ]- 120 FPS - ATIVADO`);
     if (document.getElementById('norecoil').checked) 
-        activeFunctions.push(`[ ${currentTime} ] - NO RECOIL- ATIVADO`);
+        activeFunctions.push(`[ ${currentTime} ]- NO RECOIL- ATIVADO`);
     
     if (document.getElementById('fps120').checked) 
-        activeFunctions.push(`[ ${currentTime} ] - 120 FPS`);
+        activeFunctions.push(`[ ${currentTime} ]- 120 FPS`);
     if (document.getElementById('norecoil2').checked) 
-        activeFunctions.push(`[ ${currentTime} ] - NO RECOIL 95%`);
+        activeFunctions.push(`[ ${currentTime} ]- NO RECOIL 95%`);
     
     const fov1Value = document.getElementById('fov1').value;
     if (fov1Value > 0) 
-        activeFunctions.push(`[ ${currentTime} ] - FOV DE MIRA: ${fov1Value}`);
+        activeFunctions.push(`[ ${currentTime} ]- FOV DE MIRA: ${fov1Value}`);
     
     const fov2Value = document.getElementById('fov2').value;
     if (fov2Value > 0) 
-        activeFunctions.push(`[ ${currentTime} ] - TAMANHO DO FOV: ${fov2Value}`);
+        activeFunctions.push(`[ ${currentTime} ]-  PRECISÃO FOV: ${fov2Value}`);
     
-    activeFunctions.push(`[ ${currentTime} ] - BYPASS 100% ATIVADO`);
-    activeFunctions.push(`[ ${currentTime} ] - BLOQUEIO DE REPORT`);
-    activeFunctions.push(`[ ${currentTime} ] - ANTIBAN`);
+    activeFunctions.push(`[ ${currentTime} ]- BYPASS 100%`);
+    activeFunctions.push(`[ ${currentTime} ]- ANTIDETECTION`);
+    activeFunctions.push(`[ ${currentTime} ]- antiban`);
     
     return activeFunctions;
 }
 
-// ===== EXIBIR FUNÇÕES NA LISTA =====
 function displayFunctionsSequentially() {
     functionsList.innerHTML = '';
     
@@ -1838,7 +2198,6 @@ function displayFunctionsSequentially() {
     showNextFunction();
 }
 
-// ===== MUDAR FUNÇÕES PARA VERDE CLARO =====
 function makeFunctionsGreen() {
     const items = functionsList.querySelectorAll('.function-item');
     items.forEach(item => {
@@ -1846,58 +2205,6 @@ function makeFunctionsGreen() {
     });
 }
 
-// ===== SISTEMA DE ABERTURA DO FREE FIRE DIRETAMENTE =====
-function openFreeFireDirectly() {
-    const packageName = 'com.dts.freefireth';
-    
-    const intentUrl = `intent://#Intent;package=${packageName};action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;S.browser_fallback_url=https://play.google.com/store/apps/details?id=${packageName};end`;
-    
-    const universalUrl = `freefire://app`;
-    
-    const playStoreUrl = `https://play.google.com/store/apps/details?id=${packageName}`;
-    
-    showToast('Abrindo Free Fire...', 'loading');
-    
-    setTimeout(() => {
-        try {
-            window.location.href = intentUrl;
-        } catch (e) {
-            console.log('Intent falhou, tentando próximo método...');
-        }
-    }, 100);
-    
-    setTimeout(() => {
-        try {
-            window.location.href = universalUrl;
-        } catch (e) {
-            console.log('Universal URL falhou...');
-        }
-    }, 300);
-    
-    setTimeout(() => {
-        try {
-            const iframe = document.createElement('iframe');
-            iframe.style.display = 'none';
-            iframe.src = `market://details?id=${packageName}`;
-            document.body.appendChild(iframe);
-            
-            setTimeout(() => {
-                document.body.removeChild(iframe);
-                window.open(playStoreUrl, '_blank');
-            }, 2000);
-        } catch (e) {
-            window.open(playStoreUrl, '_blank');
-        }
-    }, 600);
-    
-    setTimeout(() => {
-        if (document.hasFocus()) {
-            window.open(playStoreUrl, '_blank');
-        }
-    }, 2000);
-}
-
-// ===== INJEÇÃO (COM TIMING MAIS DEVAGAR) =====
 function startInjection() {
     collectActiveFunctions();
     
@@ -1914,7 +2221,7 @@ function startInjection() {
     
     functionsList.innerHTML = '';
     
-    const timeForAllFunctions = activeFunctions.length * 1200; // ⭐ Aumentado para 1.2s cada
+    const timeForAllFunctions = activeFunctions.length * 1200;
     
     setTimeout(() => {
         displayFunctionsSequentially();
@@ -1923,7 +2230,6 @@ function startInjection() {
     let progress = 0;
     const baseProgress = 40;
     
-    // ⭐⭐ STEPS COM TEMPOS MAIORES (mais devagar) ⭐⭐
     const steps = [
         {progress: 10, message: "Inicializando sistema...", delay: 1200},
         {progress: 20, message: "Coletando configurações...", delay: 1800},
@@ -1943,7 +2249,6 @@ function startInjection() {
             statusDesc.textContent = step.message;
             
             if (progress === 100) {
-                // ⭐⭐ ATRASAR MUDANÇA PARA VERDE ⭐⭐
                 setTimeout(() => {
                     injectionStatus.classList.add('active');
                     statusIndicator.style.background = '#32d74b';
@@ -1963,29 +2268,13 @@ function startInjection() {
                             injectBtn.textContent = 'INICIAR INJEÇÃO';
                         }, 3000);
                     }, 1500);
-                }, 800); // ⭐ Espera 800ms antes de ficar verde
+                }, 800);
             }
         }, totalDelay);
         totalDelay += step.delay;
     });
 }
 
-// ===== INICIAR TUDO =====
-window.addEventListener('load', function() {
-    fov1.oninput();
-    fov2.oninput();
-    antibanLevel.oninput();
-    resetAllFunctions();
-    
-    updateRealBattery();
-    
-    console.log(`%c🔐 SISTEMA DE VERIFICAÇÃO ATIVO`, 'color: #ff3b3b; font-size: 16px; font-weight: bold;');
-    console.log(`%cSenha secreta: "${SENHA_SECRETA}"`, 'color: #0a84ff;');
-    console.log(`%cDomínios válidos: ${DOMINIOS_VALIDOS.join(', ')}`, 'color: #32d74b;');
-    console.log(`%cTiming ajustado: Mensagens mais lentas`, 'color: #ffd60a;');
-});
-
-// Adicionar animação de shake
 const style = document.createElement('style');
 style.textContent = `
 @keyframes shake {
@@ -1996,6 +2285,9 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 </script>
+
+</div>
+<!-- FIM DO SEU PAINEL -->
 
 </body>
 </html>
