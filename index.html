@@ -60,7 +60,7 @@ border:1px solid #1d1d1d;
 border-radius:12px;
 color:#fff;
 padding:10px;
-margin-bottom:10px;
+margin-bottom:18px;
 }
 
 button{
@@ -72,14 +72,6 @@ background:linear-gradient(90deg,#ff86cb,#ff4fa3,#ff208f);
 color:#fff;
 font-weight:700;
 cursor:pointer;
-}
-
-/* mensagem login */
-#loginMsg{
-font-size:11px;
-color:#ff3b3b;
-margin-top:5px;
-text-align:center;
 }
 
 /* PAINEL */
@@ -219,7 +211,6 @@ background:#00ff3b;
 transform:translateX(20px);
 }
 
-/* BOTÃO ENTRAR */
 #entrar{
 display:none;
 margin-top:12px;
@@ -238,7 +229,6 @@ cursor:pointer;
 
 <!-- LOGIN -->
 <div class="tela-login" id="login">
-
 <div class="logo-main">
 <span class="proxy">PROXY</span>
 <span class="android">ANDROID</span>
@@ -256,11 +246,8 @@ cursor:pointer;
 
 <button onclick="login()">ENTRAR</button>
 
-<div id="loginMsg"></div>
-
 </div>
 </div>
-
 </div>
 
 <!-- PAINEL -->
@@ -291,124 +278,70 @@ cursor:pointer;
 <div id="inicio" class="page active">
 <div class="bloco">
 
-<div class="funcao"><div><div class="nome">Regedit Vip v2</div><div class="desc">Ajuste avançado</div></div><label class="switch"><input type="checkbox" onchange="ativar(this)"><span></span></label></div>
+<div class="funcao"><div><div class="nome">Regedit Vip v2</div><div class="desc">Ajuste avançado</div></div><label class="switch"><input type="checkbox"><span></span></label></div>
+<div class="funcao"><div><div class="nome">Precision</div><div class="desc">Melhora precisão</div></div><label class="switch"><input type="checkbox"><span></span></label></div>
+<div class="funcao"><div><div class="nome">Aim Assist</div><div class="desc">Auxílio de mira</div></div><label class="switch"><input type="checkbox"><span></span></label></div>
+<div class="funcao"><div><div class="nome">Stability</div><div class="desc">Recoil control</div></div><label class="switch"><input type="checkbox"><span></span></label></div>
+<div class="funcao"><div><div class="nome">Bypass</div><div class="desc">Proteção sistema</div></div><label class="switch"><input type="checkbox"><span></span></label></div>
 
-<div class="funcao"><div><div class="nome">Precision</div><div class="desc">Melhora precisão</div></div><label class="switch"><input type="checkbox" onchange="ativar(this)"><span></span></label></div>
-
-<div class="funcao"><div><div class="nome">Aim Assist</div><div class="desc">Auxílio de mira</div></div><label class="switch"><input type="checkbox" onchange="ativar(this)"><span></span></label></div>
-
-<div class="funcao"><div><div class="nome">Stability</div><div class="desc">Recoil control</div></div><label class="switch"><input type="checkbox" onchange="ativar(this)"><span></span></label></div>
-
-<div class="funcao"><div><div class="nome">Bypass</div><div class="desc">Proteção sistema</div></div><label class="switch"><input type="checkbox" onchange="ativar(this)"><span></span></label></div>
-
-<div id="entrar" onclick="ativarBtn()">ENTRAR</div>
+<div id="entrar">ENTRAR</div>
 
 </div>
 </div>
 
 <div id="conexao" class="page">
 <div class="bloco">
-
-<div style="color:#777;font-size:12px;margin-bottom:10px;">CONECTAR</div>
-
-<input id="codigoConexao" type="password" placeholder="Ex: 123456">
-
+<div style="color:#00ff3b;font-weight:700;margin-bottom:10px;">CONECTAR</div>
+<input id="codigoConexao" placeholder="Digite o código">
 <button>PAREAR</button>
-
 </div>
 </div>
 
 <div id="info" class="page">
 <div class="bloco">
-
-<div class="info-title">User</div>
-<div class="info-sub">Cleyton</div>
-
-<div class="info-title">Tempo</div>
-<div class="info-sub" id="tempoInfo">--:--:--</div>
-
-<div class="info-title">Versão</div>
-<div class="info-sub">Android</div>
-
+<div style="color:#fff;">User</div>
+<div style="color:#aaa;">Proxy</div>
+<div style="color:#fff;margin-top:10px;">Versão</div>
+<div style="color:#aaa;">Android</div>
 </div>
 </div>
 
 </div>
+
+<script src="https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js"></script>
 
 <script>
+// 🔥 COLE SEU FIREBASE AQUI
+const firebaseConfig = {
+  apiKey: "SUA_API_KEY",
+  authDomain: "SEU_PROJETO.firebaseapp.com",
+  databaseURL: "https://SEU_PROJETO-default-rtdb.firebaseio.com",
+  projectId: "SEU_PROJETO"
+};
 
-/* FIREBASE LOGIN */
-async function login(){
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
+function login(){
 const chave = document.getElementById("chave").value;
-const msg = document.getElementById("loginMsg");
 
-if(!chave){
-msg.innerText = "Digite sua chave";
-return;
-}
-
-const res = await fetch("https://painel-85487-default-rtdb.firebaseio.com/.json");
-const data = await res.json();
+db.ref("datauser").once("value").then(snap=>{
+const data = snap.val();
 
 if(!data){
-msg.innerText = "Erro no servidor";
+alert("Erro no banco");
 return;
 }
 
-if(data.PASS !== chave){
-msg.innerText = "Login inválido";
-return;
-}
-
-if(data.STATUS !== "true"){
-msg.innerText = "Acesso bloqueado";
-return;
-}
-
+if(chave === data.KEY){
 document.getElementById("login").style.display="none";
 document.getElementById("painel").style.display="block";
+}else{
+alert("Login inválido");
 }
-
-/* MENU */
-function toggleMenu(){
-document.getElementById("sidebar").classList.toggle("open");
-}
-
-/* NAV */
-function openPage(id,el){
-document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-document.getElementById(id).classList.add("active");
-
-document.querySelectorAll(".menu-item").forEach(m=>m.classList.remove("active"));
-el.classList.add("active");
-
-document.getElementById("sidebar").classList.remove("open");
-}
-
-/* FUNÇÕES */
-function ativar(el){
-document.querySelectorAll(".switch input").forEach(i=>{
-if(i!==el) i.checked=false;
 });
-document.getElementById("entrar").style.display=el.checked?"block":"none";
 }
-
-/* ENTRAR */
-function ativarBtn(){
-
-document.getElementById("statusText").innerText="Função iniciada";
-setTimeout(()=>{
-document.getElementById("statusText").innerText="ONLINE";
-},2000);
-
-}
-
-/* TEMPO */
-setInterval(()=>{
-document.getElementById("tempoInfo").innerText=new Date().toLocaleTimeString();
-},1000);
-
 </script>
 
 </body>
