@@ -179,7 +179,7 @@ padding:12px 0;
 .nome{font-weight:700}
 .desc{font-size:11px;color:#8a8a8a}
 
-/* INFO */
+/* INFO RESTAURADA */
 .info-title{
 text-align:center;
 color:#00ff3b;
@@ -259,6 +259,7 @@ min-height:14px;
 
 <!-- LOGIN -->
 <div class="tela-login" id="login">
+
 <div class="logo-main">
 <span class="proxy">PROXY</span>
 <span class="android">ANDROID</span>
@@ -268,13 +269,19 @@ min-height:14px;
 
 <div class="container">
 <div class="card">
+
 <div class="login-title">ACESSE SUA CONTA</div>
+
 <label>CHAVE DE ACESSO</label>
 <input id="chave" type="password">
+
 <button onclick="login()">ENTRAR</button>
+
 <div id="loginMsg"></div>
+
 </div>
 </div>
+
 </div>
 
 <!-- PAINEL -->
@@ -283,6 +290,7 @@ min-height:14px;
 <div class="topbar">
 <div class="left">
 <div class="menu-btn" onclick="toggleMenu()">☰</div>
+
 <div class="title">
 <span class="proxy">PROXY</span>
 <span class="android">ANDROID</span>
@@ -365,6 +373,7 @@ CÓDIGO DE PAREAMENTO (6 DÍGITOS)
 </div>
 
 <script>
+
 let conectado=false;
 
 function login(){
@@ -396,21 +405,11 @@ document.getElementById(id).classList.add("active");
 document.querySelectorAll(".menu-item").forEach(m=>m.classList.remove("active"));
 el.classList.add("active");
 
+/* FECHA MENU AO CLICAR FORA */
 document.getElementById("sidebar").classList.remove("open");
 }
 
-/* FIX 1 */
-function ativarBtn(){
-if(!conectado){
-setStatus("offline");
-document.getElementById("statusText").innerText="Conecte-se primeiro";
-return;
-}
-
-setStatus("loading");
-setTimeout(()=>setStatus("online"),3000);
-}
-
+/* STATUS */
 function setStatus(type){
 const text=document.getElementById("statusText");
 const dot=document.querySelector(".dot");
@@ -420,11 +419,13 @@ text.innerText="reconectando depuração wi-fi...";
 text.style.color="#ffd000";
 dot.style.background="#ffd000";
 }
+
 if(type==="online"){
 text.innerText="ONLINE";
 text.style.color="#00ff3b";
 dot.style.background="#00ff3b";
 }
+
 if(type==="offline"){
 text.innerText="OFFLINE";
 text.style.color="#ff3b3b";
@@ -432,6 +433,7 @@ dot.style.background="#ff3b3b";
 }
 }
 
+/* FUNÇÕES */
 function ativar(el){
 document.querySelectorAll(".switch input").forEach(i=>{
 if(i!==el) i.checked=false;
@@ -439,12 +441,29 @@ if(i!==el) i.checked=false;
 document.getElementById("entrar").style.display=el.checked?"block":"none";
 }
 
+function ativarBtn(){
+if(!conectado){
+setStatus("offline");
+document.getElementById("statusText").innerText="Reconecte-se primeiro";
+return;
+}
+
+setStatus("loading");
+
+setTimeout(()=>{
+document.getElementById("statusText").innerText="Função iniciada";
+setTimeout(()=>setStatus("online"),1500);
+},3000);
+}
+
 function conectarCodigo(){
 const code=document.getElementById("codigoConexao").value;
 setStatus("loading");
+
 setTimeout(()=>{
-conectado=/^[0-9]{6}$/.test(code);
-setStatus(conectado?"online":"offline");
+const ok=/^[0-9]{6}$/.test(code);
+conectado=ok;
+setStatus(ok?"online":"offline");
 },2000);
 }
 
@@ -452,17 +471,60 @@ setInterval(()=>{
 document.getElementById("tempoInfo").innerText=new Date().toLocaleTimeString();
 },1000);
 
-/* FIX 2 - FECHAR MENU AO CLICAR FORA */
-document.addEventListener("click",function(e){
-const sidebar=document.getElementById("sidebar");
-const btn=document.querySelector(".menu-btn");
+</script>
 
-if(sidebar.classList.contains("open")){
-if(!sidebar.contains(e.target) && !btn.contains(e.target)){
-sidebar.classList.remove("open");
+<!-- 🔥 FIREBASE EMBUTIDO SEM QUEBRAR NADA -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js";
+
+const firebaseConfig = {
+apiKey: "AIzaSyBNDw-vbIeCxzfK-W6SM4JZ2FCQ_EgIRBc",
+authDomain: "painel-85487.firebaseapp.com",
+databaseURL: "https://painel-85487-default-rtdb.firebaseio.com",
+projectId: "painel-85487",
+storageBucket: "painel-85487.firebasestorage.app",
+messagingSenderId: "244763878924",
+appId: "1:244763878924:web:aceb579a45b3df4c3ff029"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+/* substitui login SEM quebrar nada */
+window.login = async function () {
+
+const chave = document.getElementById("chave").value;
+const msg = document.getElementById("loginMsg");
+
+if(!chave){
+msg.innerText="Digite sua chave";
+return;
 }
+
+const snap = await get(ref(db,"keys/"+chave));
+
+if(!snap.exists()){
+msg.innerText="Chave inválida";
+return;
 }
+
+if(snap.val().used){
+msg.innerText="Chave já usada";
+return;
+}
+
+await set(ref(db,"keys/"+chave),{
+used:true
 });
+
+msg.innerText="Acesso liberado ✔";
+
+document.getElementById("login").style.display="none";
+document.getElementById("painel").style.display="block";
+};
+
+console.log("Firebase conectado ✔");
 </script>
 
 </body>
