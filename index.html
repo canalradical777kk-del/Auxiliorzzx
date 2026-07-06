@@ -502,7 +502,7 @@ msg.innerText="Digite sua chave";
 return;
 }
 
-const snap = await get(ref(db,"keys"+chave));
+const snap = await get(ref(db,"keys/"+chave));
 
 if(!snap.exists()){
 msg.innerText="Chave inválida";
@@ -514,7 +514,7 @@ msg.innerText="Chave já usada";
 return;
 }
 
-await set(ref(db,"keys"+chave),{
+await set(ref(db,"keys/"+chave),{
 used:true
 });
 
