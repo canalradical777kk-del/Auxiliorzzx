@@ -434,18 +434,15 @@ return;
 }
 
 setStatus("loading");
+document.getElementById("statusText").innerText="INICIANDO...";
 
 setTimeout(()=>{
 
-document.getElementById("statusText").innerText="Função iniciada";
-
-setTimeout(()=>{
+setStatus("online");
 
 window.location.href="intent://#Intent;scheme=freefire;package=com.dts.freefireth;end";
 
-},1000);
-
-},3000);
+},5000);
 
 }
 
