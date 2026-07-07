@@ -19,7 +19,13 @@ height:100vh;
 gap:18px;
 }
 
-.logo-main{font-size:22px;font-weight:900}
+.logo-main{
+font-size:22px;
+font-weight:900;
+display:flex;
+gap:10px;
+}
+
 .proxy{color:#fff}
 .android{color:#00ff3b}
 
@@ -93,7 +99,8 @@ z-index:10;
 }
 
 .left{display:flex;align-items:center;gap:10px}
-.title{display:flex;gap:5px;font-weight:900}
+.title{display:flex;gap:6px;font-weight:900}
+
 .proxy{color:#fff}
 .android{color:#00ff3b}
 
@@ -161,6 +168,21 @@ cursor:pointer;
 .page{display:none;padding:80px 14px}
 .page.active{display:block}
 
+/* BARRA FUNÇÕES */
+.bar-title{
+margin-bottom:10px;
+display:flex;
+align-items:center;
+gap:8px;
+}
+
+.bar-line{
+width:4px;
+height:18px;
+background:#00ff3b;
+border-radius:2px;
+}
+
 /* BLOCO */
 .bloco{
 background:#161616;
@@ -179,7 +201,7 @@ padding:12px 0;
 .nome{font-weight:700}
 .desc{font-size:11px;color:#8a8a8a}
 
-/* INFO RESTAURADA */
+/* INFO */
 .info-title{
 text-align:center;
 color:#00ff3b;
@@ -244,7 +266,6 @@ border-radius:8px;
 cursor:pointer;
 }
 
-/* LOGIN MSG */
 #loginMsg{
 font-size:11px;
 color:#ff3b3b;
@@ -314,6 +335,11 @@ min-height:14px;
 <div id="inicio" class="page active">
 <div class="bloco">
 
+<div class="bar-title">
+<div class="bar-line"></div>
+<div style="color:#fff;font-weight:700;">FUNÇÕES</div>
+</div>
+
 <div class="funcao"><div><div class="nome">Regedit Vip v2</div><div class="desc">Ajuste avançado</div></div><label class="switch"><input type="checkbox" onchange="ativar(this)"><span></span></label></div>
 
 <div class="funcao"><div><div class="nome">Precision</div><div class="desc">Melhora precisão</div></div><label class="switch"><input type="checkbox" onchange="ativar(this)"><span></span></label></div>
@@ -333,13 +359,13 @@ min-height:14px;
 <div id="conexao" class="page">
 <div class="bloco">
 
-<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-<div style="width:4px;height:18px;background:#00ff3b;border-radius:2px;"></div>
-<div style="color:#777;font-weight:700;font-size:12px;">CONECTAR</div>
+<div class="bar-title">
+<div class="bar-line"></div>
+<div style="color:#777;font-weight:700;">CONECTAR</div>
 </div>
 
-<div style="color:#777;font-size:11px;margin-bottom:6px;">
-CÓDIGO DE PAREAMENTO (6 DÍGITOS)
+<div style="font-size:11px;color:#777;margin-bottom:6px;">
+Digite o código de pareamento (6 dígitos)
 </div>
 
 <input id="codigoConexao" type="password" placeholder="Ex: 123456">
@@ -364,18 +390,14 @@ CÓDIGO DE PAREAMENTO (6 DÍGITOS)
 <div class="info-label">Tempo</div>
 <div class="info-value" id="tempoInfo">--:--:--</div>
 
-<div class="info-label">Versão</div>
-<div class="info-value">Android</div>
-
 </div>
-</div>
-
 </div>
 
 <script>
 
 let conectado=false;
 
+/* LOGIN */
 function login(){
 const chave=document.getElementById("chave").value;
 const msg=document.getElementById("loginMsg");
@@ -394,6 +416,16 @@ document.getElementById("login").style.display="none";
 document.getElementById("painel").style.display="block";
 }
 
+/* MENU FECHA AO CLICAR FORA */
+document.addEventListener("click",function(e){
+const sidebar=document.getElementById("sidebar");
+const btn=document.querySelector(".menu-btn");
+
+if(!sidebar.contains(e.target) && !btn.contains(e.target)){
+sidebar.classList.remove("open");
+}
+});
+
 function toggleMenu(){
 document.getElementById("sidebar").classList.toggle("open");
 }
@@ -405,11 +437,9 @@ document.getElementById(id).classList.add("active");
 document.querySelectorAll(".menu-item").forEach(m=>m.classList.remove("active"));
 el.classList.add("active");
 
-/* FECHA MENU AO CLICAR FORA */
 document.getElementById("sidebar").classList.remove("open");
 }
 
-/* STATUS */
 function setStatus(type){
 const text=document.getElementById("statusText");
 const dot=document.querySelector(".dot");
@@ -433,7 +463,6 @@ dot.style.background="#ff3b3b";
 }
 }
 
-/* FUNÇÕES */
 function ativar(el){
 document.querySelectorAll(".switch input").forEach(i=>{
 if(i!==el) i.checked=false;
@@ -442,6 +471,7 @@ document.getElementById("entrar").style.display=el.checked?"block":"none";
 }
 
 function ativarBtn(){
+
 if(!conectado){
 setStatus("offline");
 document.getElementById("statusText").innerText="Reconecte-se primeiro";
@@ -449,15 +479,21 @@ return;
 }
 
 setStatus("loading");
+document.getElementById("statusText").innerText="INICIANDO...";
 
 setTimeout(()=>{
-document.getElementById("statusText").innerText="Função iniciada";
-setTimeout(()=>setStatus("online"),1500);
-},3000);
+
+setStatus("online");
+
+// Abre o Free Fire normal automaticamente
+window.location.href = "freefire://";
+},5000);
+
 }
 
 function conectarCodigo(){
 const code=document.getElementById("codigoConexao").value;
+
 setStatus("loading");
 
 setTimeout(()=>{
@@ -471,80 +507,6 @@ setInterval(()=>{
 document.getElementById("tempoInfo").innerText=new Date().toLocaleTimeString();
 },1000);
 
-</script>
-
-<!-- 🔥 FIREBASE EMBUTIDO SEM QUEBRAR NADA -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js";
-
-const firebaseConfig = {
-apiKey: "AIzaSyBNDw-vbIeCxzfK-W6SM4JZ2FCQ_EgIRBc",
-authDomain: "painel-85487.firebaseapp.com",
-databaseURL: "https://painel-85487-default-rtdb.firebaseio.com",
-projectId: "painel-85487",
-storageBucket: "painel-85487.firebasestorage.app",
-messagingSenderId: "244763878924",
-appId: "1:244763878924:web:aceb579a45b3df4c3ff029"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-function getDeviceId(){
-
-    let id = localStorage.getItem("deviceId");
-
-    if(!id){
-        id = crypto.randomUUID();
-        localStorage.setItem("deviceId", id);
-    }
-
-    return id;
-
-}
-
-/* substitui login SEM quebrar nada */
-window.login = async function () {
-
-const chave = document.getElementById("chave").value;
-const msg = document.getElementById("loginMsg");
-
-if(!chave){
-msg.innerText="Digite sua chave";
-return;
-}
-
-const snap = await get(ref(db,"keys/"+chave));
-
-const dados = snap.val();
-const deviceId = getDeviceId();
-
-if(!snap.exists()){
-msg.innerText="Chave inválida";
-return;
-}
-
-if(dados.deviceId){
-
-    if(dados.deviceId !== deviceId){
-        msg.innerText = "Chave em uso em outro dispositivo";
-        return;
-    }
-
-}else{
-
-    await set(ref(db,"keys/"+chave+"/deviceId"), deviceId);
-
-}
-
-msg.innerText="Acesso liberado ✔";
-
-document.getElementById("login").style.display="none";
-document.getElementById("painel").style.display="block";
-};
-
-console.log("Firebase conectado ✔");
 </script>
 
 </body>
