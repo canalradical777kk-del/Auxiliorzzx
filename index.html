@@ -504,47 +504,33 @@ function getDeviceId(){
 
 }
 
-/* substitui login SEM quebrar nada */
+/* teste WebView Firebase */
+
 window.login = async function () {
 
 const chave = document.getElementById("chave").value;
 const msg = document.getElementById("loginMsg");
 
-if(!chave){
-msg.innerText="Digite sua chave";
-return;
-}
+msg.innerText="Verificando...";
 
-const snap = await get(ref(db,"keys/"+chave));
+try {
 
-const dados = snap.val();
-const deviceId = getDeviceId();
+await get(ref(db,"keys/"+chave));
 
-if(!snap.exists()){
-msg.innerText="Chave inválida";
-return;
-}
+msg.innerText="Firebase respondeu";
 
-if(dados.deviceId){
+} catch(e){
 
-    if(dados.deviceId !== deviceId){
-        msg.innerText = "Chave em uso em outro dispositivo";
-        return;
-    }
+msg.innerText="Erro Firebase";
 
-}else{
-
-    await set(ref(db,"keys/"+chave+"/deviceId"), deviceId);
+console.log(e);
 
 }
 
-msg.innerText="Acesso liberado ✔";
-
-document.getElementById("login").style.display="none";
-document.getElementById("painel").style.display="block";
 };
 
 console.log("Firebase conectado ✔");
+
 </script>
 
 </body>
