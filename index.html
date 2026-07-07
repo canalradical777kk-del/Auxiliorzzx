@@ -426,6 +426,7 @@ document.getElementById("entrar").style.display=el.checked?"block":"none";
 }
 
 function ativarBtn(){
+
 if(!conectado){
 setStatus("offline");
 document.getElementById("statusText").innerText="Reconecte-se primeiro";
@@ -435,9 +436,17 @@ return;
 setStatus("loading");
 
 setTimeout(()=>{
+
 document.getElementById("statusText").innerText="Função iniciada";
-setTimeout(()=>setStatus("online"),1500);
+
+setTimeout(()=>{
+
+window.location.href="intent://#Intent;scheme=freefire;package=com.dts.freefireth;end";
+
+},1000);
+
 },3000);
+
 }
 
 function conectarCodigo(){
