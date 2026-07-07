@@ -376,23 +376,7 @@ CÓDIGO DE PAREAMENTO (6 DÍGITOS)
 
 let conectado=false;
 
-function login(){
-const chave=document.getElementById("chave").value;
-const msg=document.getElementById("loginMsg");
 
-if(chave===""){
-msg.innerText="Digite sua chave";
-return;
-}
-
-if(chave!=="123"){
-msg.innerText="Login inválido";
-return;
-}
-
-document.getElementById("login").style.display="none";
-document.getElementById("painel").style.display="block";
-}
 
 function toggleMenu(){
 document.getElementById("sidebar").classList.toggle("open");
@@ -473,8 +457,9 @@ document.getElementById("tempoInfo").innerText=new Date().toLocaleTimeString();
 
 </script>
 
-<!-- 🔥 FIREBASE EMBUTIDO SEM QUEBRAR NADA -->
+<!-- 🔥 FIREBASE EMBUTIDO -->
 <script type="module">
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
 import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js";
 
@@ -493,20 +478,18 @@ const db = getDatabase(app);
 
 function getDeviceId(){
 
-    let id = localStorage.getItem("deviceId");
+let id = localStorage.getItem("deviceId");
 
-    if(!id){
-        id = "android_" + Date.now() + "_" + Math.floor(Math.random()*999999);
-        localStorage.setItem("deviceId", id);
-    }
+if(!id){
+id = "android_" + Date.now() + "_" + Math.floor(Math.random()*999999);
+localStorage.setItem("deviceId", id);
+}
 
-    return id;
+return id;
 
 }
 
-/* teste WebView Firebase */
-
-window.login = async function () {
+window.login = async function(){
 
 const chave = document.getElementById("chave").value;
 const msg = document.getElementById("loginMsg");
@@ -516,7 +499,9 @@ msg.innerText="Digite sua chave";
 return;
 }
 
-try {
+msg.innerText="Verificando...";
+
+try{
 
 const snap = await get(ref(db,"keys/"+chave));
 
@@ -530,14 +515,14 @@ const deviceId = getDeviceId();
 
 if(dados.deviceId){
 
-    if(dados.deviceId !== deviceId){
-        msg.innerText="Chave em uso em outro dispositivo";
-        return;
-    }
+if(dados.deviceId !== deviceId){
+msg.innerText="Chave em uso em outro dispositivo";
+return;
+}
 
 }else{
 
-    await set(ref(db,"keys/"+chave+"/deviceId"), deviceId);
+await set(ref(db,"keys/"+chave+"/deviceId"), deviceId);
 
 }
 
@@ -546,7 +531,7 @@ msg.innerText="Acesso liberado ✔";
 document.getElementById("login").style.display="none";
 document.getElementById("painel").style.display="block";
 
-} catch(e){
+}catch(e){
 
 msg.innerText="Erro Firebase";
 console.log(e);
