@@ -491,6 +491,19 @@ appId: "1:244763878924:web:aceb579a45b3df4c3ff029"
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
+function getDeviceId(){
+
+    let id = localStorage.getItem("deviceId");
+
+    if(!id){
+        id = crypto.randomUUID();
+        localStorage.setItem("deviceId", id);
+    }
+
+    return id;
+
+}
+
 /* substitui login SEM quebrar nada */
 window.login = async function () {
 
@@ -504,19 +517,13 @@ return;
 
 const snap = await get(ref(db,"keys/"+chave));
 
+const dados = snap.val();
+const deviceId = getDeviceId();
+
 if(!snap.exists()){
 msg.innerText="Chave inválida";
 return;
 }
-
-if(snap.val().used){
-msg.innerText="Chave já usada";
-return;
-}
-
-await set(ref(db,"keys/"+chave),{
-used:true
-});
 
 msg.innerText="Acesso liberado ✔";
 
