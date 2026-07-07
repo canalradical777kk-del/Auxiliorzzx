@@ -525,6 +525,19 @@ msg.innerText="Chave inválida";
 return;
 }
 
+if(dados.deviceId){
+
+    if(dados.deviceId !== deviceId){
+        msg.innerText = "Chave em uso em outro dispositivo";
+        return;
+    }
+
+}else{
+
+    await set(ref(db,"keys/"+chave+"/deviceId"), deviceId);
+
+}
+
 msg.innerText="Acesso liberado ✔";
 
 document.getElementById("login").style.display="none";
