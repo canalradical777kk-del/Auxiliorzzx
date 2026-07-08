@@ -434,12 +434,19 @@ return;
 }
 
 setStatus("loading");
-document.getElementById("statusText").innerText="INICIANDO...";
+document.getElementById("statusText").innerText="ATIVANDO...";
+
+/* chama o Android / Shizuku */
+if(window.Android){
+    Android.ativarShizuku();
+}
 
 setTimeout(()=>{
 
 setStatus("online");
+document.getElementById("statusText").innerText="INICIANDO...";
 
+/* abre o Free Fire */
 window.location.href="intent://#Intent;scheme=freefire;package=com.dts.freefireth;end";
 
 },5000);
@@ -447,14 +454,42 @@ window.location.href="intent://#Intent;scheme=freefire;package=com.dts.freefiret
 }
 
 function conectarCodigo(){
-const code=document.getElementById("codigoConexao").value;
-setStatus("loading");
 
-setTimeout(()=>{
-const ok=/^[0-9]{6}$/.test(code);
-conectado=ok;
-setStatus(ok?"online":"offline");
-},2000);
+const code=document.getElementById("codigoConexao").value;
+
+if(code.length !== 6){
+setStatus("offline");
+document.getElementById("statusText").innerText="Código inválido";
+return;
+}
+
+setStatus("loading");
+document.getElementById("statusText").innerText="VERIFICANDO...";
+
+if(window.Android){
+    Android.verificarShizuku(code);
+}else{
+    setStatus("offline");
+    document.getElementById("statusText").innerText="Shizuku indisponível";
+}
+
+}
+
+function shizukuStatus(status){
+
+if(status){
+
+conectado=true;
+setStatus("online");
+
+}else{
+
+conectado=false;
+setStatus("offline");
+document.getElementById("statusText").innerText="Conecte o Shizuku primeiro";
+
+}
+
 }
 
 setInterval(()=>{
