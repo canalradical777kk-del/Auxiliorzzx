@@ -68,10 +68,18 @@ width:100%;
 height:56px;
 border:none;
 border-radius:12px;
-background:linear-gradient(90deg,#00ff3b,#00c853);
-color:#000;
+background:linear-gradient(90deg,#ff86cb,#ff4fa3,#ff208f);
+color:#fff;
 font-weight:700;
 cursor:pointer;
+}
+
+/* mensagem login */
+#loginMsg{
+font-size:11px;
+color:#ff3b3b;
+margin-top:5px;
+text-align:center;
 }
 
 /* PAINEL */
@@ -179,26 +187,6 @@ padding:12px 0;
 .nome{font-weight:700}
 .desc{font-size:11px;color:#8a8a8a}
 
-/* INFO RESTAURADA */
-.info-title{
-text-align:center;
-color:#00ff3b;
-font-weight:700;
-margin-bottom:10px;
-}
-
-.info-label{
-color:#fff;
-font-size:12px;
-margin-top:10px;
-}
-
-.info-value{
-color:#8a8a8a;
-font-size:12px;
-margin-bottom:6px;
-}
-
 /* SWITCH */
 .switch input{display:none}
 
@@ -242,15 +230,6 @@ color:#000;
 font-weight:800;
 border-radius:8px;
 cursor:pointer;
-}
-
-/* LOGIN MSG */
-#loginMsg{
-font-size:11px;
-color:#ff3b3b;
-text-align:center;
-margin-top:8px;
-min-height:14px;
 }
 </style>
 </head>
@@ -303,14 +282,12 @@ min-height:14px;
 </div>
 </div>
 
-<!-- MENU -->
 <div class="sidebar" id="sidebar">
 <div class="menu-item active" onclick="openPage('inicio',this)">Início</div>
 <div class="menu-item" onclick="openPage('conexao',this)">Conexão</div>
 <div class="menu-item" onclick="openPage('info',this)">Informação</div>
 </div>
 
-<!-- INÍCIO -->
 <div id="inicio" class="page active">
 <div class="bloco">
 
@@ -329,43 +306,29 @@ min-height:14px;
 </div>
 </div>
 
-<!-- CONEXÃO -->
 <div id="conexao" class="page">
 <div class="bloco">
 
-<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-<div style="width:4px;height:18px;background:#00ff3b;border-radius:2px;"></div>
-<div style="color:#777;font-weight:700;font-size:12px;">CONECTAR</div>
-</div>
-
-<div style="color:#777;font-size:11px;margin-bottom:6px;">
-CÓDIGO DE PAREAMENTO (6 DÍGITOS)
-</div>
+<div style="color:#777;font-size:12px;margin-bottom:10px;">CONECTAR</div>
 
 <input id="codigoConexao" type="password" placeholder="Ex: 123456">
 
-<button onclick="conectarCodigo()">PAREAR</button>
+<button>PAREAR</button>
 
 </div>
 </div>
 
-<!-- INFO -->
 <div id="info" class="page">
 <div class="bloco">
 
-<div class="info-title">INFORMAÇÕES DO CLIENTE</div>
+<div class="info-title">User</div>
+<div class="info-sub">Cleyton</div>
 
-<div class="info-label">User</div>
-<div class="info-value">Cleyton</div>
+<div class="info-title">Tempo</div>
+<div class="info-sub" id="tempoInfo">--:--:--</div>
 
-<div class="info-label">Proxy</div>
-<div class="info-value">Android</div>
-
-<div class="info-label">Tempo</div>
-<div class="info-value" id="tempoInfo">--:--:--</div>
-
-<div class="info-label">Versão</div>
-<div class="info-value">Android</div>
+<div class="info-title">Versão</div>
+<div class="info-sub">Android</div>
 
 </div>
 </div>
@@ -374,14 +337,45 @@ CÓDIGO DE PAREAMENTO (6 DÍGITOS)
 
 <script>
 
-let conectado=false;
+/* FIREBASE LOGIN */
+async function login(){
 
+const chave = document.getElementById("chave").value;
+const msg = document.getElementById("loginMsg");
 
+if(!chave){
+msg.innerText = "Digite sua chave";
+return;
+}
 
+const res = await fetch("https://painel-85487-default-rtdb.firebaseio.com/.json");
+const data = await res.json();
+
+if(!data){
+msg.innerText = "Erro no servidor";
+return;
+}
+
+if(data.PASS !== chave){
+msg.innerText = "Login inválido";
+return;
+}
+
+if(data.STATUS !== "true"){
+msg.innerText = "Acesso bloqueado";
+return;
+}
+
+document.getElementById("login").style.display="none";
+document.getElementById("painel").style.display="block";
+}
+
+/* MENU */
 function toggleMenu(){
 document.getElementById("sidebar").classList.toggle("open");
 }
 
+/* NAV */
 function openPage(id,el){
 document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
 document.getElementById(id).classList.add("active");
@@ -389,32 +383,7 @@ document.getElementById(id).classList.add("active");
 document.querySelectorAll(".menu-item").forEach(m=>m.classList.remove("active"));
 el.classList.add("active");
 
-/* FECHA MENU AO CLICAR FORA */
 document.getElementById("sidebar").classList.remove("open");
-}
-
-/* STATUS */
-function setStatus(type){
-const text=document.getElementById("statusText");
-const dot=document.querySelector(".dot");
-
-if(type==="loading"){
-text.innerText="reconectando depuração wi-fi...";
-text.style.color="#ffd000";
-dot.style.background="#ffd000";
-}
-
-if(type==="online"){
-text.innerText="ONLINE";
-text.style.color="#00ff3b";
-dot.style.background="#00ff3b";
-}
-
-if(type==="offline"){
-text.innerText="OFFLINE";
-text.style.color="#ff3b3b";
-dot.style.background="#ff3b3b";
-}
 }
 
 /* FUNÇÕES */
@@ -425,133 +394,20 @@ if(i!==el) i.checked=false;
 document.getElementById("entrar").style.display=el.checked?"block":"none";
 }
 
+/* ENTRAR */
 function ativarBtn(){
 
-if(!conectado){
-setStatus("offline");
-document.getElementById("statusText").innerText="Reconecte-se primeiro";
-return;
-}
-
-setStatus("loading");
-document.getElementById("statusText").innerText="INICIANDO...";
-
+document.getElementById("statusText").innerText="Função iniciada";
 setTimeout(()=>{
-
-setStatus("online");
-
-window.location.href="intent://#Intent;scheme=freefire;package=com.dts.freefireth;end";
-
-},5000);
-
-}
-
-function conectarCodigo(){
-const code=document.getElementById("codigoConexao").value;
-setStatus("loading");
-
-setTimeout(()=>{
-const ok=/^[0-9]{6}$/.test(code);
-conectado=ok;
-setStatus(ok?"online":"offline");
+document.getElementById("statusText").innerText="ONLINE";
 },2000);
+
 }
 
+/* TEMPO */
 setInterval(()=>{
 document.getElementById("tempoInfo").innerText=new Date().toLocaleTimeString();
 },1000);
-
-</script>
-
-<!-- 🔥 FIREBASE EMBUTIDO -->
-<script type="module">
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js";
-
-const firebaseConfig = {
-apiKey: "AIzaSyBNDw-vbIeCxzfK-W6SM4JZ2FCQ_EgIRBc",
-authDomain: "painel-85487.firebaseapp.com",
-databaseURL: "https://painel-85487-default-rtdb.firebaseio.com",
-projectId: "painel-85487",
-storageBucket: "painel-85487.firebasestorage.app",
-messagingSenderId: "244763878924",
-appId: "1:244763878924:web:aceb579a45b3df4c3ff029"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-function getDeviceId(){
-
-let id = localStorage.getItem("deviceId");
-
-if(!id){
-id = "android_" + Date.now() + "_" + Math.floor(Math.random()*999999);
-localStorage.setItem("deviceId", id);
-}
-
-return id;
-
-}
-
-window.login = async function(){
-
-const chave = document.getElementById("chave").value;
-const msg = document.getElementById("loginMsg");
-
-if(!chave){
-msg.innerText="Digite sua chave";
-return;
-}
-
-msg.innerText="Verificando...";
-
-try{
-
-const snap = await get(ref(db,"keys/"+chave));
-
-if(!snap.exists()){
-msg.innerText="Chave inválida";
-return;
-}
-
-const dados = snap.val();
-
-if(dados.deviceLock === true){
-
-const deviceId = getDeviceId();
-
-if(dados.deviceId){
-
-if(dados.deviceId !== deviceId){
-msg.innerText="Chave em uso em outro dispositivo";
-return;
-}
-
-}else{
-
-await set(ref(db,"keys/"+chave+"/deviceId"), deviceId);
-
-}
-
-}
-
-msg.innerText="Acesso liberado ✔";
-
-document.getElementById("login").style.display="none";
-document.getElementById("painel").style.display="block";
-
-}catch(e){
-
-msg.innerText="Erro Firebase";
-console.log(e);
-
-}
-
-};
-
-console.log("Firebase conectado ✔");
 
 </script>
 
