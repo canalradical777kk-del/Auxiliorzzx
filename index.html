@@ -19,7 +19,13 @@ height:100vh;
 gap:18px;
 }
 
-.logo-main{font-size:22px;font-weight:900}
+.logo-main{
+font-size:22px;
+font-weight:900;
+display:flex;
+gap:10px;
+}
+
 .proxy{color:#fff}
 .android{color:#00ff3b}
 
@@ -68,18 +74,10 @@ width:100%;
 height:56px;
 border:none;
 border-radius:12px;
-background:linear-gradient(90deg,#ff86cb,#ff4fa3,#ff208f);
-color:#fff;
+background:linear-gradient(90deg,#00ff3b,#00c853);
+color:#000;
 font-weight:700;
 cursor:pointer;
-}
-
-/* mensagem login */
-#loginMsg{
-font-size:11px;
-color:#ff3b3b;
-margin-top:5px;
-text-align:center;
 }
 
 /* PAINEL */
@@ -101,7 +99,8 @@ z-index:10;
 }
 
 .left{display:flex;align-items:center;gap:10px}
-.title{display:flex;gap:5px;font-weight:900}
+.title{display:flex;gap:6px;font-weight:900}
+
 .proxy{color:#fff}
 .android{color:#00ff3b}
 
@@ -169,6 +168,21 @@ cursor:pointer;
 .page{display:none;padding:80px 14px}
 .page.active{display:block}
 
+/* BARRA FUNÇÕES */
+.bar-title{
+margin-bottom:10px;
+display:flex;
+align-items:center;
+gap:8px;
+}
+
+.bar-line{
+width:4px;
+height:18px;
+background:#00ff3b;
+border-radius:2px;
+}
+
 /* BLOCO */
 .bloco{
 background:#161616;
@@ -186,6 +200,26 @@ padding:12px 0;
 
 .nome{font-weight:700}
 .desc{font-size:11px;color:#8a8a8a}
+
+/* INFO */
+.info-title{
+text-align:center;
+color:#00ff3b;
+font-weight:700;
+margin-bottom:10px;
+}
+
+.info-label{
+color:#fff;
+font-size:12px;
+margin-top:10px;
+}
+
+.info-value{
+color:#8a8a8a;
+font-size:12px;
+margin-bottom:6px;
+}
 
 /* SWITCH */
 .switch input{display:none}
@@ -230,6 +264,14 @@ color:#000;
 font-weight:800;
 border-radius:8px;
 cursor:pointer;
+}
+
+#loginMsg{
+font-size:11px;
+color:#ff3b3b;
+text-align:center;
+margin-top:8px;
+min-height:14px;
 }
 </style>
 </head>
@@ -282,14 +324,21 @@ cursor:pointer;
 </div>
 </div>
 
+<!-- MENU -->
 <div class="sidebar" id="sidebar">
 <div class="menu-item active" onclick="openPage('inicio',this)">Início</div>
 <div class="menu-item" onclick="openPage('conexao',this)">Conexão</div>
 <div class="menu-item" onclick="openPage('info',this)">Informação</div>
 </div>
 
+<!-- INÍCIO -->
 <div id="inicio" class="page active">
 <div class="bloco">
+
+<div class="bar-title">
+<div class="bar-line"></div>
+<div style="color:#fff;font-weight:700;">FUNÇÕES</div>
+</div>
 
 <div class="funcao"><div><div class="nome">Regedit Vip v2</div><div class="desc">Ajuste avançado</div></div><label class="switch"><input type="checkbox" onchange="ativar(this)"><span></span></label></div>
 
@@ -306,63 +355,60 @@ cursor:pointer;
 </div>
 </div>
 
+<!-- CONEXÃO -->
 <div id="conexao" class="page">
 <div class="bloco">
 
-<div style="color:#777;font-size:12px;margin-bottom:10px;">CONECTAR</div>
+<div class="bar-title">
+<div class="bar-line"></div>
+<div style="color:#777;font-weight:700;">CONECTAR</div>
+</div>
+
+<div style="font-size:11px;color:#777;margin-bottom:6px;">
+Digite o código de pareamento (6 dígitos)
+</div>
 
 <input id="codigoConexao" type="password" placeholder="Ex: 123456">
 
-<button>PAREAR</button>
+<button onclick="conectarCodigo()">PAREAR</button>
 
 </div>
 </div>
 
+<!-- INFO -->
 <div id="info" class="page">
 <div class="bloco">
 
-<div class="info-title">User</div>
-<div class="info-sub">Cleyton</div>
+<div class="info-title">INFORMAÇÕES DO CLIENTE</div>
 
-<div class="info-title">Tempo</div>
-<div class="info-sub" id="tempoInfo">--:--:--</div>
+<div class="info-label">User</div>
+<div class="info-value">Cleyton</div>
 
-<div class="info-title">Versão</div>
-<div class="info-sub">Android</div>
+<div class="info-label">Proxy</div>
+<div class="info-value">Android</div>
+
+<div class="info-label">Tempo</div>
+<div class="info-value" id="tempoInfo">--:--:--</div>
 
 </div>
-</div>
-
 </div>
 
 <script>
 
-/* FIREBASE LOGIN */
-async function login(){
+let conectado=false;
 
-const chave = document.getElementById("chave").value;
-const msg = document.getElementById("loginMsg");
+/* LOGIN */
+function login(){
+const chave=document.getElementById("chave").value;
+const msg=document.getElementById("loginMsg");
 
-if(!chave){
-msg.innerText = "Digite sua chave";
+if(chave===""){
+msg.innerText="Digite sua chave";
 return;
 }
 
-const res = await fetch("https://painel-85487-default-rtdb.firebaseio.com/.json");
-const data = await res.json();
-
-if(!data){
-msg.innerText = "Erro no servidor";
-return;
-}
-
-if(data.PASS !== chave){
-msg.innerText = "Login inválido";
-return;
-}
-
-if(data.STATUS !== "true"){
-msg.innerText = "Acesso bloqueado";
+if(chave!=="123"){
+msg.innerText="Login inválido";
 return;
 }
 
@@ -370,12 +416,20 @@ document.getElementById("login").style.display="none";
 document.getElementById("painel").style.display="block";
 }
 
-/* MENU */
+/* MENU FECHA AO CLICAR FORA */
+document.addEventListener("click",function(e){
+const sidebar=document.getElementById("sidebar");
+const btn=document.querySelector(".menu-btn");
+
+if(!sidebar.contains(e.target) && !btn.contains(e.target)){
+sidebar.classList.remove("open");
+}
+});
+
 function toggleMenu(){
 document.getElementById("sidebar").classList.toggle("open");
 }
 
-/* NAV */
 function openPage(id,el){
 document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
 document.getElementById(id).classList.add("active");
@@ -386,7 +440,29 @@ el.classList.add("active");
 document.getElementById("sidebar").classList.remove("open");
 }
 
-/* FUNÇÕES */
+function setStatus(type){
+const text=document.getElementById("statusText");
+const dot=document.querySelector(".dot");
+
+if(type==="loading"){
+text.innerText="reconectando depuração wi-fi...";
+text.style.color="#ffd000";
+dot.style.background="#ffd000";
+}
+
+if(type==="online"){
+text.innerText="ONLINE";
+text.style.color="#00ff3b";
+dot.style.background="#00ff3b";
+}
+
+if(type==="offline"){
+text.innerText="OFFLINE";
+text.style.color="#ff3b3b";
+dot.style.background="#ff3b3b";
+}
+}
+
 function ativar(el){
 document.querySelectorAll(".switch input").forEach(i=>{
 if(i!==el) i.checked=false;
@@ -394,17 +470,40 @@ if(i!==el) i.checked=false;
 document.getElementById("entrar").style.display=el.checked?"block":"none";
 }
 
-/* ENTRAR */
 function ativarBtn(){
 
-document.getElementById("statusText").innerText="Função iniciada";
+if(!conectado){
+setStatus("offline");
+document.getElementById("statusText").innerText="Reconecte-se primeiro";
+return;
+}
+
+setStatus("loading");
+document.getElementById("statusText").innerText="INICIANDO...";
+
 setTimeout(()=>{
-document.getElementById("statusText").innerText="ONLINE";
-},2000);
+
+setStatus("online");
+
+window.location.href =
+"intent://#Intent;scheme=freefire;package=com.dts.freefireth;end";
+
+},5000);
 
 }
 
-/* TEMPO */
+function conectarCodigo(){
+const code=document.getElementById("codigoConexao").value;
+
+setStatus("loading");
+
+setTimeout(()=>{
+const ok=/^[0-9]{6}$/.test(code);
+conectado=ok;
+setStatus(ok?"online":"offline");
+},2000);
+}
+
 setInterval(()=>{
 document.getElementById("tempoInfo").innerText=new Date().toLocaleTimeString();
 },1000);
